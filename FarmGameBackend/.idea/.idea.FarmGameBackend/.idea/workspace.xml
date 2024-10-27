@@ -30,6 +30,7 @@
     "accountId": "cb3b3515-b7aa-49b1-90f5-364731b09863"
   }
 }]]></component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo"><![CDATA[{
   "customColor": "",
   "associatedIndex": 6
@@ -48,6 +49,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "swagger",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -106,13 +108,14 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1730038732623</updated>
-      <workItem from="1730038733815" duration="650000" />
+      <workItem from="1730038733815" duration="1164000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
