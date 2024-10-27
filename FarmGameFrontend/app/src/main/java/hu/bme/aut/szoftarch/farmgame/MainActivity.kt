@@ -1,16 +1,21 @@
+//Házi feladat - "Én kicsi farmom" alkalmazás
+//Szoftverarchitektúrák - 2024/őszi félév
+//Készítették:      - Barna Ferenc (Y98NYK)
+//                  - Csikós Patrik (E4MZUV)
+//                  - Török Gergely Balázs (JHP4SD)
+//                  - Tuskó László István (CGTRRV)
+
 package hu.bme.aut.szoftarch.farmgame
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import hu.bme.aut.szoftarch.farmgame.navigation.NavGraph
 import hu.bme.aut.szoftarch.farmgame.ui.theme.FarmGameAndroidTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,12 +24,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             FarmGameAndroidTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                NavGraph()
             }
         }
     }
