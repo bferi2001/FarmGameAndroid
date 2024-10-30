@@ -26,7 +26,11 @@ fun NavGraph(
             )
         }
         composable(Screen.Map.route) {
-            MapScreen()
+            MapScreen(
+                onToMapDebug = {
+                    navController.navigate(Screen.Login.route)
+                }
+            )
         }
     }
 }
