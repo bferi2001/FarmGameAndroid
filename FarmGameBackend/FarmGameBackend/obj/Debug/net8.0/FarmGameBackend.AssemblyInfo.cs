@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FarmGameBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e7c0cba7ccbae92d2a1b9e8de5adb90a34b5d1ca")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a6e155e21bc834b0c89e47eb0b59a0dfef747469")]
 [assembly: System.Reflection.AssemblyProductAttribute("FarmGameBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FarmGameBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
