@@ -17,7 +17,7 @@ else
 
 builder.Services.AddDbContext<FarmApplicationContext>(options =>
     options.UseSqlServer(connection));
-//builder.Services.AddControllers();
+builder.Services.AddControllers();
 
 
 
@@ -25,7 +25,6 @@ builder.Services.AddDbContext<FarmApplicationContext>(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//Server=tcp:y98nyk.database.windows.net,1433;Initial Catalog=Szarch;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication="Active Directory Default";
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
