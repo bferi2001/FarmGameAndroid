@@ -12,47 +12,47 @@ namespace FarmGameBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PlantedPlantsController : ControllerBase
+    public class UserProductsController : ControllerBase
     {
         private readonly FarmApplicationContext _context;
 
-        public PlantedPlantsController(FarmApplicationContext context)
+        public UserProductsController(FarmApplicationContext context)
         {
             _context = context;
         }
 
-        // GET: api/PlantedPlants
+        // GET: api/UserProducts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PlantedPlant>>> GetPlantedPlants()
+        public async Task<ActionResult<IEnumerable<UserProduct>>> GetUserProduct()
         {
-            return await _context.PlantedPlants.ToListAsync();
+            return await _context.UserProduct.ToListAsync();
         }
 
-        // GET: api/PlantedPlants/5
+        // GET: api/UserProducts/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<PlantedPlant>> GetPlantedPlant(int id)
+        public async Task<ActionResult<UserProduct>> GetUserProduct(int id)
         {
-            var plantedPlant = await _context.PlantedPlants.FindAsync(id);
+            var userProduct = await _context.UserProduct.FindAsync(id);
 
-            if (plantedPlant == null)
+            if (userProduct == null)
             {
                 return NotFound();
             }
 
-            return plantedPlant;
+            return userProduct;
         }
 
-        // PUT: api/PlantedPlants/5
+        // PUT: api/UserProducts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPlantedPlant(int id, PlantedPlant plantedPlant)
+        public async Task<IActionResult> PutUserProduct(int id, UserProduct userProduct)
         {
-            if (id != plantedPlant.Id)
+            if (id != userProduct.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(plantedPlant).State = EntityState.Modified;
+            _context.Entry(userProduct).State = EntityState.Modified;
 
             try
             {
@@ -60,7 +60,7 @@ namespace FarmGameBackend.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PlantedPlantExists(id))
+                if (!UserProductExists(id))
                 {
                     return NotFound();
                 }
@@ -73,38 +73,36 @@ namespace FarmGameBackend.Controllers
             return NoContent();
         }
 
-        // POST: api/PlantedPlants
+        // POST: api/UserProducts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<PlantedPlant>> PostPlantedPlant(PlantedPlant plantedPlant)
+        public async Task<ActionResult<UserProduct>> PostUserProduct(UserProduct userProduct)
         {
-            DateTimeOffset currentTime = DateTimeOffset.Now;
-
-            _context.PlantedPlants.Add(plantedPlant);
+            _context.UserProduct.Add(userProduct);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPlantedPlant", new { id = plantedPlant.Id }, plantedPlant);
+            return CreatedAtAction("GetUserProduct", new { id = userProduct.Id }, userProduct);
         }
 
-        // DELETE: api/PlantedPlants/5
+        // DELETE: api/UserProducts/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePlantedPlant(int id)
+        public async Task<IActionResult> DeleteUserProduct(int id)
         {
-            var plantedPlant = await _context.PlantedPlants.FindAsync(id);
-            if (plantedPlant == null)
+            var userProduct = await _context.UserProduct.FindAsync(id);
+            if (userProduct == null)
             {
                 return NotFound();
             }
 
-            _context.PlantedPlants.Remove(plantedPlant);
+            _context.UserProduct.Remove(userProduct);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool PlantedPlantExists(int id)
+        private bool UserProductExists(int id)
         {
-            return _context.PlantedPlants.Any(e => e.Id == id);
+            return _context.UserProduct.Any(e => e.Id == id);
         }
     }
 }

@@ -22,6 +22,7 @@ namespace FarmGameBackend.DbContexts
         public DbSet<Quest> Quests { get; set; }
         public DbSet<QuestType> QuestTypes { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<FarmGameBackend.Entity.UserProduct> UserProduct { get; set; } = default!;
 
     }
 }

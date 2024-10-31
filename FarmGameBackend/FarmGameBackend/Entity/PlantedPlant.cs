@@ -10,6 +10,5 @@
         public DateTimeOffset WateringTime { get; set; }
         public DateTimeOffset WeedingTime { get; set; }
         public DateTimeOffset FertilisingTime { get; set; }
-
     }
 }

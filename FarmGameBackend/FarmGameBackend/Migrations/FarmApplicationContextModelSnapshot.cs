@@ -174,6 +174,10 @@ namespace FarmGameBackend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ProductionTimeAsSeconds")
                         .HasColumnType("int");
 
@@ -181,9 +185,6 @@ namespace FarmGameBackend.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("RewardXP")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
