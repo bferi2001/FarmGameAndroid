@@ -1,4 +1,4 @@
-package hu.bme.aut.szoftarch.farmgame.data
+package hu.bme.aut.szoftarch.farmgame.data.farm
 
 class Farm (
     val columns: Int,
@@ -8,10 +8,10 @@ class Farm (
 
     init{
         val length = columns*rows
-        lands = MutableList(length){ Land(it, it,"empty")}
+        lands = MutableList(length){ Land(it, it,"empty") }
     }
 
-    fun GetLand(position: Int): Land{
+    fun GetLand(position: Int): Land {
         return lands.get(position)
     }
 

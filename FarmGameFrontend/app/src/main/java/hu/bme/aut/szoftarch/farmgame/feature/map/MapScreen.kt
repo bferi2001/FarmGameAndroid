@@ -1,13 +1,13 @@
 package hu.bme.aut.szoftarch.farmgame.feature.map
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -25,28 +25,21 @@ import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.currentRecomposeScope
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import hu.bme.aut.szoftarch.farmgame.data.Farm
-import hu.bme.aut.szoftarch.farmgame.data.Land
+import hu.bme.aut.szoftarch.farmgame.data.farm.Farm
+import hu.bme.aut.szoftarch.farmgame.data.farm.Land
 import hu.bme.aut.szoftarch.farmgame.view.FarmViewHelper
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen( onToMapDebug: () -> Unit,
 ) {
-    var showBottomBar by remember { mutableStateOf(true)}
-    var cancelCloseAction by remember { mutableStateOf(false)}
     val coroutineScope = rememberCoroutineScope()
     val scope = currentRecomposeScope
 
@@ -55,7 +48,7 @@ fun MapScreen( onToMapDebug: () -> Unit,
     val columns= 10
     val rows= 10
 
-    val farm = remember {Farm(columns,rows)}
+    val farm = remember { Farm(columns,rows) }
 
     LaunchedEffect(Unit) {
         farm.AddLand(Land(0,4,"wheat"))
@@ -63,15 +56,12 @@ fun MapScreen( onToMapDebug: () -> Unit,
         farm.AddLand(Land(0,3,"flowers"))
         farm.AddLand(Land(0,34,"flowers"))
 
-        coroutineScope.launch {
-
-
-            delay(5000)
-            if (!cancelCloseAction){
-                showBottomBar = false
-            }
-            cancelCloseAction = false
-        }
+        /*
+        farm.AddLand(Land(0,4, Planter(0)))
+        farm.AddLand(Land(0,7,CowShed(0,0)))
+        farm.AddLand(Land(0,3,CowShed(0,0)))
+        farm.AddLand(Land(0,34,Planter(0)))
+        */
     }
 
     Scaffold(
@@ -89,15 +79,7 @@ fun MapScreen( onToMapDebug: () -> Unit,
                         Text(text = "Log out")
                     }
                     Button(
-                        onClick = {coroutineScope.launch {
-                            showBottomBar = true
-                            delay(5000)
-                            if (!cancelCloseAction){
-                                showBottomBar = false
-                            }
-                            cancelCloseAction = false
-                        }
-                        }
+                        onClick = {viewModel.showBottomBar = true}
                     ) {
                         Text(text = "Open bottom")
                     }
@@ -106,7 +88,7 @@ fun MapScreen( onToMapDebug: () -> Unit,
         )
     },
     bottomBar = {
-        AnimatedVisibility(visible = showBottomBar) {
+        AnimatedVisibility(visible = viewModel.showBottomBar) {
             BottomAppBar(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.primary,
@@ -117,25 +99,26 @@ fun MapScreen( onToMapDebug: () -> Unit,
                 ){
                     Text(
                         textAlign = TextAlign.Center,
-                        text = "This could be used as an interract menu",
+                        text = "interract menu",
                     )
                     Button(onClick =
                     {
                         viewModel.selectedLand?.content = "wheat"
                         scope.invalidate()
+                        viewModel.showBottomBar = false
                     }){
                         Text(text = "Wheat")
                     }
                     Button(onClick = {
                         viewModel.selectedLand?.content = "flowers"
                         scope.invalidate()
+                        viewModel.showBottomBar = false
                     }){
                         Text(text = "Flowers")
                     }
                     Button(
                         onClick = {
-                            showBottomBar = false
-                            cancelCloseAction = true
+                            viewModel.showBottomBar = false
                         }
                     ){
                         Text(text = "Close")
@@ -172,17 +155,26 @@ fun LandItem(land: Land, viewModel: MapViewModel) {
             disabledContainerColor = Color.Gray),
         modifier = Modifier
             .padding(2.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .border(1.dp,getBorderColor(land.position, viewModel.selectedLand?.position)),
         onClick = {
             viewModel.selectedLand = land
-
+            viewModel.showBottomBar = true
         }
     ) {
         Column(
             modifier = Modifier.padding(8.dp)
         ) {
-            Text(text = "id "  +land.id)
+            Text(text = "id "+land.id)
             Text(text = land.content)
         }
+    }
+}
+
+fun getBorderColor(selected: Int, position: Int?): Color {
+    return if (selected == position) {
+        Color.Black
+    } else {
+        Color.Transparent
     }
 }
