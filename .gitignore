@@ -398,3 +398,16 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+FarmGameBackend/FarmGameBackend/obj/Debug/net8.0/FarmGameBackend.AssemblyInfo.cs
+FarmGameBackend/FarmGameBackend/obj/Debug/net8.0/FarmGameBackend.AssemblyInfoInputs.cache
+FarmGameBackend/FarmGameBackend/obj/Debug/net8.0/FarmGameBackend.assets.cache
+FarmGameBackend/FarmGameBackend/obj/Debug/net8.0/FarmGameBackend.csproj.AssemblyReference.cache
+FarmGameBackend/FarmGameBackend/obj/Debug/net8.0/FarmGameBackend.GeneratedMSBuildEditorConfig.editorconfig
+FarmGameBackend/FarmGameBackend/obj/FarmGameBackend.csproj.nuget.dgspec.json
+FarmGameBackend/FarmGameBackend/obj/FarmGameBackend.csproj.nuget.g.props
+FarmGameBackend/FarmGameBackend/obj/project.assets.json
+FarmGameBackend/FarmGameBackend/obj/project.nuget.cache
+FarmGameBackend/FarmGameBackend/obj/project.packagespec.json
+FarmGameBackend/FarmGameBackend/obj/rider.project.model.nuget.info
+FarmGameBackend/FarmGameBackend/obj/rider.project.restore.info
+FarmGameFrontend/.idea/misc.xml
