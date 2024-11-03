@@ -8,7 +8,7 @@ class Farm (
 
     init{
         val length = columns*rows
-        lands = MutableList(length){ Land(it, it,"empty") }
+        lands = MutableList(length){ Land(it, it,null) }
     }
 
     fun GetLand(position: Int): Land {

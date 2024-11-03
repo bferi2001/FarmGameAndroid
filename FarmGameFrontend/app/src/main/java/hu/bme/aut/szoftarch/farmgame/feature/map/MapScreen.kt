@@ -1,13 +1,13 @@
 package hu.bme.aut.szoftarch.farmgame.feature.map
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -38,7 +38,8 @@ import hu.bme.aut.szoftarch.farmgame.view.FarmViewHelper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MapScreen( onToMapDebug: () -> Unit,
+fun MapScreen(
+    onToMapDebug: () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val scope = currentRecomposeScope
@@ -51,10 +52,6 @@ fun MapScreen( onToMapDebug: () -> Unit,
     val farm = remember { Farm(columns,rows) }
 
     LaunchedEffect(Unit) {
-        farm.AddLand(Land(0,4,"wheat"))
-        farm.AddLand(Land(0,7,"cows"))
-        farm.AddLand(Land(0,3,"flowers"))
-        farm.AddLand(Land(0,34,"flowers"))
 
         /*
         farm.AddLand(Land(0,4, Planter(0)))
@@ -99,23 +96,10 @@ fun MapScreen( onToMapDebug: () -> Unit,
                 ){
                     Text(
                         textAlign = TextAlign.Center,
-                        text = "interract menu",
+                        text = "interact menu",
                     )
-                    Button(onClick =
-                    {
-                        viewModel.selectedLand?.content = "wheat"
-                        scope.invalidate()
-                        viewModel.showBottomBar = false
-                    }){
-                        Text(text = "Wheat")
-                    }
-                    Button(onClick = {
-                        viewModel.selectedLand?.content = "flowers"
-                        scope.invalidate()
-                        viewModel.showBottomBar = false
-                    }){
-                        Text(text = "Flowers")
-                    }
+                    createInteractButtons(viewModel.selectedLand!!, viewModel)
+
                     Button(
                         onClick = {
                             viewModel.showBottomBar = false
@@ -136,7 +120,9 @@ fun MapScreen( onToMapDebug: () -> Unit,
 fun LandGrid(farm: Farm, modifier: Modifier, viewModel: MapViewModel) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(farm.columns),
-        modifier = modifier.height(400.dp)
+        modifier = modifier
+            .height(400.dp)
+            .background(Color(0xFFa5d62c))
     ) {
         items(farm.lands) { land ->
             LandItem(land, viewModel)
@@ -156,7 +142,7 @@ fun LandItem(land: Land, viewModel: MapViewModel) {
         modifier = Modifier
             .padding(2.dp)
             .fillMaxWidth()
-            .border(1.dp,getBorderColor(land.position, viewModel.selectedLand?.position)),
+            .border(1.dp, getBorderColor(land.position, viewModel.selectedLand?.position)),
         onClick = {
             viewModel.selectedLand = land
             viewModel.showBottomBar = true
@@ -166,7 +152,7 @@ fun LandItem(land: Land, viewModel: MapViewModel) {
             modifier = Modifier.padding(8.dp)
         ) {
             Text(text = "id "+land.id)
-            Text(text = land.content)
+            Text(text = land.getName())
         }
     }
 }
@@ -176,5 +162,19 @@ fun getBorderColor(selected: Int, position: Int?): Color {
         Color.Black
     } else {
         Color.Transparent
+    }
+}
+
+@Composable()
+fun createInteractButtons(land: Land, viewModel: MapViewModel){
+    land.getInteractions().forEach{ interaction ->
+        Button(
+            onClick = {
+                land.interact(interaction, listOf("12", "building_cow_shed"))
+                viewModel.showBottomBar = false
+            })
+            {
+                Text(text = interaction)
+            }
     }
 }

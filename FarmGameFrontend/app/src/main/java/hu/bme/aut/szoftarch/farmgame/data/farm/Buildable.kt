@@ -4,7 +4,6 @@ abstract class Buildable {
     abstract fun GetName(): String
     abstract fun GetTag():String
 
-    fun GetActions(){
-
-    }
+    abstract fun getInteractions(): List<String>
+    abstract fun interact(interaction: String, params: List<String>)
 }
