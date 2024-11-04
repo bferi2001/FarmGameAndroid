@@ -1,25 +1,34 @@
 package hu.bme.aut.szoftarch.farmgame.data.farm
 
-class Farm (
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+
+class Farm(
     val columns: Int,
     val rows: Int,
-){
-    val lands: MutableList<Land>
+) {
+    var lands: List<Land> by
+    mutableStateOf(emptyList())
+        private set
 
-    init{
-        val length = columns*rows
-        lands = MutableList(length){ Land(it, it,null) }
+    init {
+        lands = List(columns * rows) { Land(it, it, null) }
     }
 
-    fun GetLand(position: Int): Land {
-        return lands.get(position)
+    fun getLand(position: Int): Land {
+        return lands[position]
     }
 
-    fun AddLand(land: Land){
-        if (land.position >= lands.size){
+    fun addLand(land: Land) {
+        if (land.position >= lands.size) {
             throw Exception("Land position out of range")
         }
-        lands.set(land.position, land)
+        lands = lands.toMutableList().also { it[land.position] = land }
+    }
+
+    fun refreshLand(land: Land) {
+        addLand(land)
     }
 
 }

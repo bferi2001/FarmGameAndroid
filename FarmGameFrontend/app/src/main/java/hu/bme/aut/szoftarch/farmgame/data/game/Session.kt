@@ -1,6 +1,5 @@
 package hu.bme.aut.szoftarch.farmgame.data.game
 
-import androidx.compose.runtime.remember
 import hu.bme.aut.szoftarch.farmgame.data.farm.Farm
 
 class Session(columns: Int, rows: Int) {
@@ -23,7 +22,4 @@ class Session(columns: Int, rows: Int) {
     fun GetCrops(): List<String> {
         return crops.toList()
     }
-
-
-
 }

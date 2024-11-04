@@ -1,9 +1,11 @@
 package hu.bme.aut.szoftarch.farmgame.data.farm
 
-class Building (
+import hu.bme.aut.szoftarch.farmgame.data.interaction.MenuLocation
+
+class Building(
     val id: Int,
     val tag: String,
-):Buildable(){
+) : Buildable() {
     var level: Int = 0
     val maxLevel: Int = 1
 
@@ -19,17 +21,20 @@ class Building (
         return tag
     }
 
+    override fun getInteractMenu(): MenuLocation {
+        return MenuLocation.SIDE
+    }
+
     override fun getInteractions(): List<String> {
-        if(level < maxLevel){
+        if (level < maxLevel) {
             return listOf("upgrade")
-        }
-        else{
+        } else {
             return emptyList()
         }
     }
 
     override fun interact(interaction: String, params: List<String>) {
-        if(interaction == "upgrade"){
+        if (interaction == "upgrade") {
             level++
         }
     }
