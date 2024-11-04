@@ -411,3 +411,5 @@ FarmGameBackend/FarmGameBackend/obj/project.packagespec.json
 FarmGameBackend/FarmGameBackend/obj/rider.project.model.nuget.info
 FarmGameBackend/FarmGameBackend/obj/rider.project.restore.info
 FarmGameFrontend/.idea/misc.xml
+
+FarmGameBackend/.idea/

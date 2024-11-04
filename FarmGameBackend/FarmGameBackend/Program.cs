@@ -1,8 +1,12 @@
+using DotNetEnv;
+using FarmGameBackend;
 using FarmGameBackend.DbContexts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+
+Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 var connection = String.Empty;
 if (builder.Environment.IsDevelopment())
@@ -19,6 +23,20 @@ builder.Services.AddDbContext<FarmApplicationContext>(options =>
     options.UseSqlServer(connection));
 builder.Services.AddControllers();
 
+// Add authentication to swagger UI
+builder.Services.AddSwaggerGen(opt =>
+{
+    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "My Api", Version = "v1" });
+    opt.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Scheme = "bearer"
+    });
+    opt.OperationFilter<AuthenticationRequirementsOperationFilter>();
+});
+
 
 
 // Add services to the container.
@@ -33,6 +51,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Middleware for Google authentication
+app.UseMiddleware<GoogleAuthMiddleware>();
 
 app.UseHttpsRedirection();
 

@@ -9,32 +9,60 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="29242141-b30d-478c-8b93-2ae33e0be225" name="Changes" comment="" />
+    <list default="true" id="29242141-b30d-478c-8b93-2ae33e0be225" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/FarmGameBackend/AuthenticationRequirementsOperationFilter.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FarmGameBackend/Controllers/AuthController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FarmGameBackend/GoogleAuthMiddleware.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.FarmGameBackend/.idea/httpClient.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FarmGameBackend/.idea/httpClient.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.FarmGameBackend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FarmGameBackend/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FarmGameBackend/Controllers/UsersController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FarmGameBackend/Controllers/UsersController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FarmGameBackend/FarmGameBackend.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/FarmGameBackend/FarmGameBackend.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FarmGameBackend/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FarmGameBackend/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FarmGameBackend/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/FarmGameBackend/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FarmGameFrontend/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FarmGameFrontend/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FarmGameFrontend/app/src/main/res/values/strings.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DpaMonitoringSettings">
+    <option name="autoShow" value="false" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "pacsinta"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;pacsinta&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/bferi2001/FarmGameAndroid.git",
-    "accountId": "cb3b3515-b7aa-49b1-90f5-364731b09863"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/bferi2001/FarmGameAndroid.git&quot;,
+    &quot;accountId&quot;: &quot;cb3b3515-b7aa-49b1-90f5-364731b09863&quot;
   }
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/787371443d916adb03d52e881bdc7cffdbb27868633048a39c4280f564d2d8/GoogleExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f5f29f8ad09a2791dd1b4377273475352366e26dff81e2144329cf5411ba16cd/AuthAppBuilderExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/pacsi/Documents/Projects/FarmGameAndroid/FarmGameBackend/FarmGameBackend/Controllers/UsersController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/pacsi/Documents/Projects/FarmGameAndroid/FarmGameBackend/FarmGameBackend/Program.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/pacsi/Documents/Projects/FarmGameAndroid/FarmGameBackend/FarmGameBackend/appsettings.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/pacsi/Documents/Projects/FarmGameAndroid/FarmGameBackend/FarmGameBackend/appsettings.json" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
 }]]></component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 6
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 6
+}</component>
   <component name="ProjectId" id="2o1YpNs2jLbQMFUH5VN8dNGHDWI" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -42,6 +70,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    ".NET Launch Settings Profile.FarmGameBackend: http.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "Backend",
     "node.js.detected.package.eslint": "true",
@@ -109,6 +138,7 @@
       <option name="presentableId" value="Default" />
       <updated>1730038732623</updated>
       <workItem from="1730038733815" duration="1164000" />
+      <workItem from="1730669962417" duration="7446000" />
     </task>
     <servers />
   </component>
@@ -117,6 +147,17 @@
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
