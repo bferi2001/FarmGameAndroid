@@ -1,4 +1,6 @@
 ﻿using Google.Apis.Auth;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Util.Store;
 
 namespace FarmGameBackend;
 
@@ -22,6 +24,7 @@ public class GoogleAuthMiddleware(RequestDelegate next)
             return;
         }
 
+        context.Items["Email"] = payload.Email;
         await next(context);
     }
     
