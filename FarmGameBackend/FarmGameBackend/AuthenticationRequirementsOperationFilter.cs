@@ -3,7 +3,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace FarmGameBackend;
 
-public abstract class AuthenticationRequirementsOperationFilter : IOperationFilter
+public class AuthenticationRequirementsOperationFilter : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
