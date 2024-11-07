@@ -60,11 +60,11 @@ data class Land(
     }
 
     fun getName(): String {
-        return content?.GetName() ?: "Empty Field"
+        return content?.getName() ?: "Empty Field"
     }
 
     fun getTag(): String {
-        return content?.GetTag() ?: "empty"
+        return content?.getTag() ?: "empty"
     }
 
 }

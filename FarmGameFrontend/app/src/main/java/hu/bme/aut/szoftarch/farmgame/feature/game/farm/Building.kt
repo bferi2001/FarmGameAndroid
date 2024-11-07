@@ -1,24 +1,28 @@
 package hu.bme.aut.szoftarch.farmgame.feature.game.farm
 
+import hu.bme.aut.szoftarch.farmgame.view.NameService
 import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
 
 class Building(
     val id: Int,
-    val tag: String,
+    private val tag: String,
 ) : Buildable() {
     var level: Int = 0
-    val maxLevel: Int = 1
+    val maxLevel: Int = 15
 
-    init {
-        //session.getBuildingMaxlevel(tag))
+    var processing: Boolean = false
+    var clean: Boolean = true
+
+    override fun getName(): String {
+        return "${NameService.getDisplayName(tag)} lvl${level}"
     }
 
-    override fun GetName(): String {
-        return "blding $level/$maxLevel"
-    }
-
-    override fun GetTag(): String {
-        return tag
+    override fun getTag(): String {
+        return if (clean) {
+            tag
+        } else {
+            "${tag}_dirty"
+        }
     }
 
     override fun getInteractMenu(): MenuLocation {
@@ -26,16 +30,43 @@ class Building(
     }
 
     override fun getInteractions(): List<String> {
-        if (level < maxLevel) {
-            return listOf("upgrade")
+        val interactions = mutableListOf<String>()
+        if (processing) {
+            interactions.add("wait")
         } else {
-            return emptyList()
+            if (level < maxLevel) {
+                interactions.add("upgrade")
+            }
+            interactions.add("start")
         }
+        if (!clean) {
+            interactions.add("clean")
+        }
+        return interactions
     }
 
     override fun interact(interaction: String, params: List<String>) {
-        if (interaction == "upgrade") {
-            level++
+        when (interaction) {
+            "start" -> {
+                processing = true
+                clean = false
+            }
+
+            "wait" -> {
+                if (clean) {
+                    processing = false
+                } else {
+                    clean = false
+                }
+            }
+
+            "clean" -> {
+                clean = true
+            }
+
+            "upgrade" -> {
+                level++
+            }
         }
     }
 }

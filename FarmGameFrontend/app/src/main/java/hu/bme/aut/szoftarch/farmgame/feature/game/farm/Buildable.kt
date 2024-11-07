@@ -3,8 +3,8 @@ package hu.bme.aut.szoftarch.farmgame.feature.game.farm
 import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
 
 abstract class Buildable {
-    abstract fun GetName(): String
-    abstract fun GetTag(): String
+    abstract fun getName(): String
+    abstract fun getTag(): String
 
     abstract fun getInteractMenu(): MenuLocation
     abstract fun getInteractions(): List<String>

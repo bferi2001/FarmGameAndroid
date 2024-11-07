@@ -26,9 +26,4 @@ class Farm(
         }
         lands = lands.toMutableList().also { it[land.position] = land }
     }
-
-    fun refreshLand(land: Land) {
-        addLand(land)
-    }
-
 }
