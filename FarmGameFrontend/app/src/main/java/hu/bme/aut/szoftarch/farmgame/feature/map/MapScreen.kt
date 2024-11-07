@@ -36,8 +36,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import hu.bme.aut.szoftarch.farmgame.data.farm.Land
-import hu.bme.aut.szoftarch.farmgame.data.interaction.MenuLocation
+import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
+import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
 import hu.bme.aut.szoftarch.farmgame.view.FarmViewHelper
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -1,6 +1,6 @@
-package hu.bme.aut.szoftarch.farmgame.data.farm
+package hu.bme.aut.szoftarch.farmgame.feature.game.farm
 
-import hu.bme.aut.szoftarch.farmgame.data.interaction.MenuLocation
+import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
 
 class Planter(
     val id: Int,

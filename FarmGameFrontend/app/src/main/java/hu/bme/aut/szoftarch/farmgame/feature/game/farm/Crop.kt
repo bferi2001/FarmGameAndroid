@@ -1,4 +1,4 @@
-package hu.bme.aut.szoftarch.farmgame.data.farm
+package hu.bme.aut.szoftarch.farmgame.feature.game.farm
 
 data class Crop(
     val name: String,

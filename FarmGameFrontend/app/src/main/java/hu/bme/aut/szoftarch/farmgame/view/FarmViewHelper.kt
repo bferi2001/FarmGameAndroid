@@ -1,7 +1,7 @@
 package hu.bme.aut.szoftarch.farmgame.view
 
 import androidx.compose.ui.graphics.Color
-import hu.bme.aut.szoftarch.farmgame.data.farm.Land
+import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
 
 class FarmViewHelper {
     fun GetLandColor(land: Land): Color {

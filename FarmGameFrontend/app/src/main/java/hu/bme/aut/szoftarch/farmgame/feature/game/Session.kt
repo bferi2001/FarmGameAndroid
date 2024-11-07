@@ -1,6 +1,6 @@
-package hu.bme.aut.szoftarch.farmgame.data.game
+package hu.bme.aut.szoftarch.farmgame.feature.game
 
-import hu.bme.aut.szoftarch.farmgame.data.farm.Farm
+import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Farm
 
 class Session(columns: Int, rows: Int) {
     val buildings: MutableSet<String> = mutableSetOf()

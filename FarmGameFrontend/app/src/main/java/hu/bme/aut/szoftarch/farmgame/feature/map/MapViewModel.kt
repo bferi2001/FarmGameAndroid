@@ -4,9 +4,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import hu.bme.aut.szoftarch.farmgame.data.farm.Farm
-import hu.bme.aut.szoftarch.farmgame.data.farm.Land
-import hu.bme.aut.szoftarch.farmgame.data.interaction.MenuLocation
+import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Farm
+import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
+import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
 
 class MapViewModel(
 ) : ViewModel() {
