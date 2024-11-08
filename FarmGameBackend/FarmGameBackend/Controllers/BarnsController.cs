@@ -84,6 +84,34 @@ namespace FarmGameBackend.Controllers
             return CreatedAtAction("GetBarn", new { id = barn.Id }, barn);
         }
 
+        // POST: api/PlantedPlants
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("{typeId}/{position}")]
+        public async Task<ActionResult<Barn>> PostBarn(int typeId, int position)
+        {
+            DateTimeOffset currentTime = DateTimeOffset.Now;
+            var newBarn = new Barn();
+            newBarn.TypeId = typeId;
+            newBarn.Position = position;
+            newBarn.ProductionStartTime = currentTime;
+            Product productType = await _context.Products.FindAsync(newBarn.TypeId);
+            if (productType == null)
+            {
+                return NotFound();
+            }
+            Random r = new Random();
+            int productionTime = productType.ProductionTimeAsSeconds;
+            newBarn.ProductionEndTime = currentTime.AddSeconds(productionTime);
+            newBarn.FeedingTime = currentTime.AddSeconds(r.Next(productionTime));
+            newBarn.CleaningTime = currentTime.AddSeconds(r.Next(productionTime));
+            newBarn.UserId = 0; //ToDo
+
+            _context.Barns.Add(newBarn);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetPlantedPlant", new { id = newBarn.Id }, newBarn);
+        }
+
         // DELETE: api/Barns/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBarn(int id)

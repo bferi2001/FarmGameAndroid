@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public int UserId { get; set; }
         public int TypeId { get; set; }
+        public int Position {  get; set; }
         public DateTimeOffset PlantTime { get; set; }
         public DateTimeOffset HarvestTime { get; set; }
         public DateTimeOffset WateringTime { get; set; }

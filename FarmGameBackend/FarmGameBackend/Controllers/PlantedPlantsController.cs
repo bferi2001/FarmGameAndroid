@@ -75,15 +75,31 @@ namespace FarmGameBackend.Controllers
 
         // POST: api/PlantedPlants
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<PlantedPlant>> PostPlantedPlant(PlantedPlant plantedPlant)
+        [HttpPost("{typeId}/{position}")]
+        public async Task<ActionResult<PlantedPlant>> PostPlantedPlant(int typeId, int position)
         {
             DateTimeOffset currentTime = DateTimeOffset.Now;
+            var newPlant = new PlantedPlant();
+            newPlant.TypeId = typeId;
+            newPlant.Position = position;
+            newPlant.PlantTime = currentTime;
+            Product productType = await _context.Products.FindAsync(newPlant.TypeId);
+            if (productType == null)
+            {
+                return NotFound();
+            }
+            Random r = new Random();
+            int growTime = productType.ProductionTimeAsSeconds;
+            newPlant.HarvestTime = currentTime.AddSeconds(growTime);
+            newPlant.WateringTime = currentTime.AddSeconds(r.Next(growTime));
+            newPlant.WeedingTime = currentTime.AddSeconds(r.Next(growTime));
+            newPlant.FertilisingTime = currentTime.AddSeconds(r.Next(growTime));
+            newPlant.UserId = 0; //ToDo
 
-            _context.PlantedPlants.Add(plantedPlant);
+            _context.PlantedPlants.Add(newPlant);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPlantedPlant", new { id = plantedPlant.Id }, plantedPlant);
+            return CreatedAtAction("GetPlantedPlant", new { id = newPlant.Id }, newPlant);
         }
 
         // DELETE: api/PlantedPlants/5

@@ -7,5 +7,6 @@
         public int QuickSellPrice { get; set; }
         public int ProductionTimeAsSeconds { get; set; }
         public int RewardXP { get; set; }
+        public Boolean IsCrop {  get; set; }
     }
 }

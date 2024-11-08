@@ -28,6 +28,20 @@ namespace FarmGameBackend.Controllers
             return await _context.BarnTypes.ToListAsync();
         }
 
+        // GET: api/BarnTypes/names
+        [HttpGet("names")]
+        public async Task<ActionResult<List<string>>> GetBarnTypeNames()
+        {
+            var barnTypeNames = await _context.BarnTypes.Select(barnType => barnType.Name).ToListAsync();
+
+            if (barnTypeNames == null)
+            {
+                return NotFound();
+            }
+
+            return barnTypeNames;
+        }
+
         // GET: api/BarnTypes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<BarnType>> GetBarnType(int id)
@@ -42,62 +56,41 @@ namespace FarmGameBackend.Controllers
             return barnType;
         }
 
-        // PUT: api/BarnTypes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutBarnType(int id, BarnType barnType)
-        {
-            if (id != barnType.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(barnType).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BarnTypeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/BarnTypes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<BarnType>> PostBarnType(BarnType barnType)
-        {
-            _context.BarnTypes.Add(barnType);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetBarnType", new { id = barnType.Id }, barnType);
-        }
-
-        // DELETE: api/BarnTypes/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBarnType(int id)
+        // GET: api/BarnTypes/5/name
+        [HttpGet("{id}/name")]
+        public async Task<ActionResult<string>> GetBarnTypeName(int id)
         {
             var barnType = await _context.BarnTypes.FindAsync(id);
+
             if (barnType == null)
             {
                 return NotFound();
             }
 
-            _context.BarnTypes.Remove(barnType);
-            await _context.SaveChangesAsync();
+            return barnType.Name;
+        }
 
-            return NoContent();
+        // GET: api/BarnTypes/5/2
+        [HttpGet("{id}/{level}")]
+        public async Task<ActionResult<int>> GetBarnTypeByLevel(int id, int level)
+        {
+            var barnType = await _context.BarnTypes.FindAsync(id);
+
+            if (barnType == null)
+            {
+                return NotFound();
+            }
+            switch (level)
+            {
+                case 1:
+                    return barnType.FirstUpgradeCost;
+                case 2:
+                    return barnType.SecondUpgradeCost;
+                case 3:
+                    return barnType.ThirdUpgradeCost;
+                default:
+                    return NotFound();
+            }
         }
 
         private bool BarnTypeExists(int id)
