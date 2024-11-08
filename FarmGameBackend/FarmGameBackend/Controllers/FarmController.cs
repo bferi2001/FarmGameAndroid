@@ -20,7 +20,7 @@ namespace FarmGameBackend.Controllers
         }
 
         [HttpPost("farm/plant/{position}/{typeName}")]
-        public async Task<IActionResult> PostFarm(int position, int typeName)
+        public async Task<ActionResult<PlantedPlant>> PostFarm(int position, int typeName)
         {
             
         }

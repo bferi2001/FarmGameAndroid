@@ -3,10 +3,10 @@
     public class BarnType
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public int FirstUpgradeCost { get; set; }
-        public int SecondUpgradeCost { get; set;}
-        public int ThirdUpgradeCost { get; set; }
-        public int ProductId { get; set; }
+        public required string Name { get; set; }
+        public required int FirstUpgradeCost { get; set; }
+        public required int SecondUpgradeCost { get; set;}
+        public required int ThirdUpgradeCost { get; set; }
+        public required int ProductName { get; set; }
     }
 }
