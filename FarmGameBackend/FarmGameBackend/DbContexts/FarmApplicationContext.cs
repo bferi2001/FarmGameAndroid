@@ -25,6 +25,7 @@ namespace FarmGameBackend.DbContexts
 
         public User GetCurrentUser()
         {
+            //ToDo
             //Dummy
             return new User
             {
