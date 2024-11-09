@@ -8,5 +8,6 @@
         public required int ProductionTimeAsSeconds { get; set; }
         public required int RewardXP { get; set; }
         public required Boolean IsCrop {  get; set; }
+        public required int UnlockXP { get; set; }
     }
 }
