@@ -23,5 +23,16 @@ namespace FarmGameBackend.DbContexts
         public DbSet<User> Users { get; set; }
         public DbSet<FarmGameBackend.Entity.UserProduct> UserProduct { get; set; } = default!;
 
+        public User GetCurrentUser()
+        {
+            //Dummy
+            return new User
+            {
+                Id = 0,
+                Email = "testemail@gmail.com",
+                UserXP = 2000,
+                UserMoney = 2000
+            };
+        }
     }
 }
