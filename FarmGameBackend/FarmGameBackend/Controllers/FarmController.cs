@@ -22,9 +22,9 @@ namespace FarmGameBackend.Controllers
         }
 
         [HttpGet("farm/plant/unlocked")]
-        public async Task<ActionResult<IEnumerable<string>>> GetUnlockedCropsAsync(int position)
+        public async Task<ActionResult<IEnumerable<string>>> GetUnlockedCropsAsync()
         {
-
+            
         }
 
         [HttpPost("farm/plant/{position}/{typeName}")]
