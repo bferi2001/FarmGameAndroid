@@ -23,17 +23,16 @@ namespace FarmGameBackend.DbContexts
         public DbSet<User> Users { get; set; }
         public DbSet<FarmGameBackend.Entity.UserProduct> UserProduct { get; set; } = default!;
 
-        public User GetCurrentUser()
+        public User GetCurrentUser(string email)
         {
-            //ToDo
-            //Dummy
-            return new User
-            {
-                Id = 0,
-                Email = "testemail@gmail.com",
-                UserXP = 2000,
-                UserMoney = 2000
-            };
+            User? user = Users.FirstOrDefault(u => u.Email == email);
+            if (user != null) return user;
+            
+            // If user does not exist, create a new user
+            user = new User{ Email = email, UserXP = 0, UserMoney = 0};
+            Users.Add(user);
+            SaveChanges();
+            return user;
         }
     }
 }
