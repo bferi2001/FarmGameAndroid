@@ -7,6 +7,6 @@
         public required int FirstUpgradeCost { get; set; }
         public required int SecondUpgradeCost { get; set;}
         public required int ThirdUpgradeCost { get; set; }
-        public required int ProductName { get; set; }
+        public required string ProductName { get; set; }
     }
 }
