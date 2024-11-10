@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace FarmGameBackend.Controllers
-{
+{//ToDo Inventory and UserXP management
+ //ToDo Fertilising costs animal poop resource
     [Route("api/[controller]")]
     public class FarmController : Controller
     {
@@ -15,17 +16,22 @@ namespace FarmGameBackend.Controllers
         {
             _context = context;
         }
-        [HttpGet("farm/actions/{position}")]
-        public async Task<ActionResult<IEnumerable<string>>> GetActions(int position)
+        [HttpGet("farm/plant/{position}/actions")]
+        public async Task<ActionResult<IEnumerable<string>>> GetActionsAsync(int position)
         {
-
+            PlantedPlant plantAtPosition = await GetPlantByPosition(position);
+            if (plantAtPosition == null)
+            {
+                return NotFound();
+            }
+            return GetActions(plantAtPosition);
         }
 
-        [HttpGet("farm/plant/unlocked")]
+        /*[HttpGet("farm/plant/unlocked")]
         public async Task<ActionResult<IEnumerable<string>>> GetUnlockedCropsAsync()
         {
             
-        }
+        }*/
 
         [HttpPost("farm/plant/{position}/{typeName}")]
         public async Task<ActionResult<PlantedPlant>> PostPlantedPlant(int position, string typeName)
@@ -34,7 +40,7 @@ namespace FarmGameBackend.Controllers
             {
                 return Conflict("The field is not empty");
             }
-            Product? productType = GetUnlockedProductByName(typeName);
+            Product? productType = await GetUnlockedProductByName(typeName);
             if (productType == null)
             {
                 return NotFound();
@@ -53,7 +59,7 @@ namespace FarmGameBackend.Controllers
         [HttpPut("farm/watering/{position}")]
         public async Task<IActionResult> PutWatering(int position)
         {
-            PlantedPlant plantAtPosition = GetPlantByPosition(position);
+            PlantedPlant plantAtPosition = await GetPlantByPosition(position);
             if (plantAtPosition == null)
             {
                 return NotFound();
@@ -63,7 +69,7 @@ namespace FarmGameBackend.Controllers
                 return BadRequest("This plant got already watered.");
             }
             DateTimeOffset currentTime = DateTimeOffset.Now;
-            if (currentTime >= plantAtPosition.WateringTime)
+            if (currentTime >= plantAtPosition.WateringTime && GetActions(plantAtPosition).Contains("watering"))
             {
                 plantAtPosition.WateringTime = null;
                 //ToDo
@@ -73,7 +79,7 @@ namespace FarmGameBackend.Controllers
         [HttpPut("farm/weeding/{position}")]
         public async Task<IActionResult> PutWeeding(int position)
         {
-            PlantedPlant plantAtPosition = GetPlantByPosition(position);
+            PlantedPlant plantAtPosition = await GetPlantByPosition(position);
             if (plantAtPosition == null)
             {
                 return NotFound();
@@ -83,7 +89,7 @@ namespace FarmGameBackend.Controllers
                 return BadRequest("This plant got already watered.");
             }
             DateTimeOffset currentTime = DateTimeOffset.Now;
-            if (currentTime >= plantAtPosition.WeedingTime)
+            if (currentTime >= plantAtPosition.WeedingTime && GetActions(plantAtPosition).Contains("weeding"))
             {
                 plantAtPosition.WeedingTime = null;
                 //ToDo
@@ -94,7 +100,7 @@ namespace FarmGameBackend.Controllers
         [HttpPut("farm/fertilising/{position}")]
         public async Task<IActionResult> PutFertilising(int position)
         {
-            PlantedPlant plantAtPosition = GetPlantByPosition(position);
+            PlantedPlant plantAtPosition = await GetPlantByPosition(position);
             if (plantAtPosition == null)
             {
                 return NotFound();
@@ -104,7 +110,7 @@ namespace FarmGameBackend.Controllers
                 return BadRequest("This plant got already fertilised.");
             }
             DateTimeOffset currentTime = DateTimeOffset.Now;
-            if (currentTime >= plantAtPosition.FertilisingTime)
+            if (currentTime >= plantAtPosition.FertilisingTime && GetActions(plantAtPosition).Contains("fertilising"))
             {
                 plantAtPosition.FertilisingTime = null;
                 //ToDo Other actions?
@@ -112,12 +118,35 @@ namespace FarmGameBackend.Controllers
             return await UpdatePlantedPlantDatabase(plantAtPosition);
         }
 
-        [HttpDelete("farm/collecting/{id}")]
+        /*[HttpDelete("farm/collecting/{id}")]
         public async Task<IActionResult> DeletePlantedPlant(int id)
         {
 
+        }*/
+        private  List<string> GetActions(PlantedPlant plantedPlant)
+        {
+            List<string> actions = new List<string>();
+            if (plantedPlant.HarvestTime != null && plantedPlant.HarvestTime < DateTimeOffset.Now)
+            {
+                actions.Add("harvesting");
+                return actions;
+            }
+            if (plantedPlant.WateringTime != null && plantedPlant.WateringTime < DateTimeOffset.Now)
+            {
+                actions.Add("watering");
+            }
+            if (plantedPlant.WeedingTime != null && plantedPlant.WeedingTime < DateTimeOffset.Now)
+            {
+                actions.Add("weeding");
+            }
+            if (plantedPlant.FertilisingTime != null && plantedPlant.FertilisingTime < DateTimeOffset.Now)
+            {
+                actions.Add("fertilising");
+            }
+            return actions;
         }
-        public async Task<IActionResult> UpdatePlantedPlantDatabase(PlantedPlant updatedPlant)
+
+        private async Task<IActionResult> UpdatePlantedPlantDatabase(PlantedPlant updatedPlant)
         {
             _context.Entry(updatedPlant).State = EntityState.Modified;
             try
@@ -137,39 +166,45 @@ namespace FarmGameBackend.Controllers
             }
             return NoContent();
         }
-        public Product? GetUnlockedProductByName(string name)
+        private async Task<Product?> GetUnlockedProductByName(string name)
         {
             if (!DoesCroptypeExistsAndUnlocked(name))
             {
                 return null;
             }
-            Product? productType = _context.Products.Where(product => product.Name == name).First();
+            Product? productType = await _context.Products.Where(product => product.Name == name).FirstAsync();
             return productType;
         }
 
-        public Boolean DoesProductExists(string _productName)
+        private Boolean DoesProductExists(string _productName)
         {
             return _context.Products.Any(product => product.Name == _productName);
         }
-
-        public List<string> GetUnlockedCrops()
+        private List<string> GetUnlockedCrops()
         {
             int userXP = _context.GetCurrentUser().UserXP;
-            return _context.Products.Where(product => product.UnlockXP >= userXP && product.IsCrop)
+            return _context.Products.Where(product => product.UnlockXP <= userXP && product.IsCrop)
                                     .Select(product => product.Name)
                                     .ToList();
         }
 
-        public Boolean DoesCroptypeExistsAndUnlocked(string _cropName)
+        private Boolean DoesCroptypeExistsAndUnlocked(string _cropName)
         {
             return GetUnlockedCrops().Any(cropName => cropName == _cropName);
         }
-        public PlantedPlant GetPlantByPosition(int position)
+        private async Task<PlantedPlant> GetPlantByPosition(int position)
         {
-            return _context.PlantedPlants.Where(plant => plant.Position == position && plant.UserName == _context.GetCurrentUser().Email).First();
+            try
+            {
+                return await _context.PlantedPlants.Where(plant => plant.Position == position && plant.UserName == _context.GetCurrentUser().Email).FirstAsync();
+            }catch (Exception ex)
+            {
+                return null;
+            }
+            
         }
 
-        public PlantedPlant CreatePlantedPlant(string _cropsTypeName, int _position, int _growTime)
+        private PlantedPlant CreatePlantedPlant(string _cropsTypeName, int _position, int _growTime)
         {
             Random r = new Random();
             DateTimeOffset currentTime = DateTimeOffset.Now;
