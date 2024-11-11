@@ -1,6 +1,5 @@
 ﻿using FarmGameBackend.DbContexts;
 using FarmGameBackend.Entity;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,16 +30,19 @@ namespace FarmGameBackend.Controllers
             return GetActions(plantAtPosition);
         }
 
-        /*[HttpGet("farm/plant/unlocked")]
+        [HttpGet("farm/plant/unlocked")]
         public async Task<ActionResult<IEnumerable<string>>> GetUnlockedCropsAsync()
         {
-            
-        }*/
+            int userXP = _context.GetCurrentUser(UserEmail!).UserXP;
+            return  await _context.Products.Where(product => product.UnlockXP <= userXP && product.IsCrop)
+                                    .Select(product => product.Name)
+                                    .ToListAsync();
+        }
 
         [HttpPost("farm/plant/{position}/{typeName}")]
         public async Task<ActionResult<PlantedPlant>> PostPlantedPlant(int position, string typeName)
         {
-            if (GetPlantByPosition(position) != null)
+            if (await GetPlantByPosition(position) != null)
             {
                 return Conflict("The field is not empty");
             }
@@ -63,7 +65,7 @@ namespace FarmGameBackend.Controllers
         [HttpPut("farm/watering/{position}")]
         public async Task<IActionResult> PutWatering(int position)
         {
-            PlantedPlant plantAtPosition = await GetPlantByPosition(position);
+            PlantedPlant? plantAtPosition = await GetPlantByPosition(position);
             if (plantAtPosition == null)
             {
                 return NotFound();
@@ -83,7 +85,7 @@ namespace FarmGameBackend.Controllers
         [HttpPut("farm/weeding/{position}")]
         public async Task<IActionResult> PutWeeding(int position)
         {
-            PlantedPlant plantAtPosition = await GetPlantByPosition(position);
+            PlantedPlant? plantAtPosition = await GetPlantByPosition(position);
             if (plantAtPosition == null)
             {
                 return NotFound();
@@ -104,7 +106,7 @@ namespace FarmGameBackend.Controllers
         [HttpPut("farm/fertilising/{position}")]
         public async Task<IActionResult> PutFertilising(int position)
         {
-            PlantedPlant plantAtPosition = await GetPlantByPosition(position);
+            PlantedPlant? plantAtPosition = await GetPlantByPosition(position);
             if (plantAtPosition == null)
             {
                 return NotFound();
@@ -129,7 +131,7 @@ namespace FarmGameBackend.Controllers
         }*/
         private  List<string> GetActions(PlantedPlant plantedPlant)
         {
-            List<string> actions = new List<string>();
+            List<string> actions = [];
             if (plantedPlant.HarvestTime != null && plantedPlant.HarvestTime < DateTimeOffset.Now)
             {
                 actions.Add("harvesting");
@@ -192,7 +194,7 @@ namespace FarmGameBackend.Controllers
                                     .ToList();
         }
 
-        private Boolean DoesCroptypeExistsAndUnlocked(string _cropName)
+        private bool DoesCroptypeExistsAndUnlocked(string _cropName)
         {
             return GetUnlockedCrops().Any(cropName => cropName == _cropName);
         }
