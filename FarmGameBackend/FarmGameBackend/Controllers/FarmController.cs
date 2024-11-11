@@ -11,13 +11,13 @@ namespace FarmGameBackend.Controllers
     {
         private readonly FarmApplicationContext _context;
         private readonly HttpContext _httpContext;
-        
-        private string? UserEmail => _httpContext.Items["Email"]?.ToString();
-
+        private readonly User CurrentUser;
         public FarmController(FarmApplicationContext context)
         {
             _context = context;
             _httpContext = HttpContext;
+            string? UserEmail = _httpContext.Items["Email"]?.ToString();
+            CurrentUser = _context.GetCurrentUser(UserEmail!);
         }
         [HttpGet("farm/plant/{position}/actions")]
         public async Task<ActionResult<IEnumerable<string>>> GetActionsAsync(int position)
@@ -33,10 +33,10 @@ namespace FarmGameBackend.Controllers
         [HttpGet("farm/plant/unlocked")]
         public async Task<ActionResult<IEnumerable<string>>> GetUnlockedCropsAsync()
         {
-            int userXP = _context.GetCurrentUser(UserEmail!).UserXP;
-            return  await _context.Products.Where(product => product.UnlockXP <= userXP && product.IsCrop)
+            int userXP = CurrentUser.UserXP;
+            return await _context.Products.Where(product => product.UnlockXP <= userXP && product.IsCrop)
                                     .Select(product => product.Name)
-                                    .ToListAsync();
+                                    .ToListAsync(); 
         }
 
         [HttpPost("farm/plant/{position}/{typeName}")]
@@ -188,7 +188,7 @@ namespace FarmGameBackend.Controllers
         }
         private List<string> GetUnlockedCrops()
         {
-            int userXP = _context.GetCurrentUser(UserEmail!).UserXP;
+            int userXP = CurrentUser.UserXP;
             return _context.Products.Where(product => product.UnlockXP <= userXP && product.IsCrop)
                                     .Select(product => product.Name)
                                     .ToList();
@@ -202,7 +202,7 @@ namespace FarmGameBackend.Controllers
         {
             try
             {
-                return await _context.PlantedPlants.Where(plant => plant.Position == position && plant.UserName == _context.GetCurrentUser(UserEmail!).Email).FirstAsync();
+                return await _context.PlantedPlants.Where(plant => plant.Position == position && plant.UserName == CurrentUser.Email).FirstAsync();
             }catch (Exception ex)
             {
                 return null;
@@ -216,7 +216,7 @@ namespace FarmGameBackend.Controllers
             DateTimeOffset currentTime = DateTimeOffset.Now;
             return new PlantedPlant
             {
-                UserName = _context.GetCurrentUser(UserEmail!).Email,
+                UserName = CurrentUser.Email,
                 CropsTypeName = _cropsTypeName,
                 Position = _position,
                 PlantTime = currentTime,
