@@ -18,6 +18,13 @@ namespace FarmGameBackend.Controllers
             _httpContext = HttpContext;
             string? UserEmail = _httpContext.Items["Email"]?.ToString();
             CurrentUser = _context.GetCurrentUser(UserEmail!);
+            /*CurrentUser = new User
+            {
+                Id = 0,
+                Email = "testemail@gmail.com",
+                UserXP = 2000,
+                UserMoney = 2000
+            };*/
         }
         [HttpGet("farm/plant/{position}/actions")]
         public async Task<ActionResult<IEnumerable<string>>> GetActionsAsync(int position)
@@ -124,11 +131,98 @@ namespace FarmGameBackend.Controllers
             return await UpdatePlantedPlantDatabase(plantAtPosition);
         }
 
-        /*[HttpDelete("farm/collecting/{id}")]
-        public async Task<IActionResult> DeletePlantedPlant(int id)
+        [HttpDelete("farm/harvest/{position}")]
+        public async Task<IActionResult> HarvestPlantedPlant(int position)
         {
+            PlantedPlant? plantAtPosition = await GetPlantByPosition(position);
+            if (plantAtPosition == null)
+            {
+                return NotFound();
+            }
+            DateTimeOffset currentTime = DateTimeOffset.Now;
+            if (!(currentTime >= plantAtPosition.HarvestTime && GetActions(plantAtPosition).Contains("harvesting")))
+            {
+                return BadRequest("This plant can't be harvested yet.");
+            }
+            _context.PlantedPlants.Remove(plantAtPosition);
+            await _context.SaveChangesAsync();
+            return await AddUserProduct(plantAtPosition.CropsTypeName, 3);
+        }
+        private async Task<IActionResult> AddUserProduct(string productName, int quantity)
+        {
+            if (!DoesProductExists(productName))
+            {
+                return NotFound("Product doesn't exists: " + productName);
+            }
+            UserProduct? userProduct = await GetUserProduct(productName);
+            if ( userProduct == null)
+            {
+                UserProduct product = new UserProduct
+                {
+                    ProductName = productName,
+                    UserName = CurrentUser.Email,
+                    Quantity = quantity
+                };
+                return await PostUserProduct(product);
+            }
+            else
+            {
+                userProduct.Quantity += quantity;
+                return await PutUserProduct(userProduct.Id, userProduct);
+            }
+        }
 
-        }*/
+        private async Task<UserProduct?> GetUserProduct(string productName)
+        {
+            var userProduct =  await _context.UserProduct.Where(userProduct => userProduct.UserName == CurrentUser.Email && userProduct.ProductName == productName).FirstOrDefaultAsync();
+            if(userProduct == null)
+            {
+                return null;
+            }
+            return userProduct;
+        }
+
+        private async Task<IActionResult> PostUserProduct(UserProduct userProduct)
+        {
+            _context.UserProduct.Add(userProduct);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetUserProduct", new { id = userProduct.Id }, userProduct);
+
+        }
+
+        private async Task<IActionResult> PutUserProduct(int id, UserProduct userProduct)
+        {
+            if (id != userProduct.Id)
+            {
+                return BadRequest("Id not match for  modifying "+userProduct.Id);
+            }
+
+            _context.Entry(userProduct).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserProductExists(id))
+                {
+                    return NotFound("UserProduct does not exists with the id: "+id);
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+        private bool UserProductExists(int id)
+        {
+            return _context.UserProduct.Any(e => e.Id == id);
+        }
+
         private  List<string> GetActions(PlantedPlant plantedPlant)
         {
             List<string> actions = [];
