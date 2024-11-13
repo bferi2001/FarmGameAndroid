@@ -1,18 +1,19 @@
 package hu.bme.aut.szoftarch.farmgame.view
 
-import androidx.compose.ui.graphics.Color
-import hu.bme.aut.szoftarch.farmgame.api.DummyController
+import hu.bme.aut.szoftarch.farmgame.R
 
 object ImageService {
-    val controllers = DummyController()
-    var images = mutableMapOf<String, Color>()
+    var images = mutableMapOf<String, Int>()
 
-    //TODO replace with image current implenmentation only usees colors
     init {
-        images = controllers.getImages()
+        images =  mutableMapOf(
+            Pair("crop_wheat", R.drawable.wheat_grown_tile),
+            Pair("crop_null", R.drawable.planter_tile),
+            Pair("empty", R.drawable.empty_tile),
+        )
     }
 
-    fun getImage(tag: String): Color {
-        return images.getOrDefault(tag, Color.Gray)
+    fun getImage(tag: String): Int {
+        return images.getOrDefault(tag, R.drawable.missing_tile)
     }
 }

@@ -66,18 +66,4 @@ class DummyController : Controller() {
             Pair("crop_null", "No crops"),
         )
     }
-
-    override fun getImages(): MutableMap<String, Color> {
-        return mutableMapOf(
-            Pair("crop_wheat", Color(0xFFF8B423)),
-            Pair("crop_flowers", Color(0xFF7F00FF)),
-            Pair("building_cow_shed", Color.Gray),
-            Pair("building_cow_shed_dirty", Color.DarkGray),
-            Pair("crop_corn", Color(0xFFF8B423)),
-            Pair("crop_null", Color(0xFF964B00)),
-            Pair("empty", Color(0xFF3f9b0b)),
-        )
-    }
-
-
 }

@@ -1,8 +1,11 @@
 package hu.bme.aut.szoftarch.farmgame.feature.map
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
 import hu.bme.aut.szoftarch.farmgame.view.ImageService
@@ -25,8 +29,7 @@ fun LandGrid(modifier: Modifier, viewModel: MapViewModel) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(viewModel.getFarm().columns),
         modifier = modifier
-            .height(400.dp)
-            .background(Color(0xFFa5d62c))
+            .background(Color(0xFF2F8136))
     ) {
         items(viewModel.getFarm().lands) { land ->
             LandItem(land, viewModel)
@@ -37,32 +40,31 @@ fun LandGrid(modifier: Modifier, viewModel: MapViewModel) {
 @Composable
 fun LandItem(land: Land, viewModel: MapViewModel) {
     Card(
-        colors = CardColors(
-            containerColor = ImageService.getImage(land.getTag()),
-            contentColor = Color.Black,
-            disabledContentColor = Color.Gray,
-            disabledContainerColor = Color.Gray
-        ),
         modifier = Modifier
-            .padding(2.dp)
             .fillMaxWidth()
-            .border(1.dp, getBorderColor(land.position, viewModel.selectedLand)),
+            .aspectRatio(1f)
+            .border(
+                width = 2.dp,
+                color =getBorderColor(land.position, viewModel.selectedLand),
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(0.dp),
         onClick = {
             viewModel.onLandClicked(land)
         }
     ) {
-        Column(
-            modifier = Modifier.padding(8.dp)
-        ) {
-            Text(text = "id " + land.id)
-            Text(text = land.getName())
-        }
+        Image(
+            painter = painterResource(id = ImageService.getImage(land.getTag())),
+            contentDescription = land.getTag(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f)
+        )
     }
 }
 
 fun getBorderColor(selected: Int, position: Int?): Color {
     return if (selected == position) {
-        Color.Black
+        Color(0xFF004337)
     } else {
         Color.Transparent
     }

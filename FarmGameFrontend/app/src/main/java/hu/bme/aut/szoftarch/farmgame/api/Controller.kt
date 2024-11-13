@@ -53,8 +53,4 @@ open class Controller {
     open fun getDisplayNames(): Map<String, String> {
         TODO("Not yet implemented")
     }
-
-    open fun getImages(): MutableMap<String, Color> {
-        TODO("Not yet implemented")
-    }
 }
