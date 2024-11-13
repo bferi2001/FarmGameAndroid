@@ -16,7 +16,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialException
@@ -33,7 +32,7 @@ import java.util.UUID
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    onToMapDebug: () -> Unit,
+    onToMap: () -> Unit,
 ) {
     //https://www.youtube.com/watch?v=P_jZMDmodG4
     val context = LocalContext.current
@@ -73,7 +72,7 @@ fun LoginScreen(
 
                 Log.i(TAG, googleIdToken)
                 Toast.makeText(context, "You are signed in!", Toast.LENGTH_SHORT).show()
-                onToMapDebug()
+                onToMap()
             }
             catch (e: GetCredentialException) {
                 Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
@@ -117,7 +116,7 @@ fun LoginScreen(
                 Text(text = "Login with Google account")
             }
             Button(
-                onClick = onToMapDebug
+                onClick = onToMap
             ) {
                 Text(text = "open map without login (debug)")
             }

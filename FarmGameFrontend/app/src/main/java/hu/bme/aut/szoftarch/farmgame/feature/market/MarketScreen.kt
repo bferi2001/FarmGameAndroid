@@ -1,4 +1,4 @@
-package hu.bme.aut.szoftarch.farmgame.feature.map
+package hu.bme.aut.szoftarch.farmgame.feature.market
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
@@ -16,18 +16,18 @@ import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import hu.bme.aut.szoftarch.farmgame.feature.map.BottomMenuContent
+import hu.bme.aut.szoftarch.farmgame.feature.map.LandGrid
+import hu.bme.aut.szoftarch.farmgame.feature.map.SideMenuScreen
+import hu.bme.aut.szoftarch.farmgame.feature.map.viewModel
 import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
 
-val playerId = 1 //TODO
-val viewModel = MapViewModel(playerId)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MapScreen(
-    onToLoginScreen: () -> Unit,
-    onToMarketScreen: () -> Unit,
+fun MarketScreen(
+    onToMap: () -> Unit,
 ) {
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -38,33 +38,13 @@ fun MapScreen(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Button(
-                            onClick = onToLoginScreen
+                            onClick = onToMap
                         ) {
-                            Text(text = "Log out")
-                        }
-                        Button(
-                            onClick = onToMarketScreen
-                        ) {
-                            Text(text = "Market")
-                        }
-                        Button(
-                            onClick = { }
-                        ) {
-                            Text(text = "Quests")
+                            Text(text = "Back to Map")
                         }
                     }
                 }
             )
-        },
-        bottomBar = {
-            AnimatedVisibility(visible = viewModel.menuOpen == MenuLocation.BOTTOM) {
-                BottomAppBar(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.primary,
-                ) {
-                    BottomMenuContent(viewModel)
-                }
-            }
         },
     ) { innerPadding ->
         Box(
@@ -72,18 +52,7 @@ fun MapScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                LandGrid(
-                    Modifier
-                        .fillMaxSize(),
-                    viewModel
-                )
-            }
-            SideMenuScreen(viewModel)
+
         }
     }
 }
-
-
-
-
