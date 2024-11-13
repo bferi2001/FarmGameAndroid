@@ -6,18 +6,16 @@ using Microsoft.EntityFrameworkCore;
 namespace FarmGameBackend.Controllers
 {//ToDo Inventory and UserXP management
  //ToDo Fertilising costs animal poop resource
-    [Route("api/[controller]")]
+    [Route("api/[controller]/farm")]
     public class FarmController : Controller
     {
         private readonly FarmApplicationContext _context;
-        private readonly HttpContext _httpContext;
-        private readonly User CurrentUser;
+        private readonly User _currentUser;
         public FarmController(FarmApplicationContext context)
         {
             _context = context;
-            _httpContext = HttpContext;
-            string? UserEmail = _httpContext.Items["Email"]?.ToString();
-            CurrentUser = _context.GetCurrentUser(UserEmail!);
+            string? userEmail = HttpContext.Items["Email"]?.ToString();
+            _currentUser = _context.GetCurrentUser(userEmail!);
             /*CurrentUser = new User
             {
                 Id = 0,
@@ -26,7 +24,7 @@ namespace FarmGameBackend.Controllers
                 UserMoney = 2000
             };*/
         }
-        [HttpGet("farm/plant/{position}/actions")]
+        [HttpGet("plant/{position}/actions")]
         public async Task<ActionResult<IEnumerable<string>>> GetActionsAsync(int position)
         {
             PlantedPlant? plantAtPosition = await GetPlantByPosition(position);
@@ -37,16 +35,16 @@ namespace FarmGameBackend.Controllers
             return GetActions(plantAtPosition);
         }
 
-        [HttpGet("farm/plant/unlocked")]
+        [HttpGet("plant/unlocked")]
         public async Task<ActionResult<IEnumerable<string>>> GetUnlockedCropsAsync()
         {
-            int userXP = CurrentUser.UserXP;
+            int userXP = _currentUser.UserXP;
             return await _context.Products.Where(product => product.UnlockXP <= userXP && product.IsCrop)
                                     .Select(product => product.Name)
                                     .ToListAsync(); 
         }
 
-        [HttpPost("farm/plant/{position}/{typeName}")]
+        [HttpPost("plant/{position}/{typeName}")]
         public async Task<ActionResult<PlantedPlant>> PostPlantedPlant(int position, string typeName)
         {
             if (await GetPlantByPosition(position) != null)
@@ -69,7 +67,7 @@ namespace FarmGameBackend.Controllers
             return CreatedAtAction("GetPlantedPlant", new { id = newPlant.Id }, newPlant);
         }
 
-        [HttpPut("farm/watering/{position}")]
+        [HttpPut("watering/{position:int}")]
         public async Task<IActionResult> PutWatering(int position)
         {
             PlantedPlant? plantAtPosition = await GetPlantByPosition(position);
@@ -89,7 +87,7 @@ namespace FarmGameBackend.Controllers
             }
             return await UpdatePlantedPlantDatabase(plantAtPosition);
         }
-        [HttpPut("farm/weeding/{position}")]
+        [HttpPut("weeding/{position:int}")]
         public async Task<IActionResult> PutWeeding(int position)
         {
             PlantedPlant? plantAtPosition = await GetPlantByPosition(position);
@@ -110,7 +108,7 @@ namespace FarmGameBackend.Controllers
             return await UpdatePlantedPlantDatabase(plantAtPosition);
         }
 
-        [HttpPut("farm/fertilising/{position}")]
+        [HttpPut("fertilising/{position:int}")]
         public async Task<IActionResult> PutFertilising(int position)
         {
             PlantedPlant? plantAtPosition = await GetPlantByPosition(position);
@@ -131,7 +129,7 @@ namespace FarmGameBackend.Controllers
             return await UpdatePlantedPlantDatabase(plantAtPosition);
         }
 
-        [HttpDelete("farm/harvest/{position}")]
+        [HttpDelete("harvest/{position:int}")]
         public async Task<IActionResult> HarvestPlantedPlant(int position)
         {
             PlantedPlant? plantAtPosition = await GetPlantByPosition(position);
@@ -160,7 +158,7 @@ namespace FarmGameBackend.Controllers
                 UserProduct product = new UserProduct
                 {
                     ProductName = productName,
-                    UserName = CurrentUser.Email,
+                    UserName = _currentUser.Email,
                     Quantity = quantity
                 };
                 return await PostUserProduct(product);
@@ -174,7 +172,7 @@ namespace FarmGameBackend.Controllers
 
         private async Task<UserProduct?> GetUserProduct(string productName)
         {
-            var userProduct =  await _context.UserProduct.Where(userProduct => userProduct.UserName == CurrentUser.Email && userProduct.ProductName == productName).FirstOrDefaultAsync();
+            var userProduct =  await _context.UserProduct.Where(userProduct => userProduct.UserName == _currentUser.Email && userProduct.ProductName == productName).FirstOrDefaultAsync();
             if(userProduct == null)
             {
                 return null;
@@ -282,7 +280,7 @@ namespace FarmGameBackend.Controllers
         }
         private List<string> GetUnlockedCrops()
         {
-            int userXP = CurrentUser.UserXP;
+            int userXP = _currentUser.UserXP;
             return _context.Products.Where(product => product.UnlockXP <= userXP && product.IsCrop)
                                     .Select(product => product.Name)
                                     .ToList();
@@ -296,7 +294,7 @@ namespace FarmGameBackend.Controllers
         {
             try
             {
-                return await _context.PlantedPlants.Where(plant => plant.Position == position && plant.UserName == CurrentUser.Email).FirstAsync();
+                return await _context.PlantedPlants.Where(plant => plant.Position == position && plant.UserName == _currentUser.Email).FirstAsync();
             }catch (Exception ex)
             {
                 return null;
@@ -306,11 +304,11 @@ namespace FarmGameBackend.Controllers
 
         private PlantedPlant CreatePlantedPlant(string _cropsTypeName, int _position, int _growTime)
         {
-            Random r = new Random();
+            var r = new Random();
             DateTimeOffset currentTime = DateTimeOffset.Now;
             return new PlantedPlant
             {
-                UserName = CurrentUser.Email,
+                UserName = _currentUser.Email,
                 CropsTypeName = _cropsTypeName,
                 Position = _position,
                 PlantTime = currentTime,
