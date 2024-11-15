@@ -1,11 +1,16 @@
 using DotNetEnv;
 using FarmGameBackend;
 using FarmGameBackend.DbContexts;
+using FarmGameBackend.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 Env.Load();
 bool useAuth = Environment.GetEnvironmentVariable("USE_AUTH") != "false";
+
+#if !DEBUG
+useAuth = false;
+#endif
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,6 +64,10 @@ if (useAuth)
 {
     // Middleware for Google authentication
     app.UseMiddleware<GoogleAuthMiddleware>();
+}
+else
+{
+    app.UseMiddleware<DebugWithConstantUserMiddleware>();
 }
 
 app.UseHttpsRedirection();

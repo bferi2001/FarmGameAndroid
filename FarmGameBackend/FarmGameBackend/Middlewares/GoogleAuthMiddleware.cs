@@ -1,8 +1,6 @@
 ﻿using Google.Apis.Auth;
-using Google.Apis.Auth.OAuth2;
-using Google.Apis.Util.Store;
 
-namespace FarmGameBackend;
+namespace FarmGameBackend.Middlewares;
 
 public class GoogleAuthMiddleware(RequestDelegate next)
 {
