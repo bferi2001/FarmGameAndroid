@@ -5,10 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 Env.Load();
+bool useAuth = Environment.GetEnvironmentVariable("USE_AUTH") != "false";
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connection = String.Empty;
+string? connection;
 if (builder.Environment.IsDevelopment())
 {
     builder.Configuration.AddEnvironmentVariables().AddJsonFile("appsettings.Development.json");
@@ -23,20 +24,22 @@ builder.Services.AddDbContext<FarmApplicationContext>(options =>
     options.UseSqlServer(connection));
 builder.Services.AddControllers();
 
-// Add authentication to swagger UI
-builder.Services.AddSwaggerGen(opt =>
+if (useAuth)
 {
-    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "My Api", Version = "v1" });
-    opt.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
+    // Add authentication to swagger UI
+    builder.Services.AddSwaggerGen(opt =>
     {
-        Type = SecuritySchemeType.Http,
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Scheme = "bearer"
+        opt.SwaggerDoc("v1", new OpenApiInfo { Title = "My Api", Version = "v1" });
+        opt.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
+        {
+            Type = SecuritySchemeType.Http,
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Scheme = "bearer"
+        });
+        opt.OperationFilter<AuthenticationRequirementsOperationFilter>();
     });
-    opt.OperationFilter<AuthenticationRequirementsOperationFilter>();
-});
-
+}
 
 
 // Add services to the container.
@@ -52,8 +55,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Middleware for Google authentication
-app.UseMiddleware<GoogleAuthMiddleware>();
+if (useAuth)
+{
+    // Middleware for Google authentication
+    app.UseMiddleware<GoogleAuthMiddleware>();
+}
 
 app.UseHttpsRedirection();
 
