@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore;
 namespace FarmGameBackend.Controllers
 {//ToDo Inventory and UserXP management
  //ToDo Fertilising costs animal poop resource
-    [Route("api/[controller]/farm")]
-    public class FarmController : Controller
+    [Route("api/farm/plant")]
+    public class PlantController : Controller
     {
         private readonly FarmApplicationContext _context;
         private readonly User _currentUser;
-        public FarmController(FarmApplicationContext context)
+        public PlantController(FarmApplicationContext context)
         {
             _context = context;
             string? userEmail = HttpContext.Items["Email"]?.ToString();
@@ -24,7 +24,7 @@ namespace FarmGameBackend.Controllers
                 UserMoney = 2000
             };*/
         }
-        [HttpGet("plant/{position}/actions")]
+        [HttpGet("{position}/actions")]
         public async Task<ActionResult<IEnumerable<string>>> GetActionsAsync(int position)
         {
             PlantedPlant? plantAtPosition = await GetPlantByPosition(position);
@@ -35,7 +35,7 @@ namespace FarmGameBackend.Controllers
             return GetActions(plantAtPosition);
         }
 
-        [HttpGet("plant/unlocked")]
+        [HttpGet("unlocked")]
         public async Task<ActionResult<IEnumerable<string>>> GetUnlockedCropsAsync()
         {
             int userXP = _currentUser.UserXP;
@@ -44,7 +44,7 @@ namespace FarmGameBackend.Controllers
                                     .ToListAsync(); 
         }
 
-        [HttpPost("plant/{position}/{typeName}")]
+        [HttpPost("{position}/{typeName}")]
         public async Task<ActionResult<PlantedPlant>> PostPlantedPlant(int position, string typeName)
         {
             if (await GetPlantByPosition(position) != null)
@@ -67,7 +67,7 @@ namespace FarmGameBackend.Controllers
             return CreatedAtAction("GetPlantedPlant", new { id = newPlant.Id }, newPlant);
         }
 
-        [HttpPut("watering/{position:int}")]
+        [HttpPut("{position:int}/watering")]
         public async Task<IActionResult> PutWatering(int position)
         {
             PlantedPlant? plantAtPosition = await GetPlantByPosition(position);
@@ -87,7 +87,7 @@ namespace FarmGameBackend.Controllers
             }
             return await UpdatePlantedPlantDatabase(plantAtPosition);
         }
-        [HttpPut("weeding/{position:int}")]
+        [HttpPut("{position:int}/weeding")]
         public async Task<IActionResult> PutWeeding(int position)
         {
             PlantedPlant? plantAtPosition = await GetPlantByPosition(position);
@@ -108,7 +108,7 @@ namespace FarmGameBackend.Controllers
             return await UpdatePlantedPlantDatabase(plantAtPosition);
         }
 
-        [HttpPut("fertilising/{position:int}")]
+        [HttpPut("{position:int}/fertilising")]
         public async Task<IActionResult> PutFertilising(int position)
         {
             PlantedPlant? plantAtPosition = await GetPlantByPosition(position);
@@ -129,7 +129,7 @@ namespace FarmGameBackend.Controllers
             return await UpdatePlantedPlantDatabase(plantAtPosition);
         }
 
-        [HttpDelete("harvest/{position:int}")]
+        [HttpDelete("{position:int}/harvest")]
         public async Task<IActionResult> HarvestPlantedPlant(int position)
         {
             PlantedPlant? plantAtPosition = await GetPlantByPosition(position);
