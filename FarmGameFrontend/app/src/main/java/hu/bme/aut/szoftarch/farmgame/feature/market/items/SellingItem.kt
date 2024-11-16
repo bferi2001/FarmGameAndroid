@@ -1,5 +1,6 @@
 package hu.bme.aut.szoftarch.farmgame.feature.market.items
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +20,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -31,7 +33,9 @@ import hu.bme.aut.szoftarch.farmgame.ui.theme.FarmGameAndroidTheme
 
 
 @Composable
-fun SellingItem(title: String, price: Int, count: Int) {
+fun SellingItem(item: String, price: Int, count: Int,
+                onInputValueChanged: (Int) -> Unit) {
+    var inputValue by remember { mutableStateOf(0) }
     /*Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -46,7 +50,7 @@ fun SellingItem(title: String, price: Int, count: Int) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
-                Text(text = title, fontWeight = FontWeight.Bold)
+                Text(text = item, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(text = "Price: $price")
                 Text(text = "Count: $count")
@@ -64,10 +68,13 @@ fun SellingItem(title: String, price: Int, count: Int) {
                 TextField(
                     value = inputValue.toString(),
                     onValueChange = { newValue ->
-                        inputValue = newValue.toIntOrNull() ?: 0
+                        //inputValue = newValue.toIntOrNull() ?: 0
+
+                        inputValue = newValue.toIntOrNull()?.coerceIn(0, count) ?: 0
+                        onInputValueChanged(inputValue * price) // Notify the parent about the change
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.width(70.dp) // Set a specific width for the TextField
+                    modifier = Modifier.width(70.dp), // Set a specific width for the TextField
                 )
                 IconButton(
                     onClick = { inputValue = (inputValue + 1).coerceAtMost(count) },
@@ -87,6 +94,6 @@ fun SellingItem(title: String, price: Int, count: Int) {
 @Composable
 fun SellingItemPreview() {
     FarmGameAndroidTheme{
-        SellingItem("Item", 1000, 10)
+        SellingItem("Item", 1000, 10) {}
     }
 }
