@@ -26,6 +26,7 @@ val viewModel = MapViewModel(playerId)
 fun MapScreen(
     onToLoginScreen: () -> Unit,
     onToMarketScreen: () -> Unit,
+    onToQuestsScreen: () -> Unit,
 ) {
 
     Scaffold(
@@ -48,7 +49,7 @@ fun MapScreen(
                             Text(text = "Market")
                         }
                         Button(
-                            onClick = { }
+                            onClick = onToQuestsScreen
                         ) {
                             Text(text = "Quests")
                         }
