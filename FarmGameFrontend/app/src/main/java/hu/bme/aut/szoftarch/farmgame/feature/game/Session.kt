@@ -13,7 +13,11 @@ class Session(
     //These could be used to cache stuff or to check availability with player level
     val buildings: MutableSet<String> = controller.getPossibleBuildings(playerId).toMutableSet()
     val crops: MutableSet<String> = controller.getPossibleCrops(playerId).toMutableSet()
-    val farm: Farm = controller.getFarm(playerId)
+
+    lateinit var farm: Farm
+    suspend fun initialize() {
+       farm = controller.getFarm(playerId)
+    }
 
     fun registerBuilding(building: String) {
         buildings.add(building)

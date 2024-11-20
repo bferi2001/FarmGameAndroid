@@ -13,10 +13,6 @@ class DummyController : Controller() {
         return Player(id, mutableMapOf(), 0, 0)
     }
 
-    override fun getFarmSize(id: Int): Pair<Int, Int> {
-        return Pair(10, 10)
-    }
-
     override fun getLands(id: Int): List<Land> {
         //Dummy starter lands
         val flowers = Planter(66)
@@ -38,18 +34,6 @@ class DummyController : Controller() {
 
     override fun getPossibleCrops(id: Int): List<String> {
         return listOf("crop_flowers", "crop_wheat", "crop_corn")
-    }
-
-    override fun getInteractions(land: Land): List<String> {
-        /*  Decide on backend
-            Example for new behaviour:
-            -Check whether an extra action is available or not
-            -Check whether player unlocked the land or not
-        */
-        if (land.content != null) {
-            return land.content!!.getInteractions()
-        }
-        return listOf("action_build", "action_plough")
     }
 
     override fun interact(land: Land, interaction: String, params: List<String>): Boolean {

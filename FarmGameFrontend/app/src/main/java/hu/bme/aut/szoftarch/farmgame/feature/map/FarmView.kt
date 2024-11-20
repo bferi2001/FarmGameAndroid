@@ -24,10 +24,12 @@ import androidx.compose.ui.unit.dp
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
 import hu.bme.aut.szoftarch.farmgame.view.ImageService
 
+const val FARM_GRID_COLUMN_COUNT = 10
+
 @Composable
 fun LandGrid(modifier: Modifier, viewModel: MapViewModel) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(viewModel.getFarm().columns),
+        columns = GridCells.Fixed(FARM_GRID_COLUMN_COUNT),
         modifier = modifier
             .background(Color(0xFF2F8136))
     ) {
@@ -72,7 +74,7 @@ fun getBorderColor(selected: Int, position: Int?): Color {
 
 @Composable
 fun CreateInteractButtons(viewModel: MapViewModel) {
-    if (viewModel.selectedLand < 1) return Text(text = "invalid selection")
+    if (viewModel.selectedLand < 0) return Text(text = "invalid selection")
 
     viewModel.getInteractions().forEach { interaction ->
         Button(
