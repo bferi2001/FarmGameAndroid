@@ -16,13 +16,7 @@ namespace FarmGameBackend.Controllers
             _context = context;
             //string? userEmail = HttpContext.Items["Email"]?.ToString();
             //_currentUser = _context.GetCurrentUser(userEmail!);
-            _currentUser = new User
-            {
-                Id = 0,
-                Email = "testemail@gmail.com",
-                UserXP = 2000,
-                UserMoney = 2000
-            };
+            _currentUser = _context.GetCurrentUser("testemail@gmail.com");
         }
         [HttpGet("{position}/actions")]
         public async Task<ActionResult<IEnumerable<string>>> GetActionsAsync(int position)
@@ -49,7 +43,8 @@ namespace FarmGameBackend.Controllers
             {
                 return Conflict("The field is not empty");
             }
-            Product? productType = await _context.ProductHelper.GetUnlockedCropByName(typeName);
+            string productName = await _context.BarnTypeHelper.GetProductnameByBarntype(typeName);
+            Product? productType = await _context.ProductHelper.GetUnlockedProductByName(productName);
             if (productType == null)
             {
                 return NotFound();
@@ -83,6 +78,10 @@ namespace FarmGameBackend.Controllers
                 barnAtPosition.CleaningTime = null;
                 //ToDo
             }
+            else
+            {
+                return BadRequest("You have to wait...");
+            }
             try
             {
                 await _context.BarnHelper.UpdateBarnDatabase(barnAtPosition);
@@ -111,6 +110,10 @@ namespace FarmGameBackend.Controllers
                 barnAtPosition.FeedingTime = null;
                 //ToDo
             }
+            else
+            {
+                return BadRequest("You have to wait...");
+            }
             try
             {
                 await _context.BarnHelper.UpdateBarnDatabase(barnAtPosition);
@@ -138,7 +141,7 @@ namespace FarmGameBackend.Controllers
             
             try
             {
-                var barnProductName = await _context.BarnHelper.GetProductnameByBarntype(barnAtPosition.TypeName);
+                var barnProductName = await _context.BarnTypeHelper.GetProductnameByBarntype(barnAtPosition.TypeName);
                 var barnProduct = await _context.ProductHelper.GetProductByName(barnProductName);
                 var updatedBarn = _context.BarnHelper.UpdateBarn(barnAtPosition, barnProduct.ProductionTimeAsSeconds);
                 await _context.BarnHelper.UpdateBarnDatabase(updatedBarn);

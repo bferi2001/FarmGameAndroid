@@ -24,6 +24,10 @@ namespace FarmGameBackend.DbContexts
         public FarmApplicationContext(DbContextOptions<FarmApplicationContext> options)
             : base(options)
         {
+            ProductHelper = new ProductHelper(this);
+            PlantHelper = new PlantHelper(this);
+            BarnHelper = new BarnHelper(this);
+            BarnTypeHelper = new BarnTypeHelper(this);
         }
         public DbSet<Barn> Barns { get; set; }
         public DbSet<BarnType> BarnTypes { get; set; }

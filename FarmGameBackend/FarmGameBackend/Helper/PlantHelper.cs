@@ -15,13 +15,7 @@ namespace FarmGameBackend.Helper
             _context = context;
             //string? userEmail = HttpContext.Items["Email"]?.ToString();
             //_currentUser = _context.GetCurrentUser(userEmail!);
-            _currentUser = new User
-            {
-                Id = 0,
-                Email = "testemail@gmail.com",
-                UserXP = 2000,
-                UserMoney = 2000
-            };
+            _currentUser = _context.GetCurrentUser("testemail@gmail.com");
         }
 
         public List<string> GetUnlockedCropsNames()

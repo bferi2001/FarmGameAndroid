@@ -17,13 +17,7 @@ namespace FarmGameBackend.Controllers
             _context = context;
             //string? userEmail = HttpContext.Items["Email"]?.ToString();
             //_currentUser = _context.GetCurrentUser(userEmail!);
-            _currentUser = new User
-            {
-                Id = 0,
-                Email = "testemail@gmail.com",
-                UserXP = 2000,
-                UserMoney = 2000
-            };
+            _currentUser = _context.GetCurrentUser("testemail@gmail.com");
         }
         [HttpGet("{position}/actions")]
         public async Task<ActionResult<IEnumerable<string>>> GetActionsAsync(int position)

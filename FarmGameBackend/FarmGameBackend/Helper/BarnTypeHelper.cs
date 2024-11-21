@@ -15,13 +15,7 @@ namespace FarmGameBackend.Helper
             _context = context;
             //string? userEmail = HttpContext.Items["Email"]?.ToString();
             //_currentUser = _context.GetCurrentUser(userEmail!);
-            _currentUser = new User
-            {
-                Id = 0,
-                Email = "testemail@gmail.com",
-                UserXP = 2000,
-                UserMoney = 2000
-            };
+            _currentUser = _context.GetCurrentUser("testemail@gmail.com");
         }
         public async Task<List<BarnType>> GetBarnTypes()
         {
@@ -98,6 +92,15 @@ namespace FarmGameBackend.Helper
         private bool BarnTypeExists(int id)
         {
             return _context.BarnTypes.Any(e => e.Id == id);
+        }
+        public async Task<string> GetProductnameByBarntype(string barntype)
+        {
+            var product = await _context.BarnTypes.Where(bt => bt.Name == barntype).Select(bt => bt.ProductName).FirstOrDefaultAsync();
+            if (product == null)
+            {
+                throw new NotFoundException("This barntype does not exists.");
+            }
+            return product;
         }
     }
 }
