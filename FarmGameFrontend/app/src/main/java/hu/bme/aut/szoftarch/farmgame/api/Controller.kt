@@ -61,6 +61,21 @@ open class Controller(val token: String) {
         return size
     }
 
+    fun getDisplayNames(): Map<String, String> {
+        return mapOf(
+            Pair("crop_wheat", "Wheat"),
+            Pair("crop_flowers", "Flowers"),
+            Pair("building_cow_shed", "Cow Shed"),
+            Pair("crop_corn", "Corn"),
+            Pair("crop_null", "No crops"),
+            Pair("empty", "Empty"),
+            Pair("action_build", "Build"),
+            Pair("action_build:building_cow_shed", "Cow Shed"),
+            Pair("action_build:building_sheep_pen", "Sheep Pen"),
+            Pair("action_plough", "Plough"),
+        )
+    }
+
     open suspend fun getLands(size: Int): List<Land> {
         var res = get("api/farm/Barn/barns", token)
         var json = res.bodyAsText()
@@ -71,6 +86,7 @@ open class Controller(val token: String) {
         val plants = gson.fromJson(json, Array<PlantedPlantDao>::class.java)
 
         var lands = mutableListOf<Land>()
+        val displayNames = getDisplayNames()
 
         for(barn in barns){
             val content = Building(
@@ -88,6 +104,12 @@ open class Controller(val token: String) {
             val content = Planter(
                 id = plant.id,
             )
+            val crop = Crop(
+                name = displayNames[plant.cropsTypeName].toString(),
+                tag = plant.cropsTypeName
+            )
+            content.content = crop
+
             val plantable = Land(
                 id = plant.id,
                 position = plant.position,
@@ -96,22 +118,34 @@ open class Controller(val token: String) {
             lands.add(plantable)
         }
 
-        lands.sortBy { it.position }
-
+        var i = 0
         while (lands.size < size){
-            lands.add(Land(
-                id = -1,
-                position = lands.size,
-                content = null
-            ))
+            if(!hasLandOnPosition(i, lands)){
+                lands.add(Land(
+                    id = -1,
+                    position = i,
+                    content = null
+                ))
+            }
+            i++
         }
+        lands.sortBy { it.position }
         return lands
+    }
+    private fun hasLandOnPosition(position: Int, lands: List<Land>): Boolean {
+        for (land in lands) {
+            if (land.position == position) {
+                return true
+            }
+        }
+        return false
     }
 
     suspend fun getFarm(): Farm {
         val size = getFarmSize()
         val farm = Farm(size)
-        for (land in getLands(size)) {
+        val lands = getLands(size)
+        for (land in lands) {
             farm.addLand(land)
         }
         return farm
@@ -141,22 +175,18 @@ open class Controller(val token: String) {
         val position = land.position
         if(land.content is Building)
         {
-            val res = post("api/farm/plant/$position/$interaction", token)
+            val res = post("api/farm/barn/$position/$interaction", token)
             return res.status.value == 200
         }
         else if(land.content is Planter)
         {
-            val res = post("api/farm/barn/$position/$interaction", token)
-            return res.status.value == 200
+            val res = post("api/farm/plant/$position/$interaction", token)
+            if(res.status.value != 200){
+                return false
+            }
         }
-        else
-        {
-            return land.interact(interaction, params)
-        }
-    }
 
-    open fun getDisplayNames(): Map<String, String> {
-        TODO("Not yet implemented")
+        return land.interact(interaction, params)
     }
 
     open suspend fun getQuests(): List<Quest>{

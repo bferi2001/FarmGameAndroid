@@ -22,21 +22,6 @@ class DummyController(token: String) : Controller(token) {
         return listOf( "action_plough","action_build:building_cow_shed", "action_build:building_sheep_pen",)
     }
 
-    override fun getDisplayNames(): Map<String, String> {
-        return mapOf(
-            Pair("crop_wheat", "Wheat"),
-            Pair("crop_flowers", "Flowers"),
-            Pair("building_cow_shed", "Cow Shed"),
-            Pair("crop_corn", "Corn"),
-            Pair("crop_null", "No crops"),
-            Pair("empty", "Empty"),
-            Pair("action_build", "Build"),
-            Pair("action_build:building_cow_shed", "Cow Shed"),
-            Pair("action_build:building_sheep_pen", "Sheep Pen"),
-            Pair("action_plough", "Plough"),
-        )
-    }
-
     private var quests =mutableListOf(
     Quest(5, "Quest 1", "click a few times"),
     Quest(10, "Quest 2", "click some mmmmmore"),
