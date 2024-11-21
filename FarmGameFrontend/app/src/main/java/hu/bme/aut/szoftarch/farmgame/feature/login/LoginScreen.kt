@@ -24,7 +24,6 @@ import com.example.compose.AppTheme
 import com.example.compose.earthTone
 import com.example.compose.woodColor
 import com.example.compose.woodLight
-import hu.bme.aut.szoftarch.farmgame.feature.market.createad.CreateAdScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
