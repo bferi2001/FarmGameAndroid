@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -104,7 +105,7 @@ fun CreateInteractButtons(viewModel: MapViewModel) {
                 )
             })
         {
-            Text(text = NameService.getDisplayName(interaction.split(":")[1]))
+            Text(text = NameService.getDisplayName(interaction.split(":").getOrNull(1) ?: interaction))
         }
     }
 }
