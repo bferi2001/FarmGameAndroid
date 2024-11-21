@@ -11,7 +11,7 @@ class Session(
     val buildings: MutableSet<String> = controller.getPossibleBuildings().toMutableSet()
     val crops: MutableSet<String> = controller.getPossibleCrops().toMutableSet()
 
-    lateinit var farm: Farm
+    var farm: Farm? = null
     suspend fun initialize(token: String) {
        farm = controller.getFarm(token)
     }

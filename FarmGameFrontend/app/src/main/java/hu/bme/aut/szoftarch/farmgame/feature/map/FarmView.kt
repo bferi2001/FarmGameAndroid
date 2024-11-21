@@ -21,9 +21,6 @@ import hu.bme.aut.szoftarch.farmgame.R
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
 import hu.bme.aut.szoftarch.farmgame.view.ImageService
 import hu.bme.aut.szoftarch.farmgame.view.NameService
-import java.time.LocalDate
-import java.time.temporal.ChronoUnit
-import kotlin.text.toFloat
 
 const val FARM_GRID_COLUMN_COUNT = 10
 
@@ -34,7 +31,7 @@ fun LandGrid(modifier: Modifier, viewModel: MapViewModel) {
         modifier = modifier
             .background(Color(0xFF2F8136))
     ) {
-        items(viewModel.getFarm().lands) { land ->
+        items(viewModel.getFarm()?.lands ?: emptyList<Land>()) { land ->
             LandItem(land, viewModel)
         }
     }
