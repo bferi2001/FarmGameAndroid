@@ -1,9 +1,10 @@
 package hu.bme.aut.szoftarch.farmgame.view
 
 import hu.bme.aut.szoftarch.farmgame.api.DummyController
+import hu.bme.aut.szoftarch.farmgame.api.LoginHandler
 
 object NameService {
-    val controllers = DummyController()
+    val controllers = DummyController(LoginHandler.token!!)
 
     var displayNames: Map<String, String>
 

@@ -26,7 +26,7 @@ class MapViewModel @Inject constructor() : ViewModel() {
         private set
 
     //TODO replace DummyController
-    private val session = Session(DummyController())
+    lateinit var session: Session
 
     sealed class InitState{
         object Loading: InitState()
@@ -39,7 +39,8 @@ class MapViewModel @Inject constructor() : ViewModel() {
     init {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                session.initialize(LoginHandler.token!!)
+                session = Session(DummyController(LoginHandler.token!!))
+                session.initialize()
                 val farm = session.farm
                 if(farm == null)
                 {

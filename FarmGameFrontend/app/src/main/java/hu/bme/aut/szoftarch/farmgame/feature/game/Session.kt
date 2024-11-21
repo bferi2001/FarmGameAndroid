@@ -12,8 +12,8 @@ class Session(
     val crops: MutableSet<String> = controller.getPossibleCrops().toMutableSet()
 
     var farm: Farm? = null
-    suspend fun initialize(token: String) {
-       farm = controller.getFarm(token)
+    suspend fun initialize() {
+       farm = controller.getFarm()
     }
 
     fun registerBuilding(building: String) {

@@ -21,12 +21,12 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.serialization.gson.gson
 
-const val BACKEND_URL = "http://152.66.152.18:5153/"
+const val BACKEND_URL = "http://192.168.68.71:5153/"
 
 fun <T> Gson.fromJsonList(jsonString: String): List<T> =
     this.fromJson(jsonString, object: TypeToken<ArrayList<T>>() { }.type)
 
-open class Controller(token: String) {
+open class Controller(val token: String) {
     var client = HttpClient(){
         defaultRequest {
             url(BACKEND_URL)
@@ -51,13 +51,13 @@ open class Controller(token: String) {
         TODO("Not yet implemented")
     }
 
-    open suspend fun getFarmSize(token: String): Int {
+    open suspend fun getFarmSize(): Int {
         val res = get("api/farm/size", token)
         val size = res.body<Int>()
         return size
     }
 
-    open suspend fun getLands(token: String, size: Int): List<Land> {
+    open suspend fun getLands(size: Int): List<Land> {
         var res = get("api/farm/Barn/barns", token)
         var json = res.bodyAsText()
         val gson = Gson()
@@ -105,10 +105,10 @@ open class Controller(token: String) {
         return lands
     }
 
-    suspend fun getFarm(token: String): Farm {
-        val size = getFarmSize(token)
+    suspend fun getFarm(): Farm {
+        val size = getFarmSize()
         val farm = Farm(size)
-        for (land in getLands(token, size)) {
+        for (land in getLands(size)) {
             farm.addLand(land)
         }
         return farm
@@ -123,7 +123,7 @@ open class Controller(token: String) {
     }
 
     open fun getPossibleCrops(): List<String> {
-        TODO("Not yet implemented")
+        TODO()
     }
 
     open fun getInteractions(land: Land): List<String> {

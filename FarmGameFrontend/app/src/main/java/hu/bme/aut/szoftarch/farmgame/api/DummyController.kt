@@ -4,7 +4,7 @@ import hu.bme.aut.szoftarch.farmgame.feature.game.Player
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
 import hu.bme.aut.szoftarch.farmgame.feature.quests.Quest
 
-class DummyController : Controller("") {
+class DummyController(token: String) : Controller(token) {
 
     override fun getPlayer(): Player {
         return Player(0, mutableMapOf(), 0, 0)
