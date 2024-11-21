@@ -38,7 +38,6 @@ import hu.bme.aut.szoftarch.farmgame.ui.theme.FarmGameAndroidTheme
 fun SellingItem(item: String, price: Int, count: Int,
                 onInputValueChanged: (Int) -> Unit) {
     var inputValue by remember { mutableStateOf(0) }
-    val context = LocalContext.current
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -54,12 +53,11 @@ fun SellingItem(item: String, price: Int, count: Int,
             }
 
             // Input field with + and - buttons
-            var inputValue by remember { mutableIntStateOf(0) }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(
                     onClick = {
-                        onInputValueChanged(inputValue * price * -1)
                         inputValue = (inputValue - 1).coerceAtLeast(0)
+                        onInputValueChanged(inputValue)
                         },
                     modifier = Modifier.weight(1f)
                 ) {
@@ -75,9 +73,8 @@ fun SellingItem(item: String, price: Int, count: Int,
                 )
                 IconButton(
                     onClick = {
-                        if (inputValue < count)
-                            onInputValueChanged(inputValue * price)
                         inputValue = (inputValue + 1).coerceAtMost(count)
+                        onInputValueChanged(inputValue)
                         },
                     modifier = Modifier.weight(1f)
                 ) {
