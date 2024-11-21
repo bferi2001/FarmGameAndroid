@@ -13,7 +13,7 @@ class MarketViewModel() : ViewModel() {
         SellingItemData("EmptyTest", 0, 0),
     )
 
-    val adItems = listOf(
+    val adItems = mutableListOf(
         AdItemData("Wheat", 5, 20, "TestUser1"),
         AdItemData("Corn", 10, 30, "test_user_2"),
         AdItemData("Wheat", 15, 20, "test_user_2"),

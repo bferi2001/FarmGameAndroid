@@ -3,6 +3,7 @@ package hu.bme.aut.szoftarch.farmgame.feature.market
 
 import android.widget.Toast
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -73,6 +74,7 @@ fun MarketScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .clickable(enabled = false, onClick = {})
         ) {
 
             Row {
@@ -96,13 +98,15 @@ fun MarketScreen(
                         }
                     }
                     LazyColumn {
-                         items(viewModel.adItems.size) { i ->
+                        items(viewModel.adItems.size) { i ->
                             AdItem(
                                 item = viewModel.adItems[i].item,
                                 price = viewModel.adItems[i].price,
                                 count = viewModel.adItems[i].count,
                                 userName = viewModel.adItems[i].seller,
                             ) {
+                                //viewModel.adItems.removeAt(i)
+
                                 Toast.makeText(context, "Buying ad item...", Toast.LENGTH_SHORT).show()
                             }
                         }
