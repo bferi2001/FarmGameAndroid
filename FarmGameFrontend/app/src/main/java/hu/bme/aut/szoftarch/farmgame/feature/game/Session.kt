@@ -35,6 +35,13 @@ class Session(
     }
 
     fun getInteractions(land: Land): List<String> {
-        return controller.getInteractions(land)
+        if (land.content != null) {
+            return land.content!!.getInteractions()
+        }
+        val possibleBuildings = getPossibleBuildings()
+        val buildingActions = possibleBuildings.map {
+            "action_build:$it"
+        }
+        return listOf( "action_plough").plus(buildingActions)
     }
 }

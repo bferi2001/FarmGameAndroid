@@ -77,7 +77,8 @@ open class Controller(val token: String) {
             Pair("empty", "Empty"),
             Pair("action_build", "Build"),
             Pair("action_build:building_cow", "Cow Shed"),
-            Pair("action_build:building_sheep_pen", "Sheep Pen"),
+            Pair("action_build:building_chicken", "Chicken Shed"),
+            Pair("action_build:building_pig", "Pig Shed"),
             Pair("action_plough", "Plough"),
         )
     }
@@ -172,10 +173,6 @@ open class Controller(val token: String) {
         val res = get("api/farm/plant/unlocked")
         val crops = res.body<Array<String>>()
         return crops.toList()
-    }
-
-    open fun getInteractions(land: Land): List<String> {
-        TODO("Not yet implemented")
     }
 
     private suspend fun upgradeBuilding(land: Land): Boolean {
