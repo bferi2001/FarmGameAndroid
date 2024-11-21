@@ -71,12 +71,12 @@ open class Controller(val token: String) {
         return mapOf(
             Pair("crop_wheat", "Wheat"),
             Pair("crop_flowers", "Flowers"),
-            Pair("building_cow_shed", "Cow Shed"),
+            Pair("building_cow", "Cow Shed"),
             Pair("crop_corn", "Corn"),
             Pair("crop_null", "No crops"),
             Pair("empty", "Empty"),
             Pair("action_build", "Build"),
-            Pair("action_build:building_cow_shed", "Cow Shed"),
+            Pair("action_build:building_cow", "Cow Shed"),
             Pair("action_build:building_sheep_pen", "Sheep Pen"),
             Pair("action_plough", "Plough"),
         )
@@ -206,6 +206,13 @@ open class Controller(val token: String) {
             val position = land.position
             val res = post("api/farm/plant/$position/$interaction")
             if(res.status.value != 200){
+                return false
+            }
+        }
+        else if(interaction == "action_build")
+        {
+            val res = buildBuilding(land, params[1])
+            if(!res){
                 return false
             }
         }

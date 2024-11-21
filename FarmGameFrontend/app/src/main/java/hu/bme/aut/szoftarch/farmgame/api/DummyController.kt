@@ -19,7 +19,7 @@ class DummyController(token: String) : Controller(token) {
         if (land.content != null) {
             return land.content!!.getInteractions()
         }
-        return listOf( "action_plough","action_build:building_cow_shed", "action_build:building_sheep_pen",)
+        return listOf( "action_plough","action_build:building_cow", "action_build:building_sheep_pen",)
     }
 
     private var quests =mutableListOf(
