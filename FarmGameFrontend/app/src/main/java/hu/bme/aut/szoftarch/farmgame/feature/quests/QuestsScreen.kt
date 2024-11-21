@@ -29,6 +29,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.compose.earthTone
+import com.example.compose.woodLight
 
 val viewModel = QuestViewModel()
 
@@ -42,8 +44,9 @@ fun QuestsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
+                modifier = Modifier.border(4.dp, earthTone),
                 colors = topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    containerColor = woodLight,
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {

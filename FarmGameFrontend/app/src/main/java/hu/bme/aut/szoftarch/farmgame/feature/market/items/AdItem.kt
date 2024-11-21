@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import hu.bme.aut.szoftarch.farmgame.ui.theme.FarmGameAndroidTheme
+import com.example.compose.AppTheme
 
 @Composable
 fun AdItem(item: String, count: Int, price: Int, userName: String) {
@@ -45,7 +45,7 @@ fun AdItem(item: String, count: Int, price: Int, userName: String) {
 @Preview(showBackground = true)
 @Composable
 fun AdItemPreview() {
-    FarmGameAndroidTheme{
+    AppTheme{
         AdItem("Item", 10, 1000, "User")
     }
 }

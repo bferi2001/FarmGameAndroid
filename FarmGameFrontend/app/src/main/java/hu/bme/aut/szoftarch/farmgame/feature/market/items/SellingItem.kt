@@ -19,18 +19,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import hu.bme.aut.szoftarch.farmgame.ui.theme.FarmGameAndroidTheme
+import com.example.compose.AppTheme
 
 
 @SuppressLint("SuspiciousIndentation")
@@ -90,7 +88,7 @@ fun SellingItem(item: String, price: Int, count: Int,
 @Preview(showBackground = true)
 @Composable
 fun SellingItemPreview() {
-    FarmGameAndroidTheme{
+    AppTheme {
         SellingItem("Item", 1000, 10) {}
     }
 }

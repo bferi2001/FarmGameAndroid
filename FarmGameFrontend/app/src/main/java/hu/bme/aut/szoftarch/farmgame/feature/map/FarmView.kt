@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import hu.bme.aut.szoftarch.farmgame.R
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
@@ -38,7 +38,7 @@ fun LandGrid(modifier: Modifier, viewModel: MapViewModel) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(viewModel.getFarm().columns),
         modifier = modifier
-            .background(Color(0xFF2F8136))
+            .background(Color(0xFF2F8136)) // Texture background Color
     ) {
         items(viewModel.getFarm().lands) { land ->
             LandItem(land, viewModel)
@@ -78,9 +78,10 @@ fun LandItem(land: Land, viewModel: MapViewModel) {
     }
 }
 
+@Composable
 fun getBorderColor(selected: Int, position: Int?): Color {
     return if (selected == position) {
-        Color(0xFF004337)
+        MaterialTheme.colorScheme.outline
     } else {
         Color.Transparent
     }

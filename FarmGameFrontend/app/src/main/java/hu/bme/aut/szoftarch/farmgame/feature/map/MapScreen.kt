@@ -1,6 +1,7 @@
 package hu.bme.aut.szoftarch.farmgame.feature.map
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +17,10 @@ import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.example.compose.earthTone
+import com.example.compose.woodColor
+import com.example.compose.woodLight
 import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
 
 val playerId = 1 //TODO
@@ -32,8 +37,9 @@ fun MapScreen(
     Scaffold(
         topBar = {
             TopAppBar(
+                modifier = Modifier.border(4.dp, earthTone),
                 colors = topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    containerColor = woodColor,
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
@@ -60,8 +66,9 @@ fun MapScreen(
         bottomBar = {
             AnimatedVisibility(visible = viewModel.menuOpen == MenuLocation.BOTTOM) {
                 BottomAppBar(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    containerColor = woodLight,
                     contentColor = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.border(4.dp, earthTone),
                 ) {
                     BottomMenuContent(viewModel)
                 }
