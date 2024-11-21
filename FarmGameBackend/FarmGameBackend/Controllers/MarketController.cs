@@ -22,38 +22,33 @@ namespace FarmGameBackend.Controllers
 
 
         [HttpGet("market")]
-        public async Task<ActionResult<IEnumerable<MarketUserProduct>>> GetUserProductsForMarketAsync()
+        public async Task<ActionResult<IEnumerable<Classified>>> GetClassifiedForMarketAsync()
         {
-            //ToDo
-            return Ok();
+            return await _context.Classifieds.Where(classified => classified.Deadline > DateTimeOffset.Now).ToListAsync();
         }
 
         [HttpPost("market")]
         public async Task<ActionResult> PostClassified(/*Todo*/)
         {
             //ToDo
-            return Ok();
         }
 
         [HttpDelete("market/buy/{id}")]
         public async Task<IActionResult> BuyClassified(int íd)
         {
             //ToDo
-            return Ok();
         }
 
         [HttpDelete("market/cancel/{id}")]
         public async Task<IActionResult> CancelClassified(int íd)
         {
             //ToDo
-            return Ok();
         }
 
         [HttpPut("market/quicksell/{productname}/{quantity}")]
         public async Task<IActionResult> QuicksellProduct(string productname, int quantity)
         {
             //ToDo
-            return Ok();
         }
         //ToDo szűréses lekérdezés
         //ToDo törlés, ha lejár
