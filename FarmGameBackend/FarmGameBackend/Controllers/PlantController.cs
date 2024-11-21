@@ -52,7 +52,7 @@ namespace FarmGameBackend.Controllers
             {
                 return Conflict("The field is not empty");
             }
-            Product? productType = await _context.ProductHelper.GetUnlockedProductByName(typeName);
+            Product? productType = await _context.ProductHelper.GetUnlockedCropByName(typeName);
             if (productType == null)
             {
                 return NotFound();

@@ -67,8 +67,20 @@ namespace FarmGameBackend.Helper
                 ProductionEndTime = currentTime.AddSeconds(_growTime),
                 CleaningTime = currentTime.AddSeconds(r.Next(_growTime)),
                 FeedingTime = currentTime.AddSeconds(r.Next(_growTime)),
+                Level = 0
             };
         }
+        public Barn UpdateBarn(Barn barn, int _growTime)
+        {
+            var r = new Random();
+            DateTimeOffset currentTime = DateTimeOffset.Now;
+            barn.ProductionStartTime = currentTime;
+            barn.ProductionEndTime = currentTime.AddSeconds(_growTime);
+            barn.CleaningTime = currentTime.AddSeconds(r.Next(_growTime));
+            barn.FeedingTime = currentTime.AddSeconds(r.Next(_growTime));
+            return barn;
+        }
+
 
         public List<string> GetActions(Barn barn)
         {
@@ -99,6 +111,31 @@ namespace FarmGameBackend.Helper
             catch (DbUpdateConcurrencyException)
             {
                 if (!_context.ProductHelper.ProductExists(barn.Id))
+                {
+                    throw new NotFoundException("");
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return;
+        }
+        public async Task UpdateBarnDatabase(Barn barn, User user)
+        {
+            _context.Entry(barn).State = EntityState.Modified;
+            _context.Entry(user).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Users.Any(e => e.Id == user.Id))
+                {
+                    throw new NotFoundException("");
+                }
+                else if (!_context.Barns.Any(e => e.Id == barn.Id))
                 {
                     throw new NotFoundException("");
                 }

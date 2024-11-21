@@ -1,4 +1,5 @@
-﻿using FarmGameBackend.Entity;
+﻿using FarmGameBackend.CustomExceptions;
+using FarmGameBackend.Entity;
 using FarmGameBackend.Helper;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography.X509Certificates;
@@ -10,11 +11,14 @@ namespace FarmGameBackend.DbContexts
         public ProductHelper ProductHelper;
         public PlantHelper PlantHelper;
         public BarnHelper BarnHelper;
+        public BarnTypeHelper BarnTypeHelper;
         public FarmApplicationContext()
         {
             ProductHelper= new ProductHelper(this);
             PlantHelper = new PlantHelper(this);
             BarnHelper = new BarnHelper(this);
+            BarnTypeHelper = new BarnTypeHelper(this);
+
         }
 
         public FarmApplicationContext(DbContextOptions<FarmApplicationContext> options)

@@ -48,13 +48,22 @@ namespace FarmGameBackend.Helper
         {
             return _context.Products.Any(product => product.Name == _productName);
         }
-        public async Task<Product?> GetUnlockedProductByName(string name)
+        public async Task<Product?> GetUnlockedCropByName(string name)
         {
             if (!_context.PlantHelper.DoesCroptypeExistsAndUnlocked(name))
             {
                 return null;
             }
             Product? productType = await _context.Products.Where(product => product.Name == name).FirstAsync();
+            return productType;
+        }
+        public async Task<Product?> GetProductByName(string name)
+        {
+            Product? productType = await _context.Products.Where(product => product.Name == name).FirstOrDefaultAsync();
+            if (productType == null)
+            {
+                throw new NotFoundException("");
+            }
             return productType;
         }
         public async Task<UserProduct> PostUserProduct(UserProduct userProduct)

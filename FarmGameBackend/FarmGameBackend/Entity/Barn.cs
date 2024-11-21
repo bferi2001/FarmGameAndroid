@@ -10,5 +10,6 @@
         public required DateTimeOffset ProductionEndTime { get; set; }
         public DateTimeOffset? FeedingTime { get; set; }
         public DateTimeOffset? CleaningTime { get; set; }
+        public required int Level { get; set; }
     }
 }

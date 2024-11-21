@@ -49,7 +49,7 @@ namespace FarmGameBackend.Controllers
             {
                 return Conflict("The field is not empty");
             }
-            Product? productType = await _context.ProductHelper.GetUnlockedProductByName(typeName);
+            Product? productType = await _context.ProductHelper.GetUnlockedCropByName(typeName);
             if (productType == null)
             {
                 return NotFound();
@@ -135,11 +135,14 @@ namespace FarmGameBackend.Controllers
             {
                 return BadRequest("This barn can't be harvested yet.");
             }
-            await _context.SaveChangesAsync();
+            
             try
             {
-                var barnProduct = await _context.BarnHelper.GetProductnameByBarntype(barnAtPosition.TypeName);
-                await _context.ProductHelper.AddUserProduct(barnProduct, 3);
+                var barnProductName = await _context.BarnHelper.GetProductnameByBarntype(barnAtPosition.TypeName);
+                var barnProduct = await _context.ProductHelper.GetProductByName(barnProductName);
+                var updatedBarn = _context.BarnHelper.UpdateBarn(barnAtPosition, barnProduct.ProductionTimeAsSeconds);
+                await _context.BarnHelper.UpdateBarnDatabase(updatedBarn);
+                await _context.ProductHelper.AddUserProduct(barnProductName, 3);
             }
             catch (NotFoundException ex)
             {
@@ -152,5 +155,36 @@ namespace FarmGameBackend.Controllers
             return NoContent();
         }
 
+
+        [HttpPut("{position:int}/upgrade")]
+        public async Task<IActionResult> UpgradeBarn(int position)
+        {
+            Barn? barnAtPosition = await _context.BarnHelper.GetBarnByPosition(position);
+            if (barnAtPosition == null)
+            {
+                return NotFound();
+            }
+            
+            try
+            {
+                var upgradeCost = await _context.BarnTypeHelper.GetBarnTypeCostByLevel(barnAtPosition.TypeName, barnAtPosition.Level+1);
+                if(_currentUser.UserMoney < upgradeCost)
+                {
+                    return BadRequest("Not enough money!");
+                }
+                _currentUser.UserMoney -= upgradeCost;
+                barnAtPosition.Level += 1;
+                await _context.BarnHelper.UpdateBarnDatabase(barnAtPosition, _currentUser);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return NoContent();
+        }
     }
 }
