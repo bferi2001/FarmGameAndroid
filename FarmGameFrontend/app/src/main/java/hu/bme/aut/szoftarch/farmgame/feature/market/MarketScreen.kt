@@ -84,7 +84,10 @@ fun MarketScreen(
                                 price = viewModel.adItems[i].price,
                                 count = viewModel.adItems[i].count,
                                 userName = viewModel.adItems[i].seller,
-                            )
+                            ) {
+                                viewModel.adItems.drop(i)
+                                Toast.makeText(context, "Buying ad item...", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 }
@@ -113,7 +116,7 @@ fun MarketScreen(
                             onClick =
                             {
                                 viewModel.sellingItems.forEach { item ->
-                                    item.count -= item.sellCount
+                                    item.quantity -= item.sellCount
                                 }
                                 /* TODO Handle giving money to user */
                                 totalPrice = 0
@@ -129,7 +132,7 @@ fun MarketScreen(
                             SellingItem(
                                 item = viewModel.sellingItems[i].item,
                                 price = viewModel.sellingItems[i].price,
-                                count = viewModel.sellingItems[i].count,
+                                quantity = viewModel.sellingItems[i].quantity,
                             ) { it ->
                                 viewModel.sellingItems[i].sellCount = it
                                 totalPrice = calcTotalPrice(viewModel.sellingItems)

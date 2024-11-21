@@ -18,7 +18,8 @@ import androidx.compose.ui.unit.dp
 import hu.bme.aut.szoftarch.farmgame.ui.theme.FarmGameAndroidTheme
 
 @Composable
-fun AdItem(item: String, count: Int, price: Int, userName: String) {
+fun AdItem(item: String, count: Int, price: Int, userName: String,
+           onBuyClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -34,7 +35,9 @@ fun AdItem(item: String, count: Int, price: Int, userName: String) {
         }
         Text(text = "Price: $price")
         Button(
-            onClick = { /* TODO Handle buy button click */ }
+            onClick = {
+                onBuyClick()
+            }
         ) {
             Text(text = "Buy")
         }
@@ -46,6 +49,6 @@ fun AdItem(item: String, count: Int, price: Int, userName: String) {
 @Composable
 fun AdItemPreview() {
     FarmGameAndroidTheme{
-        AdItem("Item", 10, 1000, "User")
+        AdItem("Item", 10, 1000, "User") {}
     }
 }
