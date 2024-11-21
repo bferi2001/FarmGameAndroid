@@ -12,6 +12,9 @@ class Building(
 
     var processing: Boolean = false
     var clean: Boolean = true
+    override fun isProcessing(): Boolean {
+        return processing
+    }
 
     override fun getName(): String {
         return "${NameService.getDisplayName(tag)} lvl${level}"

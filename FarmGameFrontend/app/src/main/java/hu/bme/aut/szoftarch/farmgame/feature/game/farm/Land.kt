@@ -14,6 +14,13 @@ data class Land(
         return MenuLocation.BOTTOM
     }
 
+    fun isProcessing(): Boolean {
+        if (content != null) {
+            return content!!.isProcessing()
+        }
+        return false
+    }
+
     fun getInteractions(): List<String> {
         if (content != null) {
             return content!!.getInteractions()
@@ -34,10 +41,10 @@ data class Land(
      * action_plough:
      * param[0]: id of the planter
      */
-    fun interact(interaction: String, params: List<String>) {
+    fun interact(interaction: String, params: List<String>):Boolean {
         if (content != null) {
             content!!.interact(interaction, params)
-            return
+            return false
         }
         when (interaction) {
             "action_build" -> {
@@ -57,6 +64,7 @@ data class Land(
                 throw Exception("Unknown interaction")
             }
         }
+        return true
     }
 
     fun getName(): String {

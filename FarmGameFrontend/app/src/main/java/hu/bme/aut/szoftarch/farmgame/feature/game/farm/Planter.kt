@@ -10,6 +10,11 @@ class Planter(
     var finished: Boolean = false
     var water: Boolean = false
     var fertilizer: Boolean = false
+
+    override fun isProcessing(): Boolean {
+        return content != null
+    }
+
     var cleaned: Boolean = true
 
     var progress: Int = 0
@@ -34,7 +39,7 @@ class Planter(
         } else if (content == null) {
             return listOf("crop_wheat", "crop_flowers")
         }
-        val interactions = mutableListOf<String>("wait")
+        val interactions = mutableListOf("wait")
         if (!water) {
             interactions.add("water")
         }

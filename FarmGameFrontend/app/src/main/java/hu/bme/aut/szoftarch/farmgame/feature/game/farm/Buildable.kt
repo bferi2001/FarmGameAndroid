@@ -8,5 +8,6 @@ abstract class Buildable {
 
     abstract fun getInteractMenu(): MenuLocation
     abstract fun getInteractions(): List<String>
+    abstract fun isProcessing(): Boolean
     abstract fun interact(interaction: String, params: List<String>)
 }

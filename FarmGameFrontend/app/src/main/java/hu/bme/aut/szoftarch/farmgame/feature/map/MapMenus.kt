@@ -39,6 +39,8 @@ fun SideMenuScreen(viewModel: MapViewModel) {
         targetValue = if (menuOpen != MenuLocation.SIDE) -(screenWidth / 2) else 0.dp
     )
 
+    val menuTitle = viewModel.getSelectedLand()?.getName() ?: "Side menu"
+
     Box(
         modifier = Modifier
             .offset(menuOffsetX)
@@ -59,7 +61,7 @@ fun SideMenuScreen(viewModel: MapViewModel) {
             ){
                 Spacer(modifier = Modifier.weight(1f))
                 Text(modifier = Modifier.weight(1f),
-                    text = "Side menu")
+                    text = menuTitle)
                 Button(
                     onClick = { viewModel.closeMenu() },
                     colors = ButtonDefaults.textButtonColors(

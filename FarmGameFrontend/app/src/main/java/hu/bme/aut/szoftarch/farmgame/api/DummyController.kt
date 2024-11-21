@@ -53,8 +53,7 @@ class DummyController : Controller() {
     }
 
     override fun interact(land: Land, interaction: String, params: List<String>): Boolean {
-        land.interact(interaction, params)
-        return true
+        return land.interact(interaction, params)
     }
 
     override fun getDisplayNames(): Map<String, String> {

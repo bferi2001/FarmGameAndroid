@@ -42,7 +42,15 @@ class MapViewModel(
         if (selectedLand < 0) {
             return
         }
-        session.controller.interact(session.farm.getLand(selectedLand), interaction, params)
+        if(session.controller.interact(session.farm.getLand(selectedLand), interaction, params)){
+            closeMenu()
+            selectedLand = -1
+        }
+
+        // Bad but quick way to update UI
+        val cheese = selectedLand
+        selectedLand = -1
+        selectedLand = cheese
     }
 
     fun getInteractions(): List<String> {
@@ -50,6 +58,13 @@ class MapViewModel(
             return emptyList()
         }
         return session.getInteractions(session.farm.getLand(selectedLand))
+    }
+
+    fun getSelectedLand() : Land? {
+        if (selectedLand < 0) {
+            return null
+        }
+        return session.farm.getLand(selectedLand)
     }
 
 
