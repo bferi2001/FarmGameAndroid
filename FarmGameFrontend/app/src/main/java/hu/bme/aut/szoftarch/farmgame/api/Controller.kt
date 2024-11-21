@@ -20,6 +20,7 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.serialization.gson.gson
@@ -40,13 +41,18 @@ open class Controller(val token: String) {
         }
     }
 
-    private suspend fun get(location: String, token: String): HttpResponse{
+    private suspend fun get(location: String): HttpResponse{
         return client.get(location){
             header("Authorization", token)
         }
     }
-    private suspend fun post(location: String, token: String): HttpResponse {
+    private suspend fun post(location: String): HttpResponse {
         return client.post(location){
+            header("Authorization", token)
+        }
+    }
+    private suspend fun put(location: String): HttpResponse {
+        return client.put(location){
             header("Authorization", token)
         }
     }
@@ -56,7 +62,7 @@ open class Controller(val token: String) {
     }
 
     open suspend fun getFarmSize(): Int {
-        val res = get("api/farm/size", token)
+        val res = get("api/farm/size")
         val size = res.body<Int>()
         return size
     }
@@ -77,11 +83,11 @@ open class Controller(val token: String) {
     }
 
     open suspend fun getLands(size: Int): List<Land> {
-        var res = get("api/farm/Barn/barns", token)
+        var res = get("api/farm/Barn/barns")
         var json = res.bodyAsText()
         val barns = gson.fromJson(json, Array<BarnDao>::class.java)
 
-        res = get("api/farm/plant/plantedPlants", token)
+        res = get("api/farm/plant/plantedPlants")
         json = res.bodyAsText()
         val plants = gson.fromJson(json, Array<PlantedPlantDao>::class.java)
 
@@ -93,6 +99,7 @@ open class Controller(val token: String) {
                 id = barn.id,
                 tag = barn.typeName
             )
+            content.level = barn.level
             val land = Land(
                 id = barn.id,
                 position = barn.position,
@@ -152,7 +159,7 @@ open class Controller(val token: String) {
     }
 
     open suspend fun getPossibleBuildings(): List<String> {
-        val res = get("api/farm/barn/unlocked", token)
+        val res = get("api/farm/barn/unlocked")
         val buildings = res.body<Array<String>>()
         return buildings.toList()
     }
@@ -162,7 +169,7 @@ open class Controller(val token: String) {
     }
 
     open suspend fun getPossibleCrops(): List<String> {
-        val res = get("api/farm/plant/unlocked", token)
+        val res = get("api/farm/plant/unlocked")
         val crops = res.body<Array<String>>()
         return crops.toList()
     }
@@ -173,12 +180,12 @@ open class Controller(val token: String) {
 
     private suspend fun upgradeBuilding(land: Land): Boolean {
         val position = land.position
-        val res = post("api/farm/barn/$position/upgrade", token)
+        val res = put("api/farm/barn/$position/upgrade")
         return res.status.value == 200
     }
     private suspend fun buildBuilding(land: Land, building: String): Boolean {
         val position = land.position
-        val res = post("api/farm/barn/$position/$building", token)
+        val res = post("api/farm/barn/$position/$building")
         return res.status.value == 200
     }
 
@@ -197,7 +204,7 @@ open class Controller(val token: String) {
         else if(land.content is Planter)
         {
             val position = land.position
-            val res = post("api/farm/plant/$position/$interaction", token)
+            val res = post("api/farm/plant/$position/$interaction")
             if(res.status.value != 200){
                 return false
             }
@@ -207,7 +214,7 @@ open class Controller(val token: String) {
     }
 
     open suspend fun getQuests(): List<Quest>{
-        var res = get("api/farm/quest/availableQuests", token)
+        var res = get("api/farm/quest/availableQuests")
         var json = res.bodyAsText()
         val quests = gson.fromJson(json, Array<QuestTypeDao>::class.java)
 
