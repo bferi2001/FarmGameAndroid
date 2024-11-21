@@ -24,11 +24,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.compose.AppTheme
 import com.example.compose.earthTone
 import com.example.compose.woodColor
 import com.example.compose.woodLight
+import hu.bme.aut.szoftarch.farmgame.feature.market.createad.CreateAdScreen
 import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -123,4 +126,10 @@ fun MapScreen(
 
 
 
-
+@Preview(showBackground = true)
+@Composable
+fun MapScreenPreview() {
+    AppTheme{
+        MapScreen(onToLoginScreen = {}, onToMarketScreen = {}, onToQuestsScreen = {})
+    }
+}

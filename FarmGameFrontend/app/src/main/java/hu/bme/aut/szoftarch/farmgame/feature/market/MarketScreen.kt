@@ -31,11 +31,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.compose.AppTheme
 import com.example.compose.earthTone
 import com.example.compose.woodLight
 import hu.bme.aut.szoftarch.farmgame.data.market.SellingItemData
+import hu.bme.aut.szoftarch.farmgame.feature.market.createad.CreateAdScreen
 import hu.bme.aut.szoftarch.farmgame.feature.market.items.AdItem
 import hu.bme.aut.szoftarch.farmgame.feature.market.items.SellingItem
 
@@ -174,4 +177,14 @@ private fun calcTotalPrice(sellingItems: List<SellingItemData>): Int {
         totalPrice += item.price * item.sellCount
     }
     return totalPrice
+}
+
+
+
+@Preview(showBackground = true)
+@Composable
+fun MarketScreenPreview() {
+    AppTheme{
+        MarketScreen({}, {})
+    }
 }

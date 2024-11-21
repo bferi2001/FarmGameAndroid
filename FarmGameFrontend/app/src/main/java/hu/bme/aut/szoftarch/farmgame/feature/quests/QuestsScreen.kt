@@ -37,10 +37,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.compose.AppTheme
 import com.example.compose.earthTone
 import com.example.compose.woodLight
+import hu.bme.aut.szoftarch.farmgame.feature.market.createad.CreateAdScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -164,5 +167,15 @@ fun QuestItem(quest: Quest) {
                 }
             }
         }
+    }
+}
+
+
+
+@Preview(showBackground = true)
+@Composable
+fun QuestsScreenPreview() {
+    AppTheme{
+        QuestsScreen(onToMap = {})
     }
 }
