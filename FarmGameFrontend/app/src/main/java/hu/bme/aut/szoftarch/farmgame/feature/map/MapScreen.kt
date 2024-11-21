@@ -16,14 +16,13 @@ import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
-
-val playerId = 1 //TODO
-val viewModel = MapViewModel(playerId)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen(
+    viewModel: MapViewModel = viewModel(),
     onToLoginScreen: () -> Unit,
     onToMarketScreen: () -> Unit,
     onToQuestsScreen: () -> Unit,

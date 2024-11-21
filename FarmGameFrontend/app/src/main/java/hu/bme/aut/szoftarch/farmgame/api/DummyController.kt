@@ -1,19 +1,18 @@
 package hu.bme.aut.szoftarch.farmgame.api
 
-import androidx.compose.ui.graphics.Color
 import hu.bme.aut.szoftarch.farmgame.feature.game.Player
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Building
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Crop
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Planter
 
-class DummyController : Controller() {
+class DummyController : Controller("") {
 
-    override fun getPlayer(id: Int): Player {
-        return Player(id, mutableMapOf(), 0, 0)
+    override fun getPlayer(): Player {
+        return Player(0, mutableMapOf(), 0, 0)
     }
 
-    override fun getLands(id: Int): List<Land> {
+    override fun getLands(): List<Land> {
         //Dummy starter lands
         val flowers = Planter(66)
         flowers.content = Crop("flowers", "crop_flowers")
@@ -27,12 +26,12 @@ class DummyController : Controller() {
         )
     }
 
-    override fun getPossibleBuildings(id: Int): List<String> {
+    override fun getPossibleBuildings(): List<String> {
 
         return listOf("building_cow_shed")
     }
 
-    override fun getPossibleCrops(id: Int): List<String> {
+    override fun getPossibleCrops(): List<String> {
         return listOf("crop_flowers", "crop_wheat", "crop_corn")
     }
 

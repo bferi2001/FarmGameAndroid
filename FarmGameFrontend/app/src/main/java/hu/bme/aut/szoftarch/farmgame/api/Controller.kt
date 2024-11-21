@@ -1,57 +1,60 @@
 package hu.bme.aut.szoftarch.farmgame.api
 
-import androidx.compose.ui.graphics.Color
 import hu.bme.aut.szoftarch.farmgame.feature.game.Player
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Building
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Farm
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.auth.Auth
-import io.ktor.client.plugins.auth.providers.BearerTokens
-import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
+import io.ktor.client.request.header
+import io.ktor.client.request.post
+import io.ktor.client.statement.HttpResponse
 
 const val BACKEND_URL = "http://127.0.0.1:5153"
-open class Controller {
+open class Controller(token: String) {
     //TODO get values from backend
-    val client = HttpClient(){
+    var client = HttpClient(){
         defaultRequest {
             url(BACKEND_URL)
         }
-        install(Auth) {
-            bearer {
-                loadTokens {
-                    BearerTokens("token", "token")
-                }
-            }
+    }
+
+    private suspend fun get(location: String, token: String): HttpResponse{
+        return client.get(location){
+            header("Authorization", token)
+        }
+    }
+    private suspend fun post(location: String, token: String): HttpResponse {
+        return client.post(location){
+            header("Authorization", token)
         }
     }
 
-    open fun getPlayer(id: Int): Player {
+    open fun getPlayer(): Player {
         TODO("Not yet implemented")
     }
 
-    open suspend fun getFarmSize(id: Int): Int {
-        val size = client.get("api/farm/size").body<Int>()
+    open suspend fun getFarmSize(token: String): Int {
+        val size = get("api/farm/size", token).body<Int>()
         return size
     }
 
-    open fun getLands(id: Int): List<Land> {
+    open fun getLands(): List<Land> {
         TODO("Not yet implemented")
     }
 
-    suspend fun getFarm(id: Int): Farm {
-        val size = getFarmSize(id)
+    suspend fun getFarm(token: String): Farm {
+        val size = getFarmSize(token)
         val farm = Farm(size)
-        for (land in getLands(id)) {
+        for (land in getLands()) {
             farm.addLand(land)
         }
         return farm
     }
 
-    open fun getPossibleBuildings(id: Int): List<String> {
+    open fun getPossibleBuildings(): List<String> {
         TODO("Not yet implemented")
     }
 
@@ -59,7 +62,7 @@ open class Controller {
         TODO("Not yet implemented")
     }
 
-    open fun getPossibleCrops(id: Int): List<String> {
+    open fun getPossibleCrops(): List<String> {
         TODO("Not yet implemented")
     }
 
