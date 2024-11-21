@@ -12,9 +12,8 @@ import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.statement.HttpResponse
 
-const val BACKEND_URL = "http://127.0.0.1:5153"
+const val BACKEND_URL = "http://152.66.152.18:5153"
 open class Controller(token: String) {
-    //TODO get values from backend
     var client = HttpClient(){
         defaultRequest {
             url(BACKEND_URL)

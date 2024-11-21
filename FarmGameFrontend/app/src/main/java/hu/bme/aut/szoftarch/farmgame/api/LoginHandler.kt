@@ -9,12 +9,9 @@ import hu.bme.aut.szoftarch.farmgame.R
 import java.security.MessageDigest
 import java.util.UUID
 
-interface LoginHandler{
-    suspend fun fetchToken(context: Context): GoogleIdTokenCredential
-}
-
-class LoginHandlerImpl : LoginHandler {
-    override suspend fun fetchToken(context: Context): GoogleIdTokenCredential {
+object LoginHandler {
+    var token: String? = null
+    suspend fun fetchToken(context: Context): GoogleIdTokenCredential {
         try{
             val credentialManager = CredentialManager.create(context)
 
@@ -24,9 +21,10 @@ class LoginHandlerImpl : LoginHandler {
             val digest = md.digest(bytes)
             val hashedNonce = digest.fold("") { str, it -> str + "%02x".format(it) }
 
+            val clientId = context.getString(R.string.googleServiceToken)
             val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
                 .setFilterByAuthorizedAccounts(false)
-                .setServerClientId(context.getString(R.string.googleServiceToken))
+                .setServerClientId(clientId)
                 .setNonce(hashedNonce)
                 .build()
 
@@ -43,6 +41,7 @@ class LoginHandlerImpl : LoginHandler {
             val googleIdTokenCredential = GoogleIdTokenCredential
                 .createFrom(credential.data)
 
+            token = googleIdTokenCredential.idToken
             return googleIdTokenCredential
         }
         catch (e: Exception){

@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.bme.aut.szoftarch.farmgame.api.LoginHandler
-import hu.bme.aut.szoftarch.farmgame.api.LoginHandlerImpl
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -24,12 +23,11 @@ open class LoginViewModel @Inject constructor() : ViewModel() {
     private val _tokenState = MutableStateFlow<TokenState>(TokenState.Idle)
     val tokenState = _tokenState.asStateFlow()
 
-    val loginHandler: LoginHandler = LoginHandlerImpl()
     fun getToken(context: Context) {
         _tokenState.value = TokenState.Loading
         viewModelScope.launch {
             try{
-                val googleIdToken = loginHandler.fetchToken(context)
+                val googleIdToken = LoginHandler.fetchToken(context)
                 _tokenState.value = TokenState.Success(googleIdToken.idToken)
             }
             catch (e: Exception) {

@@ -19,10 +19,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MapViewModel @Inject constructor(
-    @ApplicationContext context: Context,
-    val loginHandler: LoginHandler
-) : ViewModel() {
+class MapViewModel @Inject constructor() : ViewModel() {
     var selectedLand by mutableIntStateOf(-1)
     var menuOpen by mutableStateOf(MenuLocation.NONE)
         private set
@@ -32,8 +29,7 @@ class MapViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val token = ""
-            session.initialize(token)
+            session.initialize(LoginHandler.token!!)
         }
     }
 
