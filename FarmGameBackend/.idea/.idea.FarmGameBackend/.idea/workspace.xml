@@ -4,24 +4,24 @@
     <projectFile profileName="IIS Express">FarmGameBackend/FarmGameBackend.csproj</projectFile>
     <projectFile profileName="http">FarmGameBackend/FarmGameBackend.csproj</projectFile>
     <projectFile profileName="https">FarmGameBackend/FarmGameBackend.csproj</projectFile>
+    <projectFile pubXmlPath="FarmGameBackend/Properties/PublishProfiles/FarmGameBackend20241121161522 - Web Deploy.pubxml">FarmGameBackend/FarmGameBackend.csproj</projectFile>
   </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29242141-b30d-478c-8b93-2ae33e0be225" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/FarmGameBackend/AuthenticationRequirementsOperationFilter.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FarmGameBackend/Controllers/AuthController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/FarmGameBackend/GoogleAuthMiddleware.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.FarmGameBackend/.idea/httpClient.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FarmGameBackend/.idea/httpClient.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.FarmGameBackend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FarmGameBackend/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FarmGameBackend/Controllers/UsersController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FarmGameBackend/Controllers/UsersController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FarmGameBackend/Controllers/BarnController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FarmGameBackend/Controllers/BarnController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FarmGameBackend/Controllers/BarnTypesController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FarmGameBackend/Controllers/BarnTypesController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FarmGameBackend/Controllers/FarmController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FarmGameBackend/Controllers/FarmController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FarmGameBackend/Controllers/MarketController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FarmGameBackend/Controllers/MarketController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FarmGameBackend/Controllers/PlantController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FarmGameBackend/Controllers/PlantController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FarmGameBackend/FarmGameBackend.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/FarmGameBackend/FarmGameBackend.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FarmGameBackend/Helper/Helper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FarmGameBackend/Helper/Helper.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FarmGameBackend/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FarmGameBackend/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FarmGameBackend/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/FarmGameBackend/Properties/launchSettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FarmGameBackend/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/FarmGameBackend/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FarmGameFrontend/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../FarmGameFrontend/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../FarmGameFrontend/app/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,7 +29,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="DpaMonitoringSettings">
-    <option name="autoShow" value="false" />
+    <option name="firstShow" value="false" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -54,10 +54,13 @@
     <setting file="mock://C:/Users/pacsi/Documents/Projects/FarmGameAndroid/FarmGameBackend/FarmGameBackend/appsettings.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock://C:/Users/pacsi/Documents/Projects/FarmGameAndroid/FarmGameBackend/FarmGameBackend/appsettings.json" root0="FORCE_HIGHLIGHTING" />
   </component>
-  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
-  <component name="KubernetesApiProvider"><![CDATA[{
-  "isMigrated": true
-}]]></component>
+  <component name="HttpClientEndpointsTabState">
+    <option name="cachedRequestData" value="&lt;CachedHttpClientTabRequests&gt;&#10;  &lt;entry key=&quot;e75095783fc7d89b0559148d13f3fd1757e52ffa&quot; value=&quot;###&amp;#10;GET http://localhost:5153/api/BarnTypes&quot; /&gt;&#10;  &lt;entry key=&quot;db1cc1b8cd3e87ff488a6cfc4d7ecc39e4585c04&quot; value=&quot;###&amp;#10;GET http://localhost:5153/api/BarnTypes/test&quot; /&gt;&#10;  &lt;entry key=&quot;95713fdc23a1d541c86daef161720c5e86acde5c&quot; value=&quot;###&amp;#10;GET http://0.0.0.0:5153/api/BarnTypes&quot; /&gt;&#10;&lt;/CachedHttpClientTabRequests&gt;" />
+  </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -71,18 +74,113 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     ".NET Launch Settings Profile.FarmGameBackend: http.executor": "Run",
+    "Azure - Web App.Azure - Web App: FarmGameBackend FarmGame.executor": "Run",
+    "Azure - Web App.FarmGameBackend (1).executor": "Run",
+    "Azure - Web App.FarmGameBackend (2).executor": "Run",
+    "Azure - Web App.FarmGameBackend.executor": "Run",
+    "HTTP Request.FarmGameBackend-endpoints | #1.executor": "Run",
+    "HTTP Request.FarmGameBackend-endpoints_1 | #1.executor": "Run",
+    "HTTP Request.FarmGameBackend-endpoints_2 | #1.executor": "Run",
+    "HTTP Request.FarmGameBackend-endpoints_2 | #2.executor": "Run",
+    "HTTP Request.FarmGameBackend-endpoints_2 | localhost.executor": "Run",
+    "HTTP Request.FarmGameBackend-endpoints_3 | #1.executor": "Run",
+    "HTTP Request.FarmGameBackend-endpoints_4 | #1.executor": "Run",
+    "HTTP Request.FarmGameBackend-endpoints_5 | #1.executor": "Run",
+    "HTTP Request.FarmGameBackend-endpoints_6 | #1.executor": "Run",
+    "HTTP Request.FarmGameBackend-endpoints_7 | #1.executor": "Run",
+    "HTTP Request.FarmGameBackend-endpoints_8 | With header.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "Backend",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "swagger",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.FarmGameBackend: http">
+    <configuration name="Azure - Web App: FarmGameBackend FarmGame" type="AzureWebAppDeploy">
+      <option name="appServicePlanName" value="ASP-FarmGamegroup-a425" />
+      <option name="appServicePlanResourceGroupName" value="FarmGame_group" />
+      <option name="operatingSystem" value="Linux" />
+      <option name="pricingSize" value="F1" />
+      <option name="pricingTier" value="Free" />
+      <option name="projectConfiguration" value="Release" />
+      <option name="projectPlatform" value="Any CPU" />
+      <option name="publishableProjectPath" value="$PROJECT_DIR$/FarmGameBackend/FarmGameBackend.csproj" />
+      <option name="region" value="germanywestcentral" />
+      <option name="resourceGroupName" value="FarmGame_group" />
+      <option name="subscriptionId" value="f5415f25-e9de-4dc2-8ab3-e7cb2a612a87" />
+      <option name="webAppName" value="FarmGame" />
+      <method v="2" />
+    </configuration>
+    <configuration name="FarmGameBackend (1)" type="AzureWebAppDeploy">
+      <option name="appServicePlanName" value="asp-app-241121151327" />
+      <option name="appServicePlanResourceGroupName" value="rg-app-241121151327" />
+      <option name="operatingSystem" value="Windows" />
+      <option name="pricingSize" value="F1" />
+      <option name="pricingTier" value="Free" />
+      <option name="projectConfiguration" value="Release" />
+      <option name="projectPlatform" value="Any CPU" />
+      <option name="publishableProjectPath" value="$PROJECT_DIR$/FarmGameBackend/FarmGameBackend.csproj" />
+      <option name="region" value="centralus" />
+      <option name="resourceGroupName" value="rg-app-241121151327" />
+      <option name="subscriptionId" value="f5415f25-e9de-4dc2-8ab3-e7cb2a612a87" />
+      <option name="webAppName" value="app-241121151327" />
+      <method v="2" />
+    </configuration>
+    <configuration name="FarmGameBackend (2)" type="AzureWebAppDeploy">
+      <option name="appServicePlanName" value="asp-app-241121151608" />
+      <option name="appServicePlanResourceGroupName" value="rg-app-241121151608" />
+      <option name="operatingSystem" value="Linux" />
+      <option name="pricingSize" value="F1" />
+      <option name="pricingTier" value="Free" />
+      <option name="projectConfiguration" value="Release" />
+      <option name="projectPlatform" value="Any CPU" />
+      <option name="publishableProjectPath" value="$PROJECT_DIR$/FarmGameBackend/FarmGameBackend.csproj" />
+      <option name="region" value="centralus" />
+      <option name="resourceGroupName" value="rg-app-241121151608" />
+      <option name="subscriptionId" value="f5415f25-e9de-4dc2-8ab3-e7cb2a612a87" />
+      <option name="webAppName" value="app-241121151608" />
+      <method v="2" />
+    </configuration>
+    <configuration name="FarmGameBackend" type="AzureWebAppDeploy">
+      <option name="appServicePlanName" value="asp-app-241121150346" />
+      <option name="appServicePlanResourceGroupName" value="rg-app-241121150346" />
+      <option name="operatingSystem" value="Windows" />
+      <option name="pricingSize" value="F1" />
+      <option name="pricingTier" value="Free" />
+      <option name="projectConfiguration" value="Release" />
+      <option name="projectPlatform" value="Any CPU" />
+      <option name="publishableProjectPath" value="$PROJECT_DIR$/FarmGameBackend/FarmGameBackend.csproj" />
+      <option name="region" value="centralus" />
+      <option name="resourceGroupName" value="rg-app-241121150346" />
+      <option name="subscriptionId" value="266bc801-a61b-4c23-bcfa-5b468f38fd2e" />
+      <option name="webAppName" value="app-241121150346" />
+      <method v="2" />
+    </configuration>
+    <configuration name="FarmGameBackend: FarmGameBackend20241121161522 - Web Deploy" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="FarmGameBackend20241121161522 - Web Deploy.pubxml" pubxml_path="$PROJECT_DIR$/FarmGameBackend/Properties/PublishProfiles/FarmGameBackend20241121161522 - Web Deploy.pubxml" uuid_high="-7889888960677394091" uuid_low="-5408222889045378220" />
+      <method v="2" />
+    </configuration>
+    <configuration name="FarmGameBackend-endpoints_4 | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/FarmGameBackend-endpoints_4.http" executionIdentifier="#1" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="FarmGameBackend-endpoints_5 | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/FarmGameBackend-endpoints_5.http" executionIdentifier="#1" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="FarmGameBackend-endpoints_6 | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/FarmGameBackend-endpoints_6.http" executionIdentifier="#1" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="FarmGameBackend-endpoints_7 | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/FarmGameBackend-endpoints_7.http" executionIdentifier="#1" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="FarmGameBackend-endpoints_8 | With header" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/FarmGameBackend-endpoints_8.http" executionIdentifier="With header" runType="Run single request">
+      <method v="2" />
+    </configuration>
     <configuration name="FarmGameBackend: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/FarmGameBackend/FarmGameBackend.csproj" />
       <option name="LAUNCH_PROFILE_TFM" value="net8.0" />
@@ -128,6 +226,15 @@
         <option name="Build" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="HTTP Request.FarmGameBackend-endpoints_8 | With header" />
+        <item itemvalue="HTTP Request.FarmGameBackend-endpoints_7 | #1" />
+        <item itemvalue="HTTP Request.FarmGameBackend-endpoints_6 | #1" />
+        <item itemvalue="HTTP Request.FarmGameBackend-endpoints_5 | #1" />
+        <item itemvalue="HTTP Request.FarmGameBackend-endpoints_4 | #1" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -139,6 +246,11 @@
       <updated>1730038732623</updated>
       <workItem from="1730038733815" duration="1164000" />
       <workItem from="1730669962417" duration="7446000" />
+      <workItem from="1732182878741" duration="3104000" />
+      <workItem from="1732189475323" duration="1100000" />
+      <workItem from="1732193490660" duration="1640000" />
+      <workItem from="1732197764759" duration="3647000" />
+      <workItem from="1732203332234" duration="5890000" />
     </task>
     <servers />
   </component>
@@ -160,5 +272,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

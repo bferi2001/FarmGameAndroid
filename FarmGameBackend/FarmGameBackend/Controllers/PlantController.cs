@@ -175,10 +175,11 @@ namespace FarmGameBackend.Controllers
             }
             return NoContent();
         }
-
         
-        
-
-        
+        [HttpGet ("plantedPlants")]
+        public async Task<ActionResult<IEnumerable<PlantedPlant>?>> GetPlantedPlants()
+        {
+            return await Helper.Helper.GetPlants(_currentUser.Email, _context);
+        }
     }
 }

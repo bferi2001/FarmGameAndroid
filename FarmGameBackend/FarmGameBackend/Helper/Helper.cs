@@ -16,12 +16,32 @@ public static class Helper
             return null;
         }
     }
+    public static async Task<List<PlantedPlant>?> GetPlants(string email, FarmApplicationContext context)
+    {
+        try
+        {
+            return await context.PlantedPlants.Where(plant => plant.UserName == email).ToListAsync();
+        }catch (Exception ex)
+        {
+            return null;
+        }
+    }
     
     public static async Task<Barn?> GetBarnByPosition(int position, string email, FarmApplicationContext context)
     {
         try
         {
             return await context.Barns.Where(barn => barn.Position == position && barn.UserName == email).FirstAsync();
+        }catch (Exception ex)
+        {
+            return null;
+        }
+    }
+    public static async Task<List<Barn>?> GetBarns(string email, FarmApplicationContext context)
+    {
+        try
+        {
+            return await context.Barns.Where(barn => barn.UserName == email).ToListAsync();
         }catch (Exception ex)
         {
             return null;
