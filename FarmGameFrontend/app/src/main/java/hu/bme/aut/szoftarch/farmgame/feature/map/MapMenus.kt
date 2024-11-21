@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -79,16 +80,23 @@ fun SideMenuScreen(viewModel: MapViewModel) {
 fun BottomMenuContent(viewModel: MapViewModel) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        CreateInteractButtons(viewModel)
-
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ){
+            CreateInteractButtons(viewModel)
+        }
+        Spacer(modifier = Modifier.weight(1f))
         Button(
-            onClick = {
-                viewModel.closeMenu()
-            }
+            onClick = { viewModel.closeMenu() },
+            colors = ButtonDefaults.textButtonColors(
+                containerColor = Color(0xFFB54747),
+                contentColor = Color.White)
         ) {
             Text(text = "Close")
         }
+
     }
 }
