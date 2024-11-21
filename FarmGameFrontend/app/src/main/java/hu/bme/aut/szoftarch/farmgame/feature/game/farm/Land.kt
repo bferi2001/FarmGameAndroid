@@ -2,6 +2,7 @@ package hu.bme.aut.szoftarch.farmgame.feature.game.farm
 
 import hu.bme.aut.szoftarch.farmgame.view.NameService
 import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
+import java.time.LocalDate
 
 data class Land(
     val id: Int,
@@ -51,7 +52,7 @@ data class Land(
 
             "action_crop" -> {
                 val planter_id = params[0].toIntOrNull() ?: throw Exception("Invalid id")
-                val newPlant =  Planter(planter_id)
+                val newPlant =  Planter(planter_id, LocalDate.now())
                 newPlant.plant(Crop(NameService.getDisplayName(params[1]), params[1]))
                 content = newPlant
             }

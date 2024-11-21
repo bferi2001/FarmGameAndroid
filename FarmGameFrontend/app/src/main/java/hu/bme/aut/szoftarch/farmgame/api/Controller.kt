@@ -1,5 +1,7 @@
 package hu.bme.aut.szoftarch.farmgame.api
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.google.gson.Gson
 import hu.bme.aut.szoftarch.farmgame.api.dao.BarnDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.PlantedPlantDao
@@ -21,6 +23,9 @@ import io.ktor.client.request.put
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.serialization.gson.gson
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Date
 
 const val BACKEND_URL = "http://192.168.68.71:5153/"
 
@@ -104,6 +109,11 @@ class Controller(val token: String) {
         for(plant in plants){
             val content = Planter(
                 id = plant.id,
+                plantTime = toLocalDate(plant.plantTime),
+                harvestTime = if(plant.harvestTime == null) null else toLocalDate(plant.harvestTime!!),
+                wateringTime = if(plant.wateringTime == null) null else toLocalDate(plant.wateringTime!!),
+                fertilisingTime = if(plant.fertilisingTime == null) null else toLocalDate(plant.fertilisingTime!!),
+                weedingTime = if(plant.weedingTime == null) null else toLocalDate(plant.weedingTime!!)
             )
             val crop = Crop(
                 name = displayNames[plant.cropsTypeName].toString(),
@@ -133,6 +143,13 @@ class Controller(val token: String) {
         lands.sortBy { it.position }
         return lands
     }
+
+    private fun toLocalDate(date: String): LocalDate {
+        val modifiedDate = date.replace("T", " ").split('.')[0]
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        return LocalDate.parse(modifiedDate, formatter)
+    }
+
     private fun hasLandOnPosition(position: Int, lands: List<Land>): Boolean {
         for (land in lands) {
             if (land.position == position) {

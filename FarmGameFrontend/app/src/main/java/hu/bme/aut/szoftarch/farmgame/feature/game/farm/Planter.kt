@@ -2,9 +2,16 @@ package hu.bme.aut.szoftarch.farmgame.feature.game.farm
 
 import hu.bme.aut.szoftarch.farmgame.view.NameService
 import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
+import java.time.LocalDate
+import java.util.Date
 
 class Planter(
     val id: Int,
+    val plantTime: LocalDate,
+    val harvestTime: LocalDate? = null,
+    val wateringTime: LocalDate? = null,
+    val weedingTime: LocalDate? = null,
+    val fertilisingTime: LocalDate? = null
 ) : Buildable() {
     var content: Crop? = null
     var finished: Boolean = false
