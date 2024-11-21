@@ -6,7 +6,9 @@ import hu.bme.aut.szoftarch.farmgame.api.dao.BarnDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.PlantedPlantDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.QuestTypeDao
 import hu.bme.aut.szoftarch.farmgame.feature.game.Player
+import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Buildable
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Building
+import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Crop
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Farm
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Planter
@@ -135,8 +137,22 @@ open class Controller(val token: String) {
         TODO("Not yet implemented")
     }
 
-    open fun interact(land: Land, interaction: String, params: List<String>): Boolean {
-        TODO("Not yet implemented")
+    open suspend fun interact(land: Land, interaction: String, params: List<String>): Boolean {
+        val position = land.position
+        if(land.content is Building)
+        {
+            val res = post("api/farm/plant/$position/$interaction", token)
+            return res.status.value == 200
+        }
+        else if(land.content is Planter)
+        {
+            val res = post("api/farm/barn/$position/$interaction", token)
+            return res.status.value == 200
+        }
+        else
+        {
+            return land.interact(interaction, params)
+        }
     }
 
     open fun getDisplayNames(): Map<String, String> {

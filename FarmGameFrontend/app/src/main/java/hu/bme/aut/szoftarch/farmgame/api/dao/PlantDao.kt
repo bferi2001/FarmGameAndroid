@@ -7,9 +7,9 @@ data class PlantedPlantDao(
     var userName: String? = null,
     var cropsTypeName: String,
     var position: Int,
-    var plantTime: OffsetDateTime,
-    var harvestTime: OffsetDateTime? = null,
-    var wateringTime: OffsetDateTime? = null,
-    var weedingTime: OffsetDateTime? = null,
-    var fertilisingTime: OffsetDateTime? = null
+    var plantTime: String,
+    var harvestTime: String? = null,
+    var wateringTime: String? = null,
+    var weedingTime: String? = null,
+    var fertilisingTime: String? = null
 )

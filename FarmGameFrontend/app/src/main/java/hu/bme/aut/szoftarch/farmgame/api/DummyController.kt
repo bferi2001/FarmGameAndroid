@@ -22,10 +22,6 @@ class DummyController(token: String) : Controller(token) {
         return listOf( "action_plough","action_build:building_cow_shed", "action_build:building_sheep_pen",)
     }
 
-    override fun interact(land: Land, interaction: String, params: List<String>): Boolean {
-        return land.interact(interaction, params)
-    }
-
     override fun getDisplayNames(): Map<String, String> {
         return mapOf(
             Pair("crop_wheat", "Wheat"),

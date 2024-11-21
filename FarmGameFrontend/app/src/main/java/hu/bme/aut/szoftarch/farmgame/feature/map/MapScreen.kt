@@ -12,6 +12,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -49,7 +50,7 @@ fun MapScreen(
                     loading = false
                 }
                 is MapViewModel.InitState.Error -> {
-                    onToLoginScreen
+                    onToLoginScreen()
                     loading = false
                 }
                 else -> loading = true
@@ -58,6 +59,7 @@ fun MapScreen(
     }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 modifier = Modifier.border(4.dp, earthTone),

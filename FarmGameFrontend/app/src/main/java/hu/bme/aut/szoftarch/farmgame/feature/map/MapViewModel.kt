@@ -72,18 +72,20 @@ class MapViewModel @Inject constructor() : ViewModel() {
     }
 
     fun interact(interaction: String, params: List<String>) {
-        if (selectedLand < 0) {
-            return
-        }
-        if(session.controller.interact(session.farm!!.getLand(selectedLand), interaction, params)){
-            closeMenu()
-            selectedLand = -1
-        }
+        viewModelScope.launch(Dispatchers.IO) {
+            if (selectedLand < 0) {
+                return@launch
+            }
+            if(session.controller.interact(session.farm!!.getLand(selectedLand), interaction, params)){
+                closeMenu()
+                selectedLand = -1
+            }
 
-        // Bad but quick way to update UI
-        val cheese = selectedLand
-        selectedLand = -1
-        selectedLand = cheese
+            // Bad but quick way to update UI
+            val cheese = selectedLand
+            selectedLand = -1
+            selectedLand = cheese
+        }
     }
 
     fun getInteractions(): List<String> {
