@@ -27,7 +27,13 @@ namespace FarmGameBackend.Controllers
         [HttpGet("market")]
         public async Task<ActionResult<IEnumerable<Classified>>> GetClassifiedForMarketAsync()
         {
+            List<Classified> classifiedList = await _context.Classifieds.Where(classified => classified.Deadline <= DateTimeOffset.Now).ToListAsync();
+            foreach (var item in classifiedList)
+            {
+                await ClassifiedDeleted(item);
+            }
             return await _context.Classifieds.Where(classified => classified.Deadline > DateTimeOffset.Now).ToListAsync();
+
         }
 
         [HttpPost("market/{productName}/{quantity}/{price}")]
@@ -43,12 +49,7 @@ namespace FarmGameBackend.Controllers
                 UserProduct? userProduct = await _context.ProductHelper.GetUserProduct(productName);
                 int ownedQuantity = userProduct.Quantity;
 
-                if (ownedQuantity - quantity < 0)
-                {
-                    return BadRequest("Not enough product!");
-                }
                 await _context.ProductHelper.AddUserProduct(productName, -quantity);
-
                 DateTime deadline = DateTime.UtcNow.Add(TimeSpan.FromHours(2*24));
                 
                 Classified classified = new Classified
@@ -99,12 +100,6 @@ namespace FarmGameBackend.Controllers
                 Product? product = await _context.ProductHelper.GetProductByName(productName);
                 UserProduct? userProduct = await _context.ProductHelper.GetUserProduct(productName);
                 int ownedQuantity = userProduct.Quantity;
-
-                if (ownedQuantity - quantity < 0)
-
-                {
-                    return BadRequest("Not enough product!");
-                }
 
                 await _context.ProductHelper.AddUserProduct(productName, -quantity);
                 _currentUser.UserMoney += product.QuickSellPrice * quantity;

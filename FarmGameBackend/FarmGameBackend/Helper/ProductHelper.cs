@@ -139,6 +139,10 @@ namespace FarmGameBackend.Helper
             else
             {
                 // This is used in MarketController to subtract Products as well
+                if(userProduct.Quantity - quantity < 0)
+                {
+                    throw new BadRequestException("Can't add new Product with negative value");
+                }
                 userProduct.Quantity += quantity;
                 await PutUserProduct(userProduct.Id, userProduct);
                 return;
