@@ -13,19 +13,19 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,9 +35,10 @@ import hu.bme.aut.szoftarch.farmgame.ui.theme.FarmGameAndroidTheme
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun SellingItem(item: String, price: Int, count: Int,
-                onInputValueChanged: (Int) -> Unit) {
-    var inputValue by remember { mutableStateOf(0) }
+fun SellingItem(item: String, price: Int, quantity: Int,
+                secondary: Boolean = false,
+                onInputValueChanged: (Int) -> Unit){
+    var inputValue by remember { mutableIntStateOf(0) }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -47,9 +48,16 @@ fun SellingItem(item: String, price: Int, count: Int,
         ) {
             Column {
                 Text(text = item, fontWeight = FontWeight.Bold)
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(1.dp))
+                Divider(
+                    modifier = Modifier
+                        .height(1.dp)
+                        .width(50.dp),
+                    color = MaterialTheme.colorScheme.secondaryContainer // Set divider color
+                )
+                Spacer(modifier = Modifier.height(2.dp))
                 Text(text = "Price: $price")
-                Text(text = "Count: $count")
+                Text(text = "Count: $quantity")
             }
 
             // Input field with + and - buttons
@@ -66,14 +74,15 @@ fun SellingItem(item: String, price: Int, count: Int,
                 TextField(
                     value = inputValue.toString(),
                     onValueChange = { newValue ->
-                        inputValue = newValue.toIntOrNull()?.coerceIn(0, count) ?: 0
+                        inputValue = newValue.toIntOrNull()?.coerceIn(0, quantity) ?: 0
+                        onInputValueChanged(inputValue)
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.width(70.dp), // Set a specific width for the TextField
                 )
                 IconButton(
                     onClick = {
-                        inputValue = (inputValue + 1).coerceAtMost(count)
+                        inputValue = (inputValue + 1).coerceAtMost(quantity)
                         onInputValueChanged(inputValue)
                         },
                     modifier = Modifier.weight(1f)
