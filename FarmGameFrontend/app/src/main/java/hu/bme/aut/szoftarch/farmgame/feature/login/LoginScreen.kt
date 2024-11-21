@@ -1,10 +1,8 @@
 package hu.bme.aut.szoftarch.farmgame.feature.login
 
 
-import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -14,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -41,50 +38,22 @@ fun LoginScreen(
     onToMap: () -> Unit,
 ) {
     //https://www.youtube.com/watch?v=P_jZMDmodG4
-    val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
 
-    val onLoginClick: () -> Unit = {
-        val credentialManager = CredentialManager.create(context)
+    val snackbarHostState = remember { SnackbarHostState() }
 
-        val rawNonce = UUID.randomUUID().toString()
-        val bytes = rawNonce.toByteArray()
-        val md = MessageDigest.getInstance("SHA-256")
-        val digest = md.digest(bytes)
-        val hashedNonce = digest.fold("") { str, it -> str + "%02x".format(it) }
-
-        val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
-            .setFilterByAuthorizedAccounts(false)
-            .setServerClientId(context.getString(R.string.googleServiceToken))
-            .setNonce(hashedNonce)
-            .build()
-
-        val request: GetCredentialRequest = GetCredentialRequest.Builder()
-            .addCredentialOption(googleIdOption)
-            .build()
-
-        coroutineScope.launch {
-            try {
-                val result = credentialManager.getCredential(
-                    request = request,
-                    context = context,
-                )
-                val credential = result.credential
-
-                val googleIdTokenCredential = GoogleIdTokenCredential
-                    .createFrom(credential.data)
-
-                val googleIdToken = googleIdTokenCredential.idToken
-
-                Log.i(TAG, googleIdToken)
-                Toast.makeText(context, "You are signed in!", Toast.LENGTH_SHORT).show()
-                onToMap()
-            }
-            catch (e: GetCredentialException) {
-                Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
-            }
-            catch (e: GoogleIdTokenParsingException) {
-                Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+    LaunchedEffect(key1 = loginViewModel.tokenState) {
+        loginViewModel.tokenState.collect {
+            when (it) {
+                is LoginViewModel.TokenState.Idle -> {}
+                is LoginViewModel.TokenState.Loading -> {}
+                is LoginViewModel.TokenState.Success -> {
+                    val googleIdToken = it.token
+                    Log.i(TAG, "GoogleToken: "+googleIdToken)
+                    onToMap()
+                }
+                is LoginViewModel.TokenState.Error -> {
+                    snackbarHostState.showSnackbar(it.message, duration = SnackbarDuration.Short)
+                }
             }
         }
     }
@@ -118,8 +87,11 @@ fun LoginScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            val context= LocalContext.current
             Button(
-                onClick = onLoginClick
+                onClick = {
+                    loginViewModel.getToken(context)
+                }
             ) {
                 Text(text = "Login with Google account")
             }

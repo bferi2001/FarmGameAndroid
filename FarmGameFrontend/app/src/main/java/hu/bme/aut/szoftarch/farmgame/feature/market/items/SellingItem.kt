@@ -24,7 +24,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -38,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import com.example.compose.AppTheme
 
 
-@SuppressLint("SuspiciousIndentation")
 @Composable
 fun SellingItem(item: String, price: Int, quantity: Int,
                 secondary: Boolean = false,

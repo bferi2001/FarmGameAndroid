@@ -12,9 +12,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.compose.AppTheme
+import androidx.activity.viewModels
+import dagger.hilt.android.AndroidEntryPoint
+import hu.bme.aut.szoftarch.farmgame.feature.login.LoginViewModel
 import hu.bme.aut.szoftarch.farmgame.navigation.NavGraph
+import kotlin.getValue
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val loginViewModel: LoginViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

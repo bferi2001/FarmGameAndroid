@@ -8,31 +8,54 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.compose.earthTone
 import com.example.compose.woodColor
 import com.example.compose.woodLight
+import androidx.lifecycle.viewmodel.compose.viewModel
 import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
-
-val playerId = 1 //TODO
-val viewModel = MapViewModel(playerId)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen(
+    viewModel: MapViewModel = viewModel(),
     onToLoginScreen: () -> Unit,
     onToMarketScreen: () -> Unit,
     onToQuestsScreen: () -> Unit,
 ) {
+    var loading by remember{ mutableStateOf(true) }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(key1 = viewModel.loadingState) {
+        viewModel.loadingState.collect{
+            when(it){
+                is MapViewModel.InitState.Success -> {
+                    loading = false
+                }
+                is MapViewModel.InitState.Error -> {
+                    onToLoginScreen
+                    loading = false
+                }
+                else -> loading = true
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -75,19 +98,25 @@ fun MapScreen(
             }
         },
     ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                LandGrid(
-                    Modifier
-                        .fillMaxSize(),
-                    viewModel
-                )
+        if(loading)
+        {
+            CircularProgressIndicator()
+        }
+        else{
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    LandGrid(
+                        Modifier
+                            .fillMaxSize(),
+                        viewModel
+                    )
+                }
+                SideMenuScreen(viewModel)
             }
-            SideMenuScreen(viewModel)
         }
     }
 }

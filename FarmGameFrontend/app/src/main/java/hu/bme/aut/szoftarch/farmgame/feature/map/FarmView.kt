@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -12,7 +11,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,8 +28,8 @@ import hu.bme.aut.szoftarch.farmgame.R
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
 import hu.bme.aut.szoftarch.farmgame.view.ImageService
 import hu.bme.aut.szoftarch.farmgame.view.NameService
-import kotlinx.coroutines.delay
-import java.util.Date
+
+const val FARM_GRID_COLUMN_COUNT = 10
 
 @Composable
 fun LandGrid(modifier: Modifier, viewModel: MapViewModel) {
@@ -40,7 +38,7 @@ fun LandGrid(modifier: Modifier, viewModel: MapViewModel) {
         modifier = modifier
             .background(Color(0xFF2F8136)) // Texture background Color
     ) {
-        items(viewModel.getFarm().lands) { land ->
+        items(viewModel.getFarm()?.lands ?: emptyList<Land>()) { land ->
             LandItem(land, viewModel)
         }
     }
