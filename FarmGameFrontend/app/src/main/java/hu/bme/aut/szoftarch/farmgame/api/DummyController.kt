@@ -59,10 +59,6 @@ class DummyController(token: String) : Controller(token) {
     Quest(30, "Quest 6", "click some more"),
     )
 
-    override fun getQuests(): List<Quest> {
-        return quests
-    }
-
     override fun claimQuest(quest: Quest){
         quests.remove(quest)
     }

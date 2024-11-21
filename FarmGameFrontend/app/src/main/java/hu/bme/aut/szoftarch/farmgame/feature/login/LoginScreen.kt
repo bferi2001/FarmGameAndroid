@@ -51,6 +51,7 @@ fun LoginScreen(
     }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 modifier = Modifier.border(4.dp, earthTone),

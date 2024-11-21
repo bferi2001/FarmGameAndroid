@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import hu.bme.aut.szoftarch.farmgame.api.dao.BarnDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.PlantedPlantDao
+import hu.bme.aut.szoftarch.farmgame.api.dao.QuestTypeDao
 import hu.bme.aut.szoftarch.farmgame.feature.game.Player
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Building
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Farm
@@ -27,6 +28,7 @@ fun <T> Gson.fromJsonList(jsonString: String): List<T> =
     this.fromJson(jsonString, object: TypeToken<ArrayList<T>>() { }.type)
 
 open class Controller(val token: String) {
+    val gson = Gson()
     var client = HttpClient(){
         defaultRequest {
             url(BACKEND_URL)
@@ -60,7 +62,6 @@ open class Controller(val token: String) {
     open suspend fun getLands(size: Int): List<Land> {
         var res = get("api/farm/Barn/barns", token)
         var json = res.bodyAsText()
-        val gson = Gson()
         val barns = gson.fromJson(json, Array<BarnDao>::class.java)
 
         res = get("api/farm/plant/plantedPlants", token)
@@ -138,8 +139,16 @@ open class Controller(val token: String) {
         TODO("Not yet implemented")
     }
 
-    open fun getQuests(): List<Quest>{
-        TODO("Not yet implemented")
+    open suspend fun getQuests(): List<Quest>{
+        var res = get("api/farm/quest/availableQuests", token)
+        var json = res.bodyAsText()
+        val quests = gson.fromJson(json, Array<QuestTypeDao>::class.java)
+
+        var questList = mutableListOf<Quest>()
+        for(quest in quests){
+            questList.add(Quest(goal = 0, description = quest.description, title = "Quest-${quest.id}"))
+        }
+        return questList
     }
 
     open fun claimQuest(quest: Quest) {

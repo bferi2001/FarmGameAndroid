@@ -15,31 +15,61 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.compose.earthTone
 import com.example.compose.woodLight
-
-val viewModel = QuestViewModel()
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestsScreen(
+    questsViewModel: QuestViewModel = viewModel(),
     onToMap: () -> Unit,
 ) {
-    val quests by viewModel.quests.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    var loading by remember { mutableStateOf(true) }
+    var quests by remember { mutableStateOf(listOf<Quest>()) }
+
+    LaunchedEffect(key1 = questsViewModel.loadingState) {
+        questsViewModel.loadingState.collect{
+            when(it){
+                is QuestViewModel.QuestLoadState.Loading -> {
+                    loading = true
+                }
+                is QuestViewModel.QuestLoadState.Success -> {
+                    loading = false
+                    quests = it.quests
+                }
+                is QuestViewModel.QuestLoadState.Error -> {
+                    loading = false
+                    snackbarHostState.showSnackbar(it.message, duration = SnackbarDuration.Short)
+                }
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -60,17 +90,27 @@ fun QuestsScreen(
                 }
             )
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
+        if(loading)
+        {
+            CircularProgressIndicator(
+                color = MaterialTheme.colorScheme.primary,
+            )
+        }
+        else
+        {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
             ) {
-                items(quests) { quest ->
-                    QuestItem(quest)
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                ) {
+                    items(quests) { quest ->
+                        QuestItem(quest)
+                    }
                 }
             }
         }
@@ -116,7 +156,7 @@ fun QuestItem(quest: Quest) {
                 Text(text = "${quest.progress}/${quest.goal}")
                 Button(
                     onClick = {
-                        viewModel.claimQuest(quest)
+                        //viewModel.claimQuest(quest)
                     },
                     enabled = quest.isClaimable(),
                 ) {
