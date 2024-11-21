@@ -66,10 +66,13 @@ class Controller(val token: String) {
             Pair("crop_null", "No crops"),
             Pair("empty", "Empty"),
             Pair("action_build", "Build"),
-            Pair("action_build:building_cow", "Cow Shed"),
-            Pair("action_build:building_chicken", "Chicken Shed"),
-            Pair("action_build:building_pig", "Pig Shed"),
-            Pair("action_plough", "Plough"),
+            Pair("building_cow", "Cow Shed"),
+            Pair("building_chicken", "Chicken Shed"),
+            Pair("building_pig", "Pig Shed"),
+            Pair("crop_wheat", "Wheat"),
+            Pair("crop_carrot", "Carrot"),
+            Pair("crop_potato", "Potato"),
+            Pair("crop_flower", "Flower"),
         )
     }
 
@@ -175,6 +178,11 @@ class Controller(val token: String) {
         val res = post("api/farm/barn/$position/$building")
         return res.status.value == 200
     }
+    private suspend fun buildPlanter(land: Land, plant: String): Boolean {
+        val position = land.position
+        val res = post("api/farm/plant/$position/$plant")
+        return res.status.value == 200
+    }
 
     suspend fun interact(land: Land, interaction: String, params: List<String>): Boolean {
         if(land.content is Building)
@@ -199,6 +207,13 @@ class Controller(val token: String) {
         else if(interaction == "action_build")
         {
             val res = buildBuilding(land, params[1])
+            if(!res){
+                return false
+            }
+        }
+        else if(interaction == "action_crop")
+        {
+            val res = buildPlanter(land, params[1])
             if(!res){
                 return false
             }

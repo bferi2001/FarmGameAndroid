@@ -104,7 +104,9 @@ fun MapScreen(
     ) { innerPadding ->
         if(loading)
         {
-            CircularProgressIndicator()
+            CircularProgressIndicator(
+                color = MaterialTheme.colorScheme.onPrimary,
+            )
         }
         else{
             Box(

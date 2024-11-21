@@ -104,7 +104,7 @@ fun CreateInteractButtons(viewModel: MapViewModel) {
                 )
             })
         {
-            Text(text = NameService.getDisplayName(interaction))
+            Text(text = NameService.getDisplayName(interaction.split(":")[1]))
         }
     }
 }

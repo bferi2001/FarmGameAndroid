@@ -42,6 +42,11 @@ class Session(
         val buildingActions = possibleBuildings.map {
             "action_build:$it"
         }
-        return listOf( "action_plough").plus(buildingActions)
+
+        val possibleCrops = getPossibleCrops()
+        val cropActions = possibleCrops.map {
+            "action_crop:$it"
+        }
+        return cropActions.plus(buildingActions)
     }
 }

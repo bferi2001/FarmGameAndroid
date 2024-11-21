@@ -95,7 +95,7 @@ fun QuestsScreen(
         if(loading)
         {
             CircularProgressIndicator(
-                color = MaterialTheme.colorScheme.primary,
+                color = MaterialTheme.colorScheme.onPrimary,
             )
         }
         else
