@@ -5,6 +5,7 @@ import hu.bme.aut.szoftarch.farmgame.feature.game.Player
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Building
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Farm
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
+import hu.bme.aut.szoftarch.farmgame.feature.quests.Quest
 
 open class Controller {
     //TODO get values from backend
@@ -51,6 +52,14 @@ open class Controller {
     }
 
     open fun getDisplayNames(): Map<String, String> {
+        TODO("Not yet implemented")
+    }
+
+    open fun getQuests(): List<Quest>{
+        TODO("Not yet implemented")
+    }
+
+    open fun claimQuest(quest: Quest) {
         TODO("Not yet implemented")
     }
 }
