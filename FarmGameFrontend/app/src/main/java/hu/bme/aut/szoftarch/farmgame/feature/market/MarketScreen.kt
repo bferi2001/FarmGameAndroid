@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import hu.bme.aut.szoftarch.farmgame.data.market.SellingItemData
 import hu.bme.aut.szoftarch.farmgame.feature.market.items.AdItem
 import hu.bme.aut.szoftarch.farmgame.feature.market.items.SellingItem
 
@@ -40,6 +41,16 @@ fun MarketScreen(
 ) {
     val context = LocalContext.current
     var totalPrice by remember { mutableStateOf(0) } // State
+
+
+    val sellingItems = listOf(
+        SellingItemData("Wheat", 1, 2),
+        SellingItemData("Corn", 3, 4),
+        SellingItemData("Carrot", 3000, 30),
+        // Add more items as needed
+    )
+
+
 
     Scaffold(
         topBar = {
@@ -105,16 +116,41 @@ fun MarketScreen(
                             Text("Sell")
                         }
                     }
-                    LazyColumn() {
-                        item {
-                            SellingItem("Wheat", 1, 2) {}
-                            SellingItem("Corn", 3, 4) {}
+
+                    LazyColumn {
+                        /*item {
+                            SellingItem("Wheat", 1, 2) { it ->
+                                totalPrice = it
+                            }
+                            SellingItem("Corn", 3, 4) { it ->
+                                totalPrice = it
+                            }
                             SellingItem("Carrot", 3000, 30) {}
+                        }*/
+                        sellingItems.forEach { sellingItemData ->
+                            item {
+                                SellingItem(
+                                    item = sellingItemData.item,
+                                    price = sellingItemData.price,
+                                    count = sellingItemData.count,
+                                ) { it ->
+                                    sellingItemData.sellCount = it
+                                    totalPrice = calcTotalPrice(sellingItems)
+                                }
+                            }
                         }
                     }
+
                 }
             }
-
         }
     }
+}
+
+private fun calcTotalPrice(sellingItems: List<SellingItemData>): Int {
+    var totalPrice = 0
+    sellingItems.forEach  { item ->
+        totalPrice += item.price * item.sellCount
+    }
+    return totalPrice
 }

@@ -16,8 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import hu.bme.aut.szoftarch.farmgame.R
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
 import hu.bme.aut.szoftarch.farmgame.view.ImageService
+import hu.bme.aut.szoftarch.farmgame.view.NameService
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
+import kotlin.text.toFloat
 
 const val FARM_GRID_COLUMN_COUNT = 10
 
@@ -42,20 +47,27 @@ fun LandItem(land: Land, viewModel: MapViewModel) {
             .aspectRatio(1f)
             .border(
                 width = 2.dp,
-                color =getBorderColor(land.position, viewModel.selectedLand),
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)),
+                color = getBorderColor(land.position, viewModel.selectedLand),
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
+            ),
         shape = androidx.compose.foundation.shape.RoundedCornerShape(0.dp),
         onClick = {
             viewModel.onLandClicked(land)
         }
     ) {
-        Image(
-            painter = painterResource(id = ImageService.getImage(land.getTag())),
-            contentDescription = land.getTag(),
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f)
-        )
+        Box() {
+            val image = ImageService.getImage(land.getTag())
+            Image(
+                painter = painterResource(id = image),
+                contentDescription = land.getTag(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f)
+            )
+            if (image == R.drawable.missing_tile) {
+                Text(text = land.getName())
+            }
+        }
     }
 }
 
@@ -75,14 +87,14 @@ fun CreateInteractButtons(viewModel: MapViewModel) {
         Button(
             onClick = {
                 viewModel.interact(
-                    interaction, /*Temp placeholder -> */
-                    listOf("1234", "building_cow_shed")
+                    interaction.split(":")[0], /*Temp placeholder -> */
+                    listOf("1234", interaction.split(":").getOrNull(1) ?: "")
                 )
                 viewModel.closeMenu()
                 viewModel.selectedLand = -1
             })
         {
-            Text(text = interaction)
+            Text(text = NameService.getDisplayName(interaction))
         }
     }
 }

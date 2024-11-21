@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,16 +32,11 @@ import androidx.compose.ui.unit.dp
 import hu.bme.aut.szoftarch.farmgame.ui.theme.FarmGameAndroidTheme
 
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun SellingItem(item: String, price: Int, count: Int,
                 onInputValueChanged: (Int) -> Unit) {
     var inputValue by remember { mutableStateOf(0) }
-    /*Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        elevation = 2.dp
-    ) {*/
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -56,10 +52,12 @@ fun SellingItem(item: String, price: Int, count: Int,
             }
 
             // Input field with + and - buttons
-            var inputValue by remember { mutableIntStateOf(0) }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(
-                    onClick = { inputValue = (inputValue - 1).coerceAtLeast(0) },
+                    onClick = {
+                        inputValue = (inputValue - 1).coerceAtLeast(0)
+                        onInputValueChanged(inputValue)
+                        },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Filled.KeyboardArrowDown, contentDescription = "Decrease")
@@ -67,23 +65,22 @@ fun SellingItem(item: String, price: Int, count: Int,
                 TextField(
                     value = inputValue.toString(),
                     onValueChange = { newValue ->
-                        //inputValue = newValue.toIntOrNull() ?: 0
-
                         inputValue = newValue.toIntOrNull()?.coerceIn(0, count) ?: 0
-                        onInputValueChanged(inputValue * price) // Notify the parent about the change
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.width(70.dp), // Set a specific width for the TextField
                 )
                 IconButton(
-                    onClick = { inputValue = (inputValue + 1).coerceAtMost(count) },
+                    onClick = {
+                        inputValue = (inputValue + 1).coerceAtMost(count)
+                        onInputValueChanged(inputValue)
+                        },
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Filled.KeyboardArrowUp, contentDescription = "Increase")
                 }
             }
         }
-    //}
 }
 
 
