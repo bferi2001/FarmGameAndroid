@@ -1,12 +1,18 @@
 ﻿using FarmGameBackend.Entity;
+using FarmGameBackend.Helper;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.X509Certificates;
 
 namespace FarmGameBackend.DbContexts
 {
     public class FarmApplicationContext : DbContext
     {
+        public ProductHelper ProductHelper;
+        public PlantHelper PlantHelper;
         public FarmApplicationContext()
         {
+            ProductHelper ProductHelper= new ProductHelper(this);
+            PlantHelper PlantHelper = new PlantHelper(this);
         }
 
         public FarmApplicationContext(DbContextOptions<FarmApplicationContext> options)

@@ -3,6 +3,7 @@ using FarmGameBackend.Entity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static FarmGameBackend.Helper.ProductHelper;
 
 namespace FarmGameBackend.Controllers
 {
@@ -14,15 +15,15 @@ namespace FarmGameBackend.Controllers
         public ProductController(FarmApplicationContext context)
         {
             _context = context;
-            string? userEmail = HttpContext.Items["Email"]?.ToString();
-            _currentUser = _context.GetCurrentUser(userEmail!);
-            /*_currentUser = new User
+            //string? userEmail = HttpContext.Items["Email"]?.ToString();
+            //_currentUser = _context.GetCurrentUser(userEmail!);
+            _currentUser = new User
             {
                 Id = 0,
                 Email = "testemail@gmail.com",
                 UserXP = 2000,
                 UserMoney = 2000
-            };*/
+            };
         }
         [HttpGet("currentuser/inventory/market")]
         public async Task<ActionResult<IEnumerable<MarketUserProduct>>> GetUserProductsForMarketAsync()
@@ -46,15 +47,7 @@ namespace FarmGameBackend.Controllers
         [HttpGet("currentuser/inventory")]
         public async Task<List<UserProduct>> GetUserProductsAsync()
         {
-            List<UserProduct> userProducts = await _context.UserProduct
-                .Where(up => up.UserName == _currentUser.Email).ToListAsync();
-            return userProducts;
-        }
-        public class MarketUserProduct
-        {
-            public string ProductName { get; set; }
-            public int QuickSellPrice { get; set; }
-            public int Quantity { get; set; }
+            return await _context.ProductHelper.GetUserProductsAsync();
         }
     }
     
