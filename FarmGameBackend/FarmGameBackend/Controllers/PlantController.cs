@@ -59,7 +59,7 @@ namespace FarmGameBackend.Controllers
             _context.PlantedPlants.Add(newPlant);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPlantedPlant", new { id = newPlant.Id }, newPlant);
+            return Ok();
         }
 
         [HttpPut("{position:int}/watering")]

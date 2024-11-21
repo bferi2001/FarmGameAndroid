@@ -57,7 +57,7 @@ namespace FarmGameBackend.Controllers
             _context.Barns.Add(newBarn);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBarn", new { id = newBarn.Id }, newBarn);
+            return Ok();
         }
 
         [HttpPut("{position:int}/cleaning")]
@@ -187,7 +187,7 @@ namespace FarmGameBackend.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            return NoContent();
+            return Ok();
         }
         
         [HttpGet("barns")]

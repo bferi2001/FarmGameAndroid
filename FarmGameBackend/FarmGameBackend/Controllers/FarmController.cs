@@ -9,10 +9,12 @@ namespace FarmGameBackend.Controllers;
 [ApiController]
 public class FarmController(FarmApplicationContext context) : ControllerBase
 {
+    User _currentUser = context.GetCurrentUser("testemail@gmail.com");
+    
     [HttpGet("interactions/{landPosition:int}")]
     public async Task<ActionResult> GetInteractions(int landPosition)
     {
-        var email = HttpContext.Items["Email"]!.ToString()!;
+        var email = _currentUser.Email;
         User user = context.GetCurrentUser(email!);
         int xp = user.UserXP;
         
@@ -44,7 +46,7 @@ public class FarmController(FarmApplicationContext context) : ControllerBase
 
     private int FarmSize()
     {
-        var email = HttpContext.Items["Email"]!.ToString()!;
+        var email = _currentUser.Email;
         User user = context.GetCurrentUser(email!);
         int xp = user.UserXP;
         

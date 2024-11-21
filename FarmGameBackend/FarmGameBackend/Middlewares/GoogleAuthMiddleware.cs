@@ -23,7 +23,15 @@ public class GoogleAuthMiddleware(RequestDelegate next)
         }
 
         context.Items["Email"] = payload.Email;
-        await next(context);
+        try
+        {
+            await next(context);
+        }
+        catch (Exception ex)
+        {
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            await context.Response.WriteAsync(ex.Message);
+        }
     }
     
     private async Task<GoogleJsonWebSignature.Payload?> VerifyGoogleIdToken(string idToken)
