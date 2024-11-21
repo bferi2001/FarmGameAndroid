@@ -9,10 +9,12 @@ namespace FarmGameBackend.DbContexts
     {
         public ProductHelper ProductHelper;
         public PlantHelper PlantHelper;
+        public BarnHelper BarnHelper;
         public FarmApplicationContext()
         {
-            ProductHelper ProductHelper= new ProductHelper(this);
-            PlantHelper PlantHelper = new PlantHelper(this);
+            ProductHelper= new ProductHelper(this);
+            PlantHelper = new PlantHelper(this);
+            BarnHelper = new BarnHelper(this);
         }
 
         public FarmApplicationContext(DbContextOptions<FarmApplicationContext> options)

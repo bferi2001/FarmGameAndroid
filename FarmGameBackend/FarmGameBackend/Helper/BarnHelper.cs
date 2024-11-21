@@ -37,7 +37,7 @@ namespace FarmGameBackend.Helper
             return _context.BarnTypes.Where( barnType => unlockedMeatNames.Contains(barnType.ProductName)).Select(barnType => barnType.Name).ToList();
         }
 
-        public bool DoesCroptypeExistsAndUnlocked(string _barnName)
+        public bool DoesMeattypeExistsAndUnlocked(string _barnName)
         {
             return GetUnlockedBarnsNames().Any(barnName => barnName == _barnName);
         }
@@ -54,7 +54,7 @@ namespace FarmGameBackend.Helper
 
         }
 
-        public Barn CreatePlantedPlant(string _barnTypeName, int _position, int _growTime)
+        public Barn CreateBarn(string _barnTypeName, int _position, int _growTime)
         {
             var r = new Random();
             DateTimeOffset currentTime = DateTimeOffset.Now;
@@ -108,6 +108,16 @@ namespace FarmGameBackend.Helper
                 }
             }
             return;
+        }
+
+        public async Task<string> GetProductnameByBarntype(string barntype)
+        {
+            var product = await _context.BarnTypes.Where( bt => bt.Name == barntype).Select( bt => bt.ProductName ).FirstOrDefaultAsync();
+            if (product == null)
+            {
+                throw new NotFoundException("This barntype does not exists.");
+            }
+            return product;
         }
     }
 }
