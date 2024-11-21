@@ -1,7 +1,6 @@
 package hu.bme.aut.szoftarch.farmgame.feature.market
 
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,7 +22,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -31,8 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.compose.earthTone
-import com.example.compose.woodLight
 import hu.bme.aut.szoftarch.farmgame.data.market.SellingItemData
 import hu.bme.aut.szoftarch.farmgame.feature.market.items.AdItem
 import hu.bme.aut.szoftarch.farmgame.feature.market.items.SellingItem
@@ -42,19 +39,11 @@ import hu.bme.aut.szoftarch.farmgame.feature.market.items.SellingItem
 @Composable
 fun MarketScreen(
     onToMap: () -> Unit,
+    onToCreateAd: () -> Unit,
+    viewModel: MarketViewModel = viewModel(),
 ) {
     val context = LocalContext.current
-    var totalPrice by remember { mutableStateOf(0) } // State
-
-
-    val sellingItems = listOf(
-        SellingItemData("Wheat", 1, 2),
-        SellingItemData("Corn", 3, 4),
-        SellingItemData("Carrot", 3000, 30),
-        // Add more items as needed
-    )
-
-
+    var totalPrice by remember { mutableIntStateOf(0) } // State
 
     Scaffold(
         topBar = {
@@ -89,10 +78,29 @@ fun MarketScreen(
                         text = "List of ads",
                         fontWeight = FontWeight.Bold
                     )
-                    LazyColumn() {
-                        item {
-                            AdItem("Wheat", 5, 20, "TestUser1")
-                            AdItem("Corn", 10, 30, "test_user_2")
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Button(
+                            onClick = onToCreateAd
+                        ) {
+                            Text("Create ad")
+                        }
+                    }
+                    LazyColumn {
+                         items(viewModel.adItems.size) { i ->
+                            AdItem(
+                                item = viewModel.adItems[i].item,
+                                price = viewModel.adItems[i].price,
+                                count = viewModel.adItems[i].count,
+                                userName = viewModel.adItems[i].seller,
+                            ) {
+                                Toast.makeText(context, "Buying ad item...", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
                 }
@@ -106,7 +114,7 @@ fun MarketScreen(
                 // Column for selling items
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Sell items",
+                        text = "Quick sell items",
                         fontWeight = FontWeight.Bold
                     )
                     Row(
@@ -117,31 +125,31 @@ fun MarketScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text("Total: $totalPrice")
-                        Button(onClick = { /* TODO Handle sell button click */ }) {
+                        Button(
+                            onClick =
+                            {
+                                viewModel.sellingItems.forEach { item ->
+                                    item.quantity -= item.sellCount
+                                }
+                                /* TODO Handle giving money to user */
+                                totalPrice = 0
+                                Toast.makeText(context, "Selling item...", Toast.LENGTH_SHORT).show()
+                            }
+                        ) {
                             Text("Sell")
                         }
                     }
 
                     LazyColumn {
-                        /*item {
-                            SellingItem("Wheat", 1, 2) { it ->
-                                totalPrice = it
-                            }
-                            SellingItem("Corn", 3, 4) { it ->
-                                totalPrice = it
-                            }
-                            SellingItem("Carrot", 3000, 30) {}
-                        }*/
-                        sellingItems.forEach { sellingItemData ->
-                            item {
-                                SellingItem(
-                                    item = sellingItemData.item,
-                                    price = sellingItemData.price,
-                                    count = sellingItemData.count,
-                                ) { it ->
-                                    sellingItemData.sellCount = it
-                                    totalPrice = calcTotalPrice(sellingItems)
-                                }
+                        items(viewModel.sellingItems.size) { i ->
+                            SellingItem(
+                                item = viewModel.sellingItems[i].item,
+                                price = viewModel.sellingItems[i].price,
+                                quantity = viewModel.sellingItems[i].quantity,
+                                secondary = i % 2 == 0
+                            ) { it ->
+                                viewModel.sellingItems[i].sellCount = it
+                                totalPrice = calcTotalPrice(viewModel.sellingItems)
                             }
                         }
                     }
@@ -154,7 +162,7 @@ fun MarketScreen(
 
 private fun calcTotalPrice(sellingItems: List<SellingItemData>): Int {
     var totalPrice = 0
-    sellingItems.forEach { item ->
+    sellingItems.forEach  { item ->
         totalPrice += item.price * item.sellCount
     }
     return totalPrice
