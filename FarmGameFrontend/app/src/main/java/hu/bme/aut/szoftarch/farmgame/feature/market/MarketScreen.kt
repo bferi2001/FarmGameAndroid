@@ -38,7 +38,6 @@ import com.example.compose.AppTheme
 import com.example.compose.earthTone
 import com.example.compose.woodLight
 import hu.bme.aut.szoftarch.farmgame.data.market.SellingItemData
-import hu.bme.aut.szoftarch.farmgame.feature.market.createad.CreateAdScreen
 import hu.bme.aut.szoftarch.farmgame.feature.market.items.AdItem
 import hu.bme.aut.szoftarch.farmgame.feature.market.items.SellingItem
 

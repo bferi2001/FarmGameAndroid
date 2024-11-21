@@ -6,7 +6,6 @@ import hu.bme.aut.szoftarch.farmgame.api.Controller
 import hu.bme.aut.szoftarch.farmgame.api.LoginHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 

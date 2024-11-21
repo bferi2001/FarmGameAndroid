@@ -1,12 +1,9 @@
 package hu.bme.aut.szoftarch.farmgame.api
 
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import hu.bme.aut.szoftarch.farmgame.api.dao.BarnDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.PlantedPlantDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.QuestTypeDao
-import hu.bme.aut.szoftarch.farmgame.feature.game.Player
-import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Buildable
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Building
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Crop
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Farm
@@ -26,9 +23,6 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.serialization.gson.gson
 
 const val BACKEND_URL = "http://192.168.68.71:5153/"
-
-fun <T> Gson.fromJsonList(jsonString: String): List<T> =
-    this.fromJson(jsonString, object: TypeToken<ArrayList<T>>() { }.type)
 
 class Controller(val token: String) {
     val gson = Gson()
@@ -57,7 +51,7 @@ class Controller(val token: String) {
         }
     }
 
-    open suspend fun getFarmSize(): Int {
+    suspend fun getFarmSize(): Int {
         val res = get("api/farm/size")
         val size = res.body<Int>()
         return size
@@ -79,7 +73,7 @@ class Controller(val token: String) {
         )
     }
 
-    open suspend fun getLands(size: Int): List<Land> {
+    suspend fun getLands(size: Int): List<Land> {
         var res = get("api/farm/Barn/barns")
         var json = res.bodyAsText()
         val barns = gson.fromJson(json, Array<BarnDao>::class.java)
@@ -155,17 +149,17 @@ class Controller(val token: String) {
         return farm
     }
 
-    open suspend fun getPossibleBuildings(): List<String> {
+    suspend fun getPossibleBuildings(): List<String> {
         val res = get("api/farm/barn/unlocked")
         val buildings = res.body<Array<String>>()
         return buildings.toList()
     }
 
-    open fun getBuildingActions(building: Building): List<String> {
+    fun getBuildingActions(building: Building): List<String> {
         TODO("Not yet implemented")
     }
 
-    open suspend fun getPossibleCrops(): List<String> {
+    suspend fun getPossibleCrops(): List<String> {
         val res = get("api/farm/plant/unlocked")
         val crops = res.body<Array<String>>()
         return crops.toList()
@@ -182,7 +176,7 @@ class Controller(val token: String) {
         return res.status.value == 200
     }
 
-    open suspend fun interact(land: Land, interaction: String, params: List<String>): Boolean {
+    suspend fun interact(land: Land, interaction: String, params: List<String>): Boolean {
         if(land.content is Building)
         {
             val res = when(interaction){
@@ -213,7 +207,7 @@ class Controller(val token: String) {
         return land.interact(interaction, params)
     }
 
-    open suspend fun getQuests(): List<Quest>{
+    suspend fun getQuests(): List<Quest>{
         var res = get("api/farm/quest/availableQuests")
         var json = res.bodyAsText()
         val quests = gson.fromJson(json, Array<QuestTypeDao>::class.java)
@@ -225,7 +219,7 @@ class Controller(val token: String) {
         return questList
     }
 
-    open fun claimQuest(quest: Quest) {
+    fun claimQuest(quest: Quest) {
         TODO("Not yet implemented")
     }
 }

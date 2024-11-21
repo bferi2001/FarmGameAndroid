@@ -1,7 +1,5 @@
 package hu.bme.aut.szoftarch.farmgame.api.dao
 
-import java.time.OffsetDateTime
-
 data class PlantedPlantDao(
     var id: Int,
     var userName: String? = null,
