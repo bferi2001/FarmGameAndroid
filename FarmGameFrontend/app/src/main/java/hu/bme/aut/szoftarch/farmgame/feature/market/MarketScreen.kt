@@ -77,6 +77,19 @@ fun MarketScreen(
                         text = "List of ads",
                         fontWeight = FontWeight.Bold
                     )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Button(
+                            onClick = { }
+                        ) {
+                            Text("Create ad")
+                        }
+                    }
                     LazyColumn {
                          items(viewModel.adItems.size) { i ->
                             AdItem(
@@ -85,7 +98,6 @@ fun MarketScreen(
                                 count = viewModel.adItems[i].count,
                                 userName = viewModel.adItems[i].seller,
                             ) {
-                                //viewModel.adItems.drop(i)
                                 Toast.makeText(context, "Buying ad item...", Toast.LENGTH_SHORT).show()
                             }
                         }
@@ -101,7 +113,7 @@ fun MarketScreen(
                 // Column for selling items
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Sell items",
+                        text = "Quick sell items",
                         fontWeight = FontWeight.Bold
                     )
                     Row(
