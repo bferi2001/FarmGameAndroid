@@ -25,6 +25,18 @@ else
     connection = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
 }
 
+// Add CORS support
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
+
 builder.Services.AddDbContext<FarmApplicationContext>(options =>
     options.UseSqlServer(connection));
 builder.Services.AddControllers();
@@ -70,6 +82,7 @@ else
     app.UseMiddleware<DebugWithConstantUserMiddleware>();
 }
 
+app.UseCors();
 app.UseHttpsRedirection();
 
 app.MapControllers();

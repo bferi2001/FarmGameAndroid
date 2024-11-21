@@ -20,6 +20,12 @@ namespace FarmGameBackend.Controllers
         {
             _context = context;
         }
+        
+        [HttpGet("test")]
+        public ActionResult Test()
+        {
+            return Ok("BarnTypesController is working.");
+        }
 
         // GET: api/BarnTypes
         [HttpGet]

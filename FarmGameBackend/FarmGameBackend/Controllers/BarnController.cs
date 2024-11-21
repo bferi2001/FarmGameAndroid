@@ -189,5 +189,11 @@ namespace FarmGameBackend.Controllers
             }
             return NoContent();
         }
+        
+        [HttpGet("barns")]
+        public async Task<ActionResult<IEnumerable<Barn>?>> GetBarns()
+        {
+            return await Helper.Helper.GetBarns(_currentUser.Email, _context);
+        }
     }
 }
