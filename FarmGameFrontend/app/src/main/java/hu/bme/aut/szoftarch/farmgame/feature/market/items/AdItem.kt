@@ -19,7 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import hu.bme.aut.szoftarch.farmgame.ui.theme.FarmGameAndroidTheme
+import com.example.compose.AppTheme
 
 @Composable
 fun AdItem(item: String, count: Int, price: Int, userName: String,
