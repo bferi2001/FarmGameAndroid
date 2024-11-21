@@ -5,15 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
 class Farm(
-    val columns: Int,
-    val rows: Int,
+    val size: Int,
 ) {
     var lands: List<Land> by
     mutableStateOf(emptyList())
         private set
 
     init {
-        lands = List(columns * rows) { Land(it, it, null) }
+        lands = List(size) { Land(it, it, null) }
     }
 
     fun getLand(position: Int): Land {
