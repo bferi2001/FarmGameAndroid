@@ -6,16 +6,14 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.bme.aut.szoftarch.farmgame.api.LoginHandler
+import hu.bme.aut.szoftarch.farmgame.api.LoginHandlerImpl
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-open class LoginViewModel @Inject constructor(
-    @ApplicationContext val context: Context,
-    val loginHandler: LoginHandler
-) : ViewModel() {
+open class LoginViewModel @Inject constructor() : ViewModel() {
     sealed class TokenState {
         object Idle : TokenState()
         object Loading : TokenState()
@@ -26,7 +24,8 @@ open class LoginViewModel @Inject constructor(
     private val _tokenState = MutableStateFlow<TokenState>(TokenState.Idle)
     val tokenState = _tokenState.asStateFlow()
 
-    fun getToken() {
+    val loginHandler: LoginHandler = LoginHandlerImpl()
+    fun getToken(context: Context) {
         _tokenState.value = TokenState.Loading
         viewModelScope.launch {
             try{

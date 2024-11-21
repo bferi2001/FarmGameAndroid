@@ -13,7 +13,7 @@ import javax.inject.Singleton
 object  AppModule{
     @Provides
     @Singleton
-    fun bindLoginHandler(): LoginHandler{
+    fun provideLoginHandler(): LoginHandler{
         return LoginHandlerImpl()
     }
 }

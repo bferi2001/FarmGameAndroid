@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
 import hu.bme.aut.szoftarch.farmgame.feature.login.LoginScreen
+import hu.bme.aut.szoftarch.farmgame.feature.login.LoginViewModel
 import hu.bme.aut.szoftarch.farmgame.feature.map.MapScreen
 import hu.bme.aut.szoftarch.farmgame.feature.market.MarketScreen
 import hu.bme.aut.szoftarch.farmgame.feature.quests.QuestsScreen
@@ -15,6 +16,7 @@ import hu.bme.aut.szoftarch.farmgame.feature.quests.QuestsScreen
 @Composable
 fun NavGraph(
     navController: NavHostController = rememberNavController(),
+    loginViewModel: LoginViewModel
 ) {
     NavHost(
         navController = navController,
