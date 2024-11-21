@@ -26,9 +26,9 @@ namespace FarmGameBackend.Controllers
 
 
         [HttpGet("market")]
-        public async Task<ActionResult<IEnumerable<MarketUserProduct>>> GetUserProductsForMarketAsync()
+        public async Task<ActionResult<IEnumerable<Classified>>> GetClassifiedForMarketAsync()
         {
-            //ToDo
+            return await _context.Classifieds.Where(classified => classified.Deadline > DateTimeOffset.Now).ToListAsync();
         }
 
         [HttpPost("market/{productName}/{quantity}/{price}")]

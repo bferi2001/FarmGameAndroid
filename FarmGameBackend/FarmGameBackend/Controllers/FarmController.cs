@@ -35,14 +35,20 @@ public class FarmController(FarmApplicationContext context) : ControllerBase
         return Ok();
     }
     
-    [HttpGet("api/farm/size")]
+    [HttpGet("size")]
     public ActionResult GetFarmSize()
+    {
+        int size = FarmSize();
+        return Ok(size);
+    }
+
+    private int FarmSize()
     {
         var email = HttpContext.Items["Email"]!.ToString()!;
         User user = context.GetCurrentUser(email!);
         int xp = user.UserXP;
         
         int unlockedLandCount = xp/100 + 1;
-        return Ok(unlockedLandCount);
+        return unlockedLandCount;
     }
 }
