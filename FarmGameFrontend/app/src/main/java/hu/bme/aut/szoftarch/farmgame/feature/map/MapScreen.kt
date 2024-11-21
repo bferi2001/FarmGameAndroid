@@ -25,10 +25,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.compose.earthTone
 import com.example.compose.woodColor
 import com.example.compose.woodLight
-import androidx.lifecycle.viewmodel.compose.viewModel
 import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -10,10 +10,6 @@ class DummyController : Controller("") {
         return Player(0, mutableMapOf(), 0, 0)
     }
 
-    override fun getFarmSize(id: Int): Pair<Int, Int> {
-        return Pair(10, 10)
-    }
-
     override fun getPossibleBuildings(): List<String> {
 
         return listOf("building_cow_shed", "building_sheep_pen")

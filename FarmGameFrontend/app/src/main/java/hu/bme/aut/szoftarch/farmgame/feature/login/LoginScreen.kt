@@ -12,29 +12,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.credentials.CredentialManager
-import androidx.credentials.GetCredentialRequest
-import androidx.credentials.exceptions.GetCredentialException
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.compose.earthTone
 import com.example.compose.woodColor
 import com.example.compose.woodLight
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
-import hu.bme.aut.szoftarch.farmgame.R
-import kotlinx.coroutines.launch
-import java.security.MessageDigest
-import java.util.UUID
 
-
-@SuppressLint("ShowToast")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
+    loginViewModel: LoginViewModel = viewModel(),
     onToMap: () -> Unit,
 ) {
     //https://www.youtube.com/watch?v=P_jZMDmodG4
@@ -48,7 +40,7 @@ fun LoginScreen(
                 is LoginViewModel.TokenState.Loading -> {}
                 is LoginViewModel.TokenState.Success -> {
                     val googleIdToken = it.token
-                    Log.i(TAG, "GoogleToken: "+googleIdToken)
+                    Log.i(TAG, "GoogleToken: $googleIdToken")
                     onToMap()
                 }
                 is LoginViewModel.TokenState.Error -> {

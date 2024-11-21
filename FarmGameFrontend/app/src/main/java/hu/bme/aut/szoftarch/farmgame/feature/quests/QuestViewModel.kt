@@ -1,6 +1,5 @@
 package hu.bme.aut.szoftarch.farmgame.feature.quests
 
-import hu.bme.aut.szoftarch.farmgame.api.Controller
 import hu.bme.aut.szoftarch.farmgame.api.DummyController
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

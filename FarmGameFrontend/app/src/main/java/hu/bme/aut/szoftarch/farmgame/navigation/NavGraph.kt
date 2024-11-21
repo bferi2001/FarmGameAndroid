@@ -27,7 +27,8 @@ fun NavGraph(
             LoginScreen(
                 onToMap = {
                     navController.navigate(Screen.Map.route)
-                }
+                },
+                loginViewModel = loginViewModel
             )
         }
         composable(Screen.Map.route) {

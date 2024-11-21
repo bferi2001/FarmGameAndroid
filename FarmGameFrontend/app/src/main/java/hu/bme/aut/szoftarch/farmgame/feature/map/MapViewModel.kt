@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.szoftarch.farmgame.api.DummyController
 import hu.bme.aut.szoftarch.farmgame.api.LoginHandler
@@ -73,7 +74,7 @@ class MapViewModel @Inject constructor() : ViewModel() {
         if (selectedLand < 0) {
             return
         }
-        if(session.controller.interact(session.farm.getLand(selectedLand), interaction, params)){
+        if(session.controller.interact(session.farm!!.getLand(selectedLand), interaction, params)){
             closeMenu()
             selectedLand = -1
         }
@@ -95,15 +96,6 @@ class MapViewModel @Inject constructor() : ViewModel() {
         if (selectedLand < 0) {
             return null
         }
-        return session.farm.getLand(selectedLand)
+        return session.farm?.getLand(selectedLand)
     }
-
-    fun getSelectedLand() : Land? {
-        if (selectedLand < 0) {
-            return null
-        }
-        return session.farm.getLand(selectedLand)
-    }
-
-
 }

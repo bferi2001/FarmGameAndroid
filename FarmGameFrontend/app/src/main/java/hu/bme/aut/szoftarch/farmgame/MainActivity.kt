@@ -11,8 +11,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.example.compose.AppTheme
 import androidx.activity.viewModels
+import com.example.compose.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import hu.bme.aut.szoftarch.farmgame.feature.login.LoginViewModel
 import hu.bme.aut.szoftarch.farmgame.navigation.NavGraph
@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AppTheme {
-                NavGraph()
+                NavGraph(loginViewModel = loginViewModel)
             }
         }
     }

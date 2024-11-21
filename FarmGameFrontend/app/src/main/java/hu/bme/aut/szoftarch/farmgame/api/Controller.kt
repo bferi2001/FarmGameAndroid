@@ -9,6 +9,7 @@ import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Building
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Farm
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Planter
+import hu.bme.aut.szoftarch.farmgame.feature.quests.Quest
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -101,8 +102,6 @@ open class Controller(token: String) {
                 content = null
             ))
         }
-
-
         return lands
     }
 

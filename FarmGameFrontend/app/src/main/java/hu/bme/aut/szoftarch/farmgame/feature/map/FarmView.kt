@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -11,12 +12,13 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -28,13 +30,15 @@ import hu.bme.aut.szoftarch.farmgame.R
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
 import hu.bme.aut.szoftarch.farmgame.view.ImageService
 import hu.bme.aut.szoftarch.farmgame.view.NameService
+import kotlinx.coroutines.delay
+import java.util.Date
 
 const val FARM_GRID_COLUMN_COUNT = 10
 
 @Composable
 fun LandGrid(modifier: Modifier, viewModel: MapViewModel) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(viewModel.getFarm().columns),
+        columns = GridCells.Fixed(FARM_GRID_COLUMN_COUNT),
         modifier = modifier
             .background(Color(0xFF2F8136)) // Texture background Color
     ) {
@@ -108,8 +112,8 @@ fun CreateInteractButtons(viewModel: MapViewModel) {
 
 @Composable
 fun CountdownProgressBar(targetDate: Date, startingTime: Date) {
-    var remainingDuration by remember { mutableStateOf(0L) }
-    var currentTargetDate by remember { mutableStateOf(targetDate.time) }
+    var remainingDuration by remember { mutableLongStateOf(0L) }
+    var currentTargetDate by remember { mutableLongStateOf(targetDate.time) }
 
     val totalDuration = targetDate.time - startingTime.time
 
