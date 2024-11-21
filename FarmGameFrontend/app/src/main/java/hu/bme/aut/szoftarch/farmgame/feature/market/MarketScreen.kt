@@ -1,7 +1,6 @@
 package hu.bme.aut.szoftarch.farmgame.feature.market
 
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -106,13 +105,19 @@ fun MarketScreen(
                             Text("Sell")
                         }
                     }
-                    LazyColumn() {
+
+                    LazyColumn {
                         item {
-                            SellingItem("Wheat", 1, 2) {}
-                            SellingItem("Corn", 3, 4) {}
+                            SellingItem("Wheat", 1, 2) { it ->
+                                totalPrice = it
+                            }
+                            SellingItem("Corn", 3, 4) { it ->
+                                totalPrice = it
+                            }
                             SellingItem("Carrot", 3000, 30) {}
                         }
                     }
+
                 }
             }
 
