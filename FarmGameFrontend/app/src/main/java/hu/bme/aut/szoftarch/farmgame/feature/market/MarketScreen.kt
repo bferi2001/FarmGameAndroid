@@ -85,7 +85,7 @@ fun MarketScreen(
                                 count = viewModel.adItems[i].count,
                                 userName = viewModel.adItems[i].seller,
                             ) {
-                                viewModel.adItems.drop(i)
+                                //viewModel.adItems.drop(i)
                                 Toast.makeText(context, "Buying ad item...", Toast.LENGTH_SHORT).show()
                             }
                         }
@@ -133,6 +133,7 @@ fun MarketScreen(
                                 item = viewModel.sellingItems[i].item,
                                 price = viewModel.sellingItems[i].price,
                                 quantity = viewModel.sellingItems[i].quantity,
+                                secondary = i % 2 == 0
                             ) { it ->
                                 viewModel.sellingItems[i].sellCount = it
                                 totalPrice = calcTotalPrice(viewModel.sellingItems)
