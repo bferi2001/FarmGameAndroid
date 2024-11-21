@@ -115,16 +115,20 @@ open class Controller(val token: String) {
         return farm
     }
 
-    open fun getPossibleBuildings(): List<String> {
-        TODO("Not yet implemented")
+    open suspend fun getPossibleBuildings(): List<String> {
+        val res = get("api/farm/barn/unlocked", token)
+        val buildings = res.body<Array<String>>()
+        return buildings.toList()
     }
 
     open fun getBuildingActions(building: Building): List<String> {
         TODO("Not yet implemented")
     }
 
-    open fun getPossibleCrops(): List<String> {
-        TODO()
+    open suspend fun getPossibleCrops(): List<String> {
+        val res = get("api/farm/plant/unlocked", token)
+        val crops = res.body<Array<String>>()
+        return crops.toList()
     }
 
     open fun getInteractions(land: Land): List<String> {

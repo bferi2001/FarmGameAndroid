@@ -10,15 +10,6 @@ class DummyController(token: String) : Controller(token) {
         return Player(0, mutableMapOf(), 0, 0)
     }
 
-    override fun getPossibleBuildings(): List<String> {
-
-        return listOf("building_cow_shed", "building_sheep_pen")
-    }
-
-    override fun getPossibleCrops(): List<String> {
-        return listOf("crop_flowers", "crop_wheat", "crop_corn")
-    }
-
     override fun getInteractions(land: Land): List<String> {
         /*  Decide on backend
             Example for new behaviour:
