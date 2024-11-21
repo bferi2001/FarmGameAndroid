@@ -33,13 +33,13 @@ namespace FarmGameBackend.Controllers
             //ToDo
         }
 
-        [HttpDelete("market/{id}")]
+        [HttpDelete("market/buy/{id}")]
         public async Task<IActionResult> BuyClassified(int íd)
         {
             //ToDo
         }
 
-        [HttpDelete("market/{id}")]
+        [HttpDelete("market/cancel/{id}")]
         public async Task<IActionResult> CancelClassified(int íd)
         {
             //ToDo
