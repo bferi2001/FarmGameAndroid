@@ -2,6 +2,7 @@ package hu.bme.aut.szoftarch.farmgame.feature.game.farm
 
 import hu.bme.aut.szoftarch.farmgame.view.NameService
 import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
+import java.time.Duration
 import java.time.LocalDate
 import java.util.Date
 
@@ -21,6 +22,16 @@ class Planter(
     override fun isProcessing(): Boolean {
         return content != null
     }
+
+    override fun getTargetDate(): Date {
+        if(harvestTime==null) return Date()
+        return Date.from(harvestTime.atStartOfDay().atZone(java.time.ZoneId.systemDefault()).toInstant())
+    }
+
+    override fun getStartDate(): Date {
+        return Date.from(plantTime.atStartOfDay().atZone(java.time.ZoneId.systemDefault()).toInstant())
+    }
+
 
     var cleaned: Boolean = true
 

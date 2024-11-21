@@ -2,6 +2,7 @@ package hu.bme.aut.szoftarch.farmgame.feature.game.farm
 
 import hu.bme.aut.szoftarch.farmgame.view.NameService
 import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
+import java.util.Date
 
 class Building(
     val id: Int,
@@ -14,6 +15,14 @@ class Building(
     var clean: Boolean = true
     override fun isProcessing(): Boolean {
         return processing
+    }
+
+    override fun getTargetDate(): Date {
+        return Date()
+    }
+
+    override fun getStartDate(): Date {
+        return Date()
     }
 
     override fun getName(): String {

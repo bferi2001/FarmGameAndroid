@@ -94,7 +94,10 @@ fun getBorderColor(selected: Int, position: Int?): Color {
 fun CreateInteractButtons(viewModel: MapViewModel) {
     if (viewModel.selectedLand < 0) return Text(text = "invalid selection")
     if (viewModel.getSelectedLand()?.isProcessing() == true) {
-        CountdownProgressBar(Date(Date().time + 50000L), Date())
+        CountdownProgressBar(
+            viewModel.getSelectedLand()?.content?.getTargetDate() ?: Date(),
+            viewModel.getSelectedLand()?.content?.getStartDate() ?: Date()
+        )
     }
     viewModel.getInteractions().forEach { interaction ->
         Button(
