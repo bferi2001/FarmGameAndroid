@@ -36,28 +36,28 @@ namespace FarmGameBackend.Helper
                 .Where(up => up.UserName == _currentUser.Email).ToListAsync();
             return userProducts;
         }
-        private bool UserProductExists(int id)
+        public bool UserProductExists(int id)
         {
             return _context.UserProduct.Any(e => e.Id == id);
         }
-        private bool ProductExists(int id)
+        public bool ProductExists(int id)
         {
             return _context.Products.Any(e => e.Id == id);
         }
-        private Boolean DoesProductExists(string _productName)
+        public Boolean DoesProductExists(string _productName)
         {
             return _context.Products.Any(product => product.Name == _productName);
         }
-        private async Task<Product?> GetUnlockedProductByName(string name)
+        public async Task<Product?> GetUnlockedProductByName(string name)
         {
-            if (!DoesCroptypeExistsAndUnlocked(name))
+            if (!_context.PlantHelper.DoesCroptypeExistsAndUnlocked(name))
             {
                 return null;
             }
             Product? productType = await _context.Products.Where(product => product.Name == name).FirstAsync();
             return productType;
         }
-        private async Task<UserProduct> PostUserProduct(UserProduct userProduct)
+        public async Task<UserProduct> PostUserProduct(UserProduct userProduct)
         {
             _context.UserProduct.Add(userProduct);
             await _context.SaveChangesAsync();
@@ -66,7 +66,7 @@ namespace FarmGameBackend.Helper
 
         }
 
-        private async Task PutUserProduct(int id, UserProduct userProduct)
+        public async Task PutUserProduct(int id, UserProduct userProduct)
         {
             if (id != userProduct.Id)
             {
@@ -93,7 +93,7 @@ namespace FarmGameBackend.Helper
 
             return;
         }
-        private async Task<UserProduct?> GetUserProduct(string productName)
+        public async Task<UserProduct?> GetUserProduct(string productName)
         {
             var userProduct = await _context.UserProduct.Where(userProduct => userProduct.UserName == _currentUser.Email && userProduct.ProductName == productName).FirstOrDefaultAsync();
             if (userProduct == null)
@@ -102,7 +102,7 @@ namespace FarmGameBackend.Helper
             }
             return userProduct;
         }
-        private async Task AddUserProduct(string productName, int quantity)
+        public async Task AddUserProduct(string productName, int quantity)
         {
             if (!DoesProductExists(productName))
             {
@@ -118,12 +118,13 @@ namespace FarmGameBackend.Helper
                     Quantity = quantity
                 };
                 await PostUserProduct(product);
-                return 
+                return;
             }
             else
             {
                 userProduct.Quantity += quantity;
-                return await PutUserProduct(userProduct.Id, userProduct);
+                await PutUserProduct(userProduct.Id, userProduct);
+                return;
             }
         }
     }
