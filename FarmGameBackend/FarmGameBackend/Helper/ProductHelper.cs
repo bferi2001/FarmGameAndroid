@@ -127,5 +127,18 @@ namespace FarmGameBackend.Helper
                 return;
             }
         }
+        public List<string?> GetUnlockedMeatNames()
+        {
+            int userXP = _currentUser.UserXP;
+            var productNames =  _context.Products.Where(product => product.Name.StartsWith("meat_") && product.UnlockXP <= userXP)
+                                    .Select(product => product.Name)
+                                    .ToList();
+
+            if (!productNames.Any())
+            {
+                throw new NotFoundException("No unlocked meat.");
+            }
+            return productNames;
+        }
     }
 }

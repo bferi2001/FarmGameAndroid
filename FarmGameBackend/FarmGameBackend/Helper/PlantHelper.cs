@@ -24,7 +24,7 @@ namespace FarmGameBackend.Helper
             };
         }
 
-        public List<string> GetUnlockedCrops()
+        public List<string> GetUnlockedCropsNames()
         {
             int userXP = _currentUser.UserXP;
             return _context.Products.Where(product => product.UnlockXP <= userXP && product.IsCrop)
@@ -34,7 +34,7 @@ namespace FarmGameBackend.Helper
 
         public bool DoesCroptypeExistsAndUnlocked(string _cropName)
         {
-            return GetUnlockedCrops().Any(cropName => cropName == _cropName);
+            return GetUnlockedCropsNames().Any(cropName => cropName == _cropName);
         }
         public async Task<PlantedPlant?> GetPlantByPosition(int position)
         {
