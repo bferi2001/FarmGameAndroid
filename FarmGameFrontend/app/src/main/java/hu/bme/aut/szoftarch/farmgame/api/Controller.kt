@@ -171,15 +171,32 @@ open class Controller(val token: String) {
         TODO("Not yet implemented")
     }
 
-    open suspend fun interact(land: Land, interaction: String, params: List<String>): Boolean {
+    private suspend fun upgradeBuilding(land: Land): Boolean {
         val position = land.position
+        val res = post("api/farm/barn/$position/upgrade", token)
+        return res.status.value == 200
+    }
+    private suspend fun buildBuilding(land: Land, building: String): Boolean {
+        val position = land.position
+        val res = post("api/farm/barn/$position/$building", token)
+        return res.status.value == 200
+    }
+
+    open suspend fun interact(land: Land, interaction: String, params: List<String>): Boolean {
         if(land.content is Building)
         {
-            val res = post("api/farm/barn/$position/$interaction", token)
-            return res.status.value == 200
+            val res = when(interaction){
+                "upgrade" -> upgradeBuilding(land)
+                "action_build" -> buildBuilding(land, params[0])
+                else -> false
+            }
+            if(!res){
+                return false
+            }
         }
         else if(land.content is Planter)
         {
+            val position = land.position
             val res = post("api/farm/plant/$position/$interaction", token)
             if(res.status.value != 200){
                 return false
