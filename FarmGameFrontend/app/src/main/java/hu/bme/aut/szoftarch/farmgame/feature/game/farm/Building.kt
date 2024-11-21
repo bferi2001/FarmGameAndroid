@@ -8,7 +8,7 @@ class Building(
     private val tag: String,
 ) : Buildable() {
     var level: Int = 0
-    val maxLevel: Int = 15
+    val maxLevel: Int = 3
 
     var processing: Boolean = false
     var clean: Boolean = true
@@ -16,7 +16,6 @@ class Building(
     override fun getName(): String {
         return "${NameService.getDisplayName(tag)} lvl${level}"
     }
-
     override fun getTag(): String {
         return if (clean) {
             tag

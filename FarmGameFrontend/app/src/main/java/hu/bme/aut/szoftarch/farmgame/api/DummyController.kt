@@ -29,7 +29,7 @@ class DummyController : Controller() {
 
     override fun getPossibleBuildings(id: Int): List<String> {
 
-        return listOf("building_cow_shed")
+        return listOf("building_cow_shed", "building_sheep_pen")
     }
 
     override fun getPossibleCrops(id: Int): List<String> {
@@ -48,6 +48,11 @@ class DummyController : Controller() {
             Pair("building_cow_shed", "Cow Shed"),
             Pair("crop_corn", "Corn"),
             Pair("crop_null", "No crops"),
+            Pair("empty", "Empty"),
+            Pair("action_build", "Build"),
+            Pair("action_build:building_cow_shed", "Cow Shed"),
+            Pair("action_build:building_sheep_pen", "Sheep Pen"),
+            Pair("action_plough", "Plough"),
         )
     }
 }
