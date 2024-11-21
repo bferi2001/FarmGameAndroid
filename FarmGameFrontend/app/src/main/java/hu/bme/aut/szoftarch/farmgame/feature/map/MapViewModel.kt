@@ -15,8 +15,8 @@ import hu.bme.aut.szoftarch.farmgame.feature.game.Session
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Farm
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
 import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
-import jakarta.inject.Inject
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class MapViewModel @Inject constructor(

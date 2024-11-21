@@ -32,11 +32,10 @@ import androidx.compose.ui.unit.dp
 import hu.bme.aut.szoftarch.farmgame.ui.theme.FarmGameAndroidTheme
 
 
-@SuppressLint("SuspiciousIndentation")
 @Composable
 fun SellingItem(item: String, price: Int, count: Int,
                 onInputValueChanged: (Int) -> Unit) {
-    var inputValue by remember { mutableStateOf(0) }
+    var inputValue by remember { mutableIntStateOf(0) }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
