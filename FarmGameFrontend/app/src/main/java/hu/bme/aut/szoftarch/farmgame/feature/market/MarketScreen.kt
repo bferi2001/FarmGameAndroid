@@ -40,6 +40,7 @@ import hu.bme.aut.szoftarch.farmgame.feature.market.items.SellingItem
 @Composable
 fun MarketScreen(
     onToMap: () -> Unit,
+    onToCreateAd: () -> Unit,
     viewModel: MarketViewModel = viewModel(),
 ) {
     val context = LocalContext.current
@@ -85,7 +86,7 @@ fun MarketScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Button(
-                            onClick = { }
+                            onClick = onToCreateAd
                         ) {
                             Text("Create ad")
                         }

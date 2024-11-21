@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import hu.bme.aut.szoftarch.farmgame.feature.login.LoginScreen
 import hu.bme.aut.szoftarch.farmgame.feature.map.MapScreen
 import hu.bme.aut.szoftarch.farmgame.feature.market.MarketScreen
+import hu.bme.aut.szoftarch.farmgame.feature.market.createad.CreateAdScreen
 import hu.bme.aut.szoftarch.farmgame.feature.quests.QuestsScreen
 
 
@@ -44,7 +45,10 @@ fun NavGraph(
             MarketScreen(
                 onToMap = {
                     navController.navigate(Screen.Map.route)
-                }
+                },
+                onToCreateAd = {
+                    navController.navigate(Screen.CreateAd.route)
+                },
             )
         }
         composable(Screen.Quests.route) {
@@ -52,6 +56,13 @@ fun NavGraph(
                 onToMap = {
                     navController.navigate(Screen.Map.route)
                 }
+            )
+        }
+        composable(Screen.CreateAd.route) {
+            CreateAdScreen (
+                onToMarketScreen = {
+                    navController.navigate(Screen.Market.route)
+                },
             )
         }
     }
