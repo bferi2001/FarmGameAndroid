@@ -30,7 +30,7 @@ const val BACKEND_URL = "http://192.168.68.71:5153/"
 fun <T> Gson.fromJsonList(jsonString: String): List<T> =
     this.fromJson(jsonString, object: TypeToken<ArrayList<T>>() { }.type)
 
-open class Controller(val token: String) {
+class Controller(val token: String) {
     val gson = Gson()
     var client = HttpClient(){
         defaultRequest {
@@ -55,10 +55,6 @@ open class Controller(val token: String) {
         return client.put(location){
             header("Authorization", token)
         }
-    }
-
-    open fun getPlayer(): Player {
-        TODO("Not yet implemented")
     }
 
     open suspend fun getFarmSize(): Int {

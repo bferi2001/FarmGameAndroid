@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.bme.aut.szoftarch.farmgame.api.DummyController
+import hu.bme.aut.szoftarch.farmgame.api.Controller
 import hu.bme.aut.szoftarch.farmgame.api.LoginHandler
 import hu.bme.aut.szoftarch.farmgame.feature.game.Session
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Farm
@@ -39,7 +39,7 @@ class MapViewModel @Inject constructor() : ViewModel() {
     init {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                session = Session(DummyController(LoginHandler.token!!))
+                session = Session(Controller(LoginHandler.token!!))
                 session.initialize()
                 val farm = session.farm
                 if(farm == null)
