@@ -2,7 +2,7 @@ package hu.bme.aut.szoftarch.farmgame.feature.market
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import hu.bme.aut.szoftarch.farmgame.api.Controller
+import hu.bme.aut.szoftarch.farmgame.api.ApiController
 import hu.bme.aut.szoftarch.farmgame.api.LoginHandler
 import hu.bme.aut.szoftarch.farmgame.data.market.AdItemData
 import hu.bme.aut.szoftarch.farmgame.data.market.SellingItemData
@@ -39,8 +39,8 @@ class MarketViewModel() : ViewModel() {
     }
 
     suspend fun loadItems() {
-        val controller = Controller(LoginHandler.token!!)
-        val items = controller.getAds()
+        val apiController = ApiController(LoginHandler.token!!)
+        val items = apiController.getAds()
         _loadingState.value = LoadingState.Loaded(items)
     }
 

@@ -1,6 +1,5 @@
 package hu.bme.aut.szoftarch.farmgame.api
 
-import com.google.gson.Gson
 import hu.bme.aut.szoftarch.farmgame.api.dao.BarnDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.ClassifiedDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.PlantedPlantDao
@@ -12,55 +11,12 @@ import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Farm
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Planter
 import hu.bme.aut.szoftarch.farmgame.feature.quests.Quest
-import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.request.delete
-import io.ktor.client.request.get
-import io.ktor.client.request.header
-import io.ktor.client.request.post
-import io.ktor.client.request.put
-import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
-import io.ktor.serialization.gson.gson
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-const val BACKEND_URL = "http://192.168.68.71:5153/"
-
-class Controller(val token: String) {
-    val gson = Gson()
-    var client = HttpClient(){
-        defaultRequest {
-            url(BACKEND_URL)
-        }
-        install(ContentNegotiation){
-            gson()
-        }
-    }
-
-    private suspend fun get(location: String): HttpResponse{
-        return client.get(location){
-            header("Authorization", token)
-        }
-    }
-    private suspend fun post(location: String): HttpResponse {
-        return client.post(location){
-            header("Authorization", token)
-        }
-    }
-    private suspend fun put(location: String): HttpResponse {
-        return client.put(location){
-            header("Authorization", token)
-        }
-    }
-    private suspend fun delete(location: String): HttpResponse {
-        return client.delete(location){
-            header("Authorization", token)
-        }
-    }
-
+class ApiController(token: String) : HttpRequestMaker(token) {
     suspend fun getFarmSize(): Int {
         val res = get("api/farm/size")
         val size = res.body<Int>()

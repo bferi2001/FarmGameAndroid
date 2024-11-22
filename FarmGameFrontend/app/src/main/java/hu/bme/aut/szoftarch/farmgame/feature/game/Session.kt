@@ -1,11 +1,11 @@
 package hu.bme.aut.szoftarch.farmgame.feature.game
 
-import hu.bme.aut.szoftarch.farmgame.api.Controller
+import hu.bme.aut.szoftarch.farmgame.api.ApiController
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Farm
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
 
 class Session(
-    val controller: Controller,
+    val apiController: ApiController,
 ) {
     //These could be used to cache stuff or to check availability with player level
     var buildings: MutableSet<String> = mutableSetOf()
@@ -13,9 +13,9 @@ class Session(
 
     var farm: Farm? = null
     suspend fun initialize() {
-        farm = controller.getFarm()
-        crops = controller.getPossibleCrops().toMutableSet()
-        buildings = controller.getPossibleBuildings().toMutableSet()
+        farm = apiController.getFarm()
+        crops = apiController.getPossibleCrops().toMutableSet()
+        buildings = apiController.getPossibleBuildings().toMutableSet()
     }
 
     fun registerBuilding(building: String) {

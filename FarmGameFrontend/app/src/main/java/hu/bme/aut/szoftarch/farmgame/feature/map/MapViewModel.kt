@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.bme.aut.szoftarch.farmgame.api.Controller
+import hu.bme.aut.szoftarch.farmgame.api.ApiController
 import hu.bme.aut.szoftarch.farmgame.api.LoginHandler
 import hu.bme.aut.szoftarch.farmgame.feature.game.Session
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Farm
@@ -44,7 +44,7 @@ class MapViewModel @Inject constructor() : ViewModel() {
         _loadingState.value = InitState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                session = Session(Controller(LoginHandler.token!!))
+                session = Session(ApiController(LoginHandler.token!!))
                 session.initialize()
                 val farm = session.farm
                 if(farm == null)
@@ -81,7 +81,7 @@ class MapViewModel @Inject constructor() : ViewModel() {
             if (selectedLand < 0) {
                 return@launch
             }
-            if(session.controller.interact(session.farm!!.getLand(selectedLand), interaction, params)){
+            if(session.apiController.interact(session.farm!!.getLand(selectedLand), interaction, params)){
                 closeMenu()
                 selectedLand = -1
 

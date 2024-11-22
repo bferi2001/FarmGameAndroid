@@ -2,7 +2,7 @@ package hu.bme.aut.szoftarch.farmgame.feature.quests
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import hu.bme.aut.szoftarch.farmgame.api.Controller
+import hu.bme.aut.szoftarch.farmgame.api.ApiController
 import hu.bme.aut.szoftarch.farmgame.api.LoginHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,10 +10,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class QuestViewModel : ViewModel() {
-    private val controller = Controller(LoginHandler.token!!)
+    private val apiController = ApiController(LoginHandler.token!!)
 
     fun claimQuest(quest: Quest) {
-        controller.claimQuest(quest)
+        apiController.claimQuest(quest)
         //_quests.value = loadQuests()
     }
 
@@ -32,7 +32,7 @@ class QuestViewModel : ViewModel() {
     }
     suspend fun loadQuests() {
         try {
-            val quests = controller.getQuests()
+            val quests = apiController.getQuests()
             _loadingState.value = QuestLoadState.Success(quests)
         }
         catch (e: Exception){

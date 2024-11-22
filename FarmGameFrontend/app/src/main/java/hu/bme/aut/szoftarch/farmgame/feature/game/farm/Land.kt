@@ -1,11 +1,6 @@
 package hu.bme.aut.szoftarch.farmgame.feature.game.farm
 
-import androidx.lifecycle.viewmodel.compose.viewModel
-import hu.bme.aut.szoftarch.farmgame.feature.map.MapViewModel
-import hu.bme.aut.szoftarch.farmgame.view.NameService
 import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
-import java.time.LocalDate
-import java.time.LocalDateTime
 
 data class Land(
     val id: Int,
