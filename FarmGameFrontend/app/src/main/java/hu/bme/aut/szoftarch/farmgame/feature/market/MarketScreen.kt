@@ -23,8 +23,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -37,6 +39,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.compose.AppTheme
 import com.example.compose.earthTone
 import com.example.compose.woodLight
+import hu.bme.aut.szoftarch.farmgame.data.market.AdItemData
 import hu.bme.aut.szoftarch.farmgame.data.market.SellingItemData
 import hu.bme.aut.szoftarch.farmgame.feature.market.items.AdItem
 import hu.bme.aut.szoftarch.farmgame.feature.market.items.SellingItem
@@ -51,6 +54,21 @@ fun MarketScreen(
 ) {
     val context = LocalContext.current
     var totalPrice by remember { mutableIntStateOf(0) } // State
+    var adItems = remember { mutableStateListOf<AdItemData>() } // State
+    LaunchedEffect(key1 = viewModel.loadingState) {
+        viewModel.loadingState.collect{
+            when(it){
+                is MarketViewModel.LoadingState.Loaded -> {
+                    adItems.clear()
+                    adItems.addAll(it.items)
+                }
+                is MarketViewModel.LoadingState.Loading -> {}
+                is MarketViewModel.LoadingState.Error -> {
+                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -100,15 +118,13 @@ fun MarketScreen(
                         }
                     }
                     LazyColumn {
-                        items(viewModel.adItems.size) { i ->
+                        items(adItems.size) { i ->
                             AdItem(
-                                item = viewModel.adItems[i].item,
-                                price = viewModel.adItems[i].price,
-                                count = viewModel.adItems[i].count,
-                                userName = viewModel.adItems[i].seller,
+                                item = adItems[i].item,
+                                price = adItems[i].price,
+                                count = adItems[i].count,
+                                userName = adItems[i].seller,
                             ) {
-                                //viewModel.adItems.removeAt(i)
-
                                 Toast.makeText(context, "Buying ad item...", Toast.LENGTH_SHORT).show()
                             }
                         }

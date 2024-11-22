@@ -1,8 +1,15 @@
 package hu.bme.aut.szoftarch.farmgame.feature.market
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import hu.bme.aut.szoftarch.farmgame.api.Controller
+import hu.bme.aut.szoftarch.farmgame.api.LoginHandler
 import hu.bme.aut.szoftarch.farmgame.data.market.AdItemData
 import hu.bme.aut.szoftarch.farmgame.data.market.SellingItemData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class MarketViewModel() : ViewModel() {
 
@@ -13,9 +20,28 @@ class MarketViewModel() : ViewModel() {
         SellingItemData("EmptyTest", 0, 0),
     )
 
-    val adItems = mutableListOf(
-        AdItemData("Wheat", 5, 20, "TestUser1"),
-        AdItemData("Corn", 10, 30, "test_user_2"),
-        AdItemData("Wheat", 15, 20, "test_user_2"),
-    )
+    sealed class LoadingState {
+        data class Loaded(val items: List<AdItemData>) : LoadingState()
+        object Loading : LoadingState()
+        data class Error(val message: String) : LoadingState()
+    }
+    private var _loadingState = MutableStateFlow<LoadingState>(LoadingState.Loading)
+    val loadingState = _loadingState.asStateFlow()
+
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                loadItems()
+            } catch (e: Exception) {
+                _loadingState.value = LoadingState.Error(e.message ?: "Unknown error")
+            }
+        }
+    }
+
+    suspend fun loadItems() {
+        val controller = Controller(LoginHandler.token!!)
+        val items = controller.getAds()
+        _loadingState.value = LoadingState.Loaded(items)
+    }
+
 }

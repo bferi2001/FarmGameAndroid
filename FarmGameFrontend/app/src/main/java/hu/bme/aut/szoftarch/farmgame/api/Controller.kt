@@ -4,8 +4,10 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.google.gson.Gson
 import hu.bme.aut.szoftarch.farmgame.api.dao.BarnDao
+import hu.bme.aut.szoftarch.farmgame.api.dao.ClassifiedDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.PlantedPlantDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.QuestTypeDao
+import hu.bme.aut.szoftarch.farmgame.data.market.AdItemData
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Building
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Crop
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Farm
@@ -253,5 +255,22 @@ class Controller(val token: String) {
 
     fun claimQuest(quest: Quest) {
         TODO("Not yet implemented")
+    }
+
+    suspend fun getAds(): List<AdItemData> {
+        val res = get("api/farm/market")
+        val json = res.bodyAsText()
+        val adsDao = gson.fromJson(json, Array<ClassifiedDao>::class.java)
+        val ads = adsDao.map {
+            AdItemData(
+                item = it.productName,
+                price = it.price,
+                count = it.quantity,
+                seller = it.userName ?: "Unknown"
+            )
+        }
+
+        return ads.toList()
+
     }
 }
