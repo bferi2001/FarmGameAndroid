@@ -2,7 +2,9 @@ package hu.bme.aut.szoftarch.farmgame.feature.map
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -104,9 +106,17 @@ fun MapScreen(
     ) { innerPadding ->
         if(loading)
         {
-            CircularProgressIndicator(
-                color = MaterialTheme.colorScheme.onPrimary,
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.onBackground,
+                )
+            }
         }
         else{
             Box(

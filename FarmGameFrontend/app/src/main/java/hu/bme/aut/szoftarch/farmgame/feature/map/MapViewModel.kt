@@ -37,6 +37,11 @@ class MapViewModel @Inject constructor() : ViewModel() {
     val loadingState = _loadingState.asStateFlow()
 
     init {
+        load()
+    }
+
+    fun load(){
+        _loadingState.value = InitState.Loading
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 session = Session(Controller(LoginHandler.token!!))
@@ -79,6 +84,11 @@ class MapViewModel @Inject constructor() : ViewModel() {
             if(session.controller.interact(session.farm!!.getLand(selectedLand), interaction, params)){
                 closeMenu()
                 selectedLand = -1
+
+                if(interaction == "action_crop" || interaction == "harvesting")
+                {
+                    load()
+                }
             }
 
             // Bad but quick way to update UI

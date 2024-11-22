@@ -3,16 +3,17 @@ package hu.bme.aut.szoftarch.farmgame.feature.game.farm
 import hu.bme.aut.szoftarch.farmgame.view.NameService
 import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
 import java.time.Duration
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.Date
 
 class Planter(
     val id: Int,
-    val plantTime: LocalDate,
-    val harvestTime: LocalDate? = null,
-    val wateringTime: LocalDate? = null,
-    val weedingTime: LocalDate? = null,
-    val fertilisingTime: LocalDate? = null
+    val plantTime: LocalDateTime,
+    val actions: Array<String>,
+    val harvestTime: LocalDateTime? = null,
+    val wateringTime: LocalDateTime? = null,
+    val weedingTime: LocalDateTime? = null,
+    val fertilisingTime: LocalDateTime? = null,
 ) : Buildable() {
     var content: Crop? = null
     var finished: Boolean = false
@@ -25,11 +26,14 @@ class Planter(
 
     override fun getTargetDate(): Date {
         if(harvestTime==null) return Date()
-        return Date.from(harvestTime.atStartOfDay().atZone(java.time.ZoneId.systemDefault()).toInstant())
+        val duration = Duration.between(LocalDateTime.now(), harvestTime).toMillis()
+        val date = Date(Date().toInstant().toEpochMilli() + duration)
+        return date
     }
 
     override fun getStartDate(): Date {
-        return Date.from(plantTime.atStartOfDay().atZone(java.time.ZoneId.systemDefault()).toInstant())
+        val date = Date.from(plantTime.atZone(java.time.ZoneId.systemDefault()).toInstant())
+        return date
     }
 
 
@@ -50,7 +54,7 @@ class Planter(
     }
 
     override fun getInteractions(): List<String> {
-        if (!cleaned) {
+        /*if (!cleaned) {
             return listOf("clean")
         } else if (finished) {
             return listOf("collect")
@@ -63,8 +67,8 @@ class Planter(
         }
         if (!fertilizer) {
             interactions.add("fertilize")
-        }
-        return interactions
+        }*/
+        return actions.toList()
     }
 
     override fun interact(interaction: String, params: List<String>) {

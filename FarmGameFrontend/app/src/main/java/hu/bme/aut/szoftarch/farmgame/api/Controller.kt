@@ -1,7 +1,5 @@
 package hu.bme.aut.szoftarch.farmgame.api
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.google.gson.Gson
 import hu.bme.aut.szoftarch.farmgame.api.dao.BarnDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.ClassifiedDao
@@ -18,6 +16,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
@@ -25,9 +24,8 @@ import io.ktor.client.request.put
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.serialization.gson.gson
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Date
 
 const val BACKEND_URL = "http://192.168.68.71:5153/"
 
@@ -54,6 +52,11 @@ class Controller(val token: String) {
     }
     private suspend fun put(location: String): HttpResponse {
         return client.put(location){
+            header("Authorization", token)
+        }
+    }
+    private suspend fun delete(location: String): HttpResponse {
+        return client.delete(location){
             header("Authorization", token)
         }
     }
@@ -111,11 +114,12 @@ class Controller(val token: String) {
         for(plant in plants){
             val content = Planter(
                 id = plant.id,
-                plantTime = toLocalDate(plant.plantTime),
-                harvestTime = if(plant.harvestTime == null) null else toLocalDate(plant.harvestTime!!),
-                wateringTime = if(plant.wateringTime == null) null else toLocalDate(plant.wateringTime!!),
-                fertilisingTime = if(plant.fertilisingTime == null) null else toLocalDate(plant.fertilisingTime!!),
-                weedingTime = if(plant.weedingTime == null) null else toLocalDate(plant.weedingTime!!)
+                plantTime = toLocalDateTime(plant.plantTime),
+                actions = getCropActions(plant.position),
+                harvestTime = if(plant.harvestTime == null) null else toLocalDateTime(plant.harvestTime!!),
+                wateringTime = if(plant.wateringTime == null) null else toLocalDateTime(plant.wateringTime!!),
+                fertilisingTime = if(plant.fertilisingTime == null) null else toLocalDateTime(plant.fertilisingTime!!),
+                weedingTime = if(plant.weedingTime == null) null else toLocalDateTime(plant.weedingTime!!)
             )
             val crop = Crop(
                 name = displayNames[plant.cropsTypeName].toString(),
@@ -146,10 +150,10 @@ class Controller(val token: String) {
         return lands
     }
 
-    private fun toLocalDate(date: String): LocalDate {
+    private fun toLocalDateTime(date: String): LocalDateTime {
         val modifiedDate = date.replace("T", " ").split('.')[0]
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        return LocalDate.parse(modifiedDate, formatter)
+        return LocalDateTime.parse(modifiedDate, formatter)
     }
 
     private fun hasLandOnPosition(position: Int, lands: List<Land>): Boolean {
@@ -217,10 +221,16 @@ class Controller(val token: String) {
         }
         else if(land.content is Planter)
         {
-            val position = land.position
-            val res = post("api/farm/plant/$position/$interaction")
-            if(res.status.value != 200){
-                return false
+            if(interaction == "harvesting")
+            {
+                return harvest(land.position)
+            }
+            else {
+                val position = land.position
+                val res = post("api/farm/plant/$position/$interaction")
+                if(res.status.value != 200){
+                    return false
+                }
             }
         }
         else if(interaction == "action_build")
@@ -272,5 +282,17 @@ class Controller(val token: String) {
 
         return ads.toList()
 
+    }
+
+    suspend fun getCropActions(position: Int): Array<String> {
+        val res = get("api/farm/plant/$position/actions")
+        val json = res.bodyAsText()
+        val actions = gson.fromJson(json, Array<String>::class.java)
+        return actions
+    }
+
+    suspend fun harvest(position: Int): Boolean{
+        val res = delete("api/farm/plant/$position/harvest")
+        return res.status.value == 204
     }
 }
