@@ -12,13 +12,16 @@ namespace FarmGameBackend.DbContexts
         public PlantHelper PlantHelper;
         public BarnHelper BarnHelper;
         public BarnTypeHelper BarnTypeHelper;
+        public QuestHelper QuestHelper;
+        public UserHelper UserHelper;
         public FarmApplicationContext()
         {
             ProductHelper= new ProductHelper(this);
             PlantHelper = new PlantHelper(this);
             BarnHelper = new BarnHelper(this);
             BarnTypeHelper = new BarnTypeHelper(this);
-
+            QuestHelper = new QuestHelper(this)
+            UserHelper = new UserHelper(this);
         }
 
         public FarmApplicationContext(DbContextOptions<FarmApplicationContext> options)
@@ -28,6 +31,8 @@ namespace FarmGameBackend.DbContexts
             PlantHelper = new PlantHelper(this);
             BarnHelper = new BarnHelper(this);
             BarnTypeHelper = new BarnTypeHelper(this);
+            QuestHelper = new QuestHelper(this);
+            UserHelper = new UserHelper(this);
         }
         public DbSet<Barn> Barns { get; set; }
         public DbSet<BarnType> BarnTypes { get; set; }
