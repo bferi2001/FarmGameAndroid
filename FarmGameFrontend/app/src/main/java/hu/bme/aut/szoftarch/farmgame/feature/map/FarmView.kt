@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -98,7 +99,15 @@ fun CreateInteractButtons(viewModel: MapViewModel) {
             viewModel.getSelectedLand()?.content?.getStartDate() ?: Date()
         )
     }
-    viewModel.getInteractions().forEach { interaction ->
+
+    var interactions = remember { mutableStateListOf<String>() }
+    LaunchedEffect(key1 = viewModel.interactions) {
+        viewModel.interactions.collect{ it ->
+            interactions.clear()
+            interactions.addAll(it)
+        }
+    }
+    interactions.forEach { interaction ->
         Button(
             onClick = {
                 viewModel.interact(

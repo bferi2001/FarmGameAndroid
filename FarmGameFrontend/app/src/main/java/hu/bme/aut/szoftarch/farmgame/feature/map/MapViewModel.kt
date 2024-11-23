@@ -14,6 +14,7 @@ import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Farm
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
 import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -38,6 +39,7 @@ class MapViewModel @Inject constructor() : ViewModel() {
 
     init {
         load()
+        fetchInteractions()
     }
 
     fun load(){
@@ -72,6 +74,7 @@ class MapViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onLandClicked(land: Land) {
+        interactions.value = emptyList()
         selectedLand = land.position
         menuOpen = land.getInteractMenu()
     }
@@ -98,11 +101,23 @@ class MapViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun getInteractions(): List<String> {
-        if (selectedLand < 0) {
-            return emptyList()
+    val interactions: MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
+    private fun fetchInteractions(){
+        viewModelScope.launch(Dispatchers.IO) {
+            while (true)
+            {
+                var newInteractions = emptyList<String>()
+                if (selectedLand >= 0) {
+                    newInteractions = session.getInteractions(session.farm!!.getLand(selectedLand))
+                }
+
+                if(newInteractions != interactions.value){
+                    interactions.value = newInteractions
+                }
+
+                delay(1000)
+            }
         }
-        return session.getInteractions(session.farm!!.getLand(selectedLand))
     }
 
     fun getSelectedLand() : Land? {
