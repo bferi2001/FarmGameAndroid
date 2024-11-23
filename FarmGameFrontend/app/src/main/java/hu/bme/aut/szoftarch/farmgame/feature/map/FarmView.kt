@@ -18,8 +18,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -51,13 +53,19 @@ fun LandGrid(modifier: Modifier, viewModel: MapViewModel) {
 
 @Composable
 fun LandItem(land: Land, viewModel: MapViewModel) {
+    var selectedLandId by remember { mutableIntStateOf(-1) }
+    LaunchedEffect(key1 = viewModel.selectedLandId) {
+        viewModel.selectedLandId.collect { id ->
+            selectedLandId = id
+        }
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(1f)
             .border(
                 width = 2.dp,
-                color = getBorderColor(land.position, viewModel.selectedLand),
+                color = getBorderColor(land.position, selectedLandId),
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
             ),
         shape = androidx.compose.foundation.shape.RoundedCornerShape(0.dp),
@@ -65,7 +73,7 @@ fun LandItem(land: Land, viewModel: MapViewModel) {
             viewModel.onLandClicked(land)
         }
     ) {
-        Box() {
+        Box {
             val image = ImageService.getImage(land.getTag())
             Image(
                 painter = painterResource(id = image),
@@ -92,11 +100,24 @@ fun getBorderColor(selected: Int, position: Int?): Color {
 
 @Composable
 fun CreateInteractButtons(viewModel: MapViewModel) {
-    if (viewModel.selectedLand < 0) return Text(text = "invalid selection")
-    if (viewModel.getSelectedLand()?.isProcessing() == true) {
+    var selectedLand by remember { mutableStateOf<Land?>(null) }
+    var targetDate by remember { mutableStateOf<Date>(Date()) }
+    var startDate by remember { mutableStateOf<Date>(Date()) }
+    var processing by remember { mutableStateOf(false) }
+    LaunchedEffect(key1 = viewModel.selectedLandId) {
+        viewModel.selectedLandId.collect { landId ->
+            selectedLand = viewModel.getSelectedLandById(landId)
+            targetDate = selectedLand?.content?.getTargetDate() ?: Date()
+            startDate = selectedLand?.content?.getStartDate() ?: Date()
+            processing = selectedLand?.isProcessing() == true
+        }
+    }
+
+    if (selectedLand == null) return Text(text = "invalid selection")
+    if (processing == true) {
         CountdownProgressBar(
-            viewModel.getSelectedLand()?.content?.getTargetDate() ?: Date(),
-            viewModel.getSelectedLand()?.content?.getStartDate() ?: Date()
+            targetDate = targetDate,
+            startingTime = startDate
         )
     }
 
@@ -125,13 +146,12 @@ fun CreateInteractButtons(viewModel: MapViewModel) {
 @Composable
 fun CountdownProgressBar(targetDate: Date, startingTime: Date) {
     var remainingDuration by remember { mutableLongStateOf(0L) }
-    var currentTargetDate by remember { mutableLongStateOf(targetDate.time) }
+    var timeUp by remember { mutableStateOf(remainingDuration < 0L) }
 
-    val totalDuration = targetDate.time - startingTime.time
-
-    LaunchedEffect(key1 = currentTargetDate) {
+    LaunchedEffect(key1 = targetDate) {
         while (true) {
-            remainingDuration = currentTargetDate - Date().time
+            remainingDuration = targetDate.time - Date().time
+            timeUp = remainingDuration <= 0
             if (remainingDuration <= 0) break // Stop when target time is reached
             delay(1000) // Update every second
         }
@@ -139,10 +159,13 @@ fun CountdownProgressBar(targetDate: Date, startingTime: Date) {
 
     Column(horizontalAlignment = Alignment.End) {
         LinearProgressIndicator(
-            progress = { 1f-(remainingDuration.toFloat() / totalDuration.toFloat()).coerceIn(0f, 1f) },
+            progress = {
+                if(timeUp) return@LinearProgressIndicator 1f
+                val totalDuration = targetDate.time - startingTime.time
+                return@LinearProgressIndicator 1f-(remainingDuration.toFloat() / totalDuration.toFloat()).coerceIn(0f, 1f) },
             color = Color.Green,
         )
-        Text(if(remainingDuration < 0L) "Time's up!" else formatRemainingTime(remainingDuration))
+        Text(if(timeUp) "Time's up!" else formatRemainingTime(remainingDuration))
     }
 }
 
@@ -154,7 +177,7 @@ fun formatRemainingTime(millis: Long): String {
 
     return when {
         days > 0 -> {
-            "${days} and ${leadZero(hours)}:${leadZero(minutes)}:${leadZero(seconds)} remaining"
+            "$days and ${leadZero(hours)}:${leadZero(minutes)}:${leadZero(seconds)} remaining"
         }
         hours > 0 -> {
             "${hours}:${leadZero(minutes)}:${leadZero(seconds)} remaining"

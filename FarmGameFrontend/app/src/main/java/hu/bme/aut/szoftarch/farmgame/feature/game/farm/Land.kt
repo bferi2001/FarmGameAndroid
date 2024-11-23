@@ -48,10 +48,6 @@ data class Land(
                 content = Building(building_id, params[1])
             }
 
-            "action_crop" -> {
-                val planter_id = params[0].toIntOrNull() ?: throw Exception("Invalid id")
-            }
-
             else -> {
                 throw Exception("Unknown interaction")
             }
@@ -66,5 +62,4 @@ data class Land(
     fun getTag(): String {
         return content?.getTag() ?: "empty"
     }
-
 }

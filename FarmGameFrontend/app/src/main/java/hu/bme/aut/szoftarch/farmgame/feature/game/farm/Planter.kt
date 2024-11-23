@@ -9,11 +9,8 @@ import java.util.Date
 class Planter(
     val id: Int,
     val plantTime: LocalDateTime,
-    val actions: Array<String>,
+    var actions: Array<String>,
     val harvestTime: LocalDateTime? = null,
-    val wateringTime: LocalDateTime? = null,
-    val weedingTime: LocalDateTime? = null,
-    val fertilisingTime: LocalDateTime? = null,
 ) : Buildable() {
     var content: Crop? = null
     var finished: Boolean = false
@@ -36,6 +33,9 @@ class Planter(
         return date
     }
 
+    override fun setNewActions(actions: Array<String>) {
+        this.actions = actions
+    }
 
     var cleaned: Boolean = true
 
@@ -54,20 +54,6 @@ class Planter(
     }
 
     override fun getInteractions(): List<String> {
-        /*if (!cleaned) {
-            return listOf("clean")
-        } else if (finished) {
-            return listOf("collect")
-        } else if (content == null) {
-            return listOf("crop_wheat", "crop_flowers")
-        }
-        val interactions = mutableListOf("wait")
-        if (!water) {
-            interactions.add("water")
-        }
-        if (!fertilizer) {
-            interactions.add("fertilize")
-        }*/
         return actions.toList()
     }
 

@@ -20,14 +20,18 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.example.compose.woodLight
+import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
 import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
 
 @Composable
@@ -37,11 +41,17 @@ fun SideMenuScreen(viewModel: MapViewModel) {
 
     val menuOpen by remember { derivedStateOf { viewModel.menuOpen } }
 
-    val menuOffsetX by animateDpAsState(
-        targetValue = if (menuOpen != MenuLocation.SIDE) -(screenWidth / 2) else 0.dp
-    )
+    var selectedLand by remember { mutableStateOf<Land?>(null) }
+    LaunchedEffect(key1 = viewModel.selectedLandId) {
+        viewModel.selectedLandId.collect { landId ->
+            selectedLand = viewModel.getSelectedLandById(landId)
+        }
+    }
 
-    val menuTitle = viewModel.getSelectedLand()?.getName() ?: "Side menu"
+    val menuOffsetX by animateDpAsState(
+        targetValue = if (menuOpen != MenuLocation.SIDE) -(screenWidth / 2) else 0.dp, label = ""
+    )
+    val menuTitle by remember { mutableStateOf(selectedLand?.getName() ?: "Side menu")}
 
     Box(
         modifier = Modifier

@@ -25,6 +25,10 @@ class Building(
         return Date()
     }
 
+    override fun setNewActions(actions: Array<String>) {
+        // no actions
+    }
+
     override fun getName(): String {
         return "${NameService.getDisplayName(tag)} lvl${level}"
     }

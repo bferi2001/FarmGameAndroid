@@ -6,6 +6,7 @@ import java.util.Date
 abstract class Buildable {
     abstract fun getName(): String
     abstract fun getTag(): String
+    abstract fun setNewActions(actions: Array<String>)
 
     abstract fun getInteractMenu(): MenuLocation
     abstract fun getInteractions(): List<String>

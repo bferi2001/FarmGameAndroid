@@ -1,7 +1,6 @@
 package hu.bme.aut.szoftarch.farmgame.feature.map
 
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -12,6 +11,7 @@ import hu.bme.aut.szoftarch.farmgame.api.LoginHandler
 import hu.bme.aut.szoftarch.farmgame.feature.game.Session
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Farm
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
+import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Planter
 import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MapViewModel @Inject constructor() : ViewModel() {
-    var selectedLand by mutableIntStateOf(-1)
+    var selectedLandId = MutableStateFlow(-1)
     var menuOpen by mutableStateOf(MenuLocation.NONE)
         private set
 
@@ -75,18 +75,18 @@ class MapViewModel @Inject constructor() : ViewModel() {
 
     fun onLandClicked(land: Land) {
         interactions.value = emptyList()
-        selectedLand = land.position
+        selectedLandId.value = land.position
         menuOpen = land.getInteractMenu()
     }
 
     fun interact(interaction: String, params: List<String>) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (selectedLand < 0) {
+            if (selectedLandId.value < 0) {
                 return@launch
             }
-            if(session.apiController.interact(session.farm!!.getLand(selectedLand), interaction, params)){
+            if(session.apiController.interact(session.farm!!.getLand(selectedLandId.value), interaction, params)){
                 closeMenu()
-                selectedLand = -1
+                selectedLandId.value = -1
 
                 if(interaction == "action_crop" || interaction == "harvesting")
                 {
@@ -94,10 +94,10 @@ class MapViewModel @Inject constructor() : ViewModel() {
                 }
             }
 
-            // Bad but quick way to update UI
-            val cheese = selectedLand
-            selectedLand = -1
-            selectedLand = cheese
+            // Quick way to update UI
+            val cheese = selectedLandId.value
+            selectedLandId.value = -1
+            selectedLandId.value = cheese
         }
     }
 
@@ -107,8 +107,11 @@ class MapViewModel @Inject constructor() : ViewModel() {
             while (true)
             {
                 var newInteractions = emptyList<String>()
-                if (selectedLand >= 0) {
-                    newInteractions = session.getInteractions(session.farm!!.getLand(selectedLand))
+                if (selectedLandId.value >= 0) {
+                    val isPlant = session.farm!!.getLand(selectedLandId.value).content is Planter
+                    val actions = session.apiController.getActions(selectedLandId.value, isPlant)
+                    session.farm!!.getLand(selectedLandId.value).content?.setNewActions(actions)
+                    newInteractions = session.getInteractions(session.farm!!.getLand(selectedLandId.value))
                 }
 
                 if(newInteractions != interactions.value){
@@ -120,10 +123,10 @@ class MapViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun getSelectedLand() : Land? {
-        if (selectedLand < 0) {
+    fun getSelectedLandById(id: Int) : Land? {
+        if (selectedLandId.value < 0) {
             return null
         }
-        return session.farm?.getLand(selectedLand)
+        return session.farm?.getLand(selectedLandId.value)
     }
 }

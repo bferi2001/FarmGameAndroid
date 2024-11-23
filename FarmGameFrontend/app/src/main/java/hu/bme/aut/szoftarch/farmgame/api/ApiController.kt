@@ -71,11 +71,8 @@ class ApiController(token: String) : HttpRequestMaker(token) {
             val content = Planter(
                 id = plant.id,
                 plantTime = toLocalDateTime(plant.plantTime),
-                actions = getCropActions(plant.position),
+                actions = getActions(plant.position, true),
                 harvestTime = if(plant.harvestTime == null) null else toLocalDateTime(plant.harvestTime!!),
-                wateringTime = if(plant.wateringTime == null) null else toLocalDateTime(plant.wateringTime!!),
-                fertilisingTime = if(plant.fertilisingTime == null) null else toLocalDateTime(plant.fertilisingTime!!),
-                weedingTime = if(plant.weedingTime == null) null else toLocalDateTime(plant.weedingTime!!)
             )
             val crop = Crop(
                 name = displayNames[plant.cropsTypeName].toString(),
@@ -137,10 +134,6 @@ class ApiController(token: String) : HttpRequestMaker(token) {
         return buildings.toList()
     }
 
-    fun getBuildingActions(building: Building): List<String> {
-        TODO("Not yet implemented")
-    }
-
     suspend fun getPossibleCrops(): List<String> {
         val res = get("api/farm/plant/unlocked")
         val crops = res.body<Array<String>>()
@@ -180,6 +173,13 @@ class ApiController(token: String) : HttpRequestMaker(token) {
             if(interaction == "harvesting")
             {
                 return harvest(land.position)
+            }
+            else if(
+                interaction == "watering" ||
+                interaction == "fertilising" ||
+                interaction == "weeding" )
+            {
+                return plantAction(land.position, interaction)
             }
             else {
                 val position = land.position
@@ -240,8 +240,9 @@ class ApiController(token: String) : HttpRequestMaker(token) {
 
     }
 
-    suspend fun getCropActions(position: Int): Array<String> {
-        val res = get("api/farm/plant/$position/actions")
+    suspend fun getActions(position: Int, plantActions: Boolean): Array<String> {
+        val type = if(plantActions) "plant" else "barn"
+        val res = get("api/farm/$type/$position/actions")
         val json = res.bodyAsText()
         val actions = gson.fromJson(json, Array<String>::class.java)
         return actions
@@ -250,5 +251,10 @@ class ApiController(token: String) : HttpRequestMaker(token) {
     suspend fun harvest(position: Int): Boolean{
         val res = delete("api/farm/plant/$position/harvest")
         return res.status.value == 204
+    }
+
+    suspend fun plantAction(position: Int, action: String): Boolean {
+        val res = put("api/farm/plant/$position/$action")
+        return res.status.value == 200
     }
 }
