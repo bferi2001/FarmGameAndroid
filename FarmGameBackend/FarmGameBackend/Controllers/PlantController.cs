@@ -160,6 +160,10 @@ namespace FarmGameBackend.Controllers
             {
                 return BadRequest("This plant can't be harvested yet.");
             }
+            if(_context.PlantHelper.GetActions(plantAtPosition).Count > 1)
+            {
+                return BadRequest("This plant needs other actions.");
+            }
             _context.PlantedPlants.Remove(plantAtPosition);
             await _context.SaveChangesAsync();
             try
