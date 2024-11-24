@@ -92,7 +92,7 @@ class MapViewModel @Inject constructor() : ViewModel() {
                 closeMenu()
                 selectedLandId.value = -1
 
-                if(interaction == "action_crop" || interaction == "harvesting")
+                if(interaction == "action_crop" || interaction == "harvesting" ||interaction == "action_build")
                 {
                     load()
                 }
