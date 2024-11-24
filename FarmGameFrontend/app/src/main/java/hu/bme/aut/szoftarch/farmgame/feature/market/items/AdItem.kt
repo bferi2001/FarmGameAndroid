@@ -47,7 +47,6 @@ fun AdItem(item: String, count: Int, price: Int, userName: String, deadline: Loc
                     Text(text = item, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(text = "Count: $count")
-                    Text(text = "Seller: $userName")
                 }
                 Text(text = "Price: $price")
                 Button(
@@ -58,6 +57,7 @@ fun AdItem(item: String, count: Int, price: Int, userName: String, deadline: Loc
                     Text(text = "Buy")
                 }
             }
+            Text(text = "Seller: $userName")
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
             Text(text = "Deadline: ${deadline.format(formatter)}")
         }
