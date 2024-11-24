@@ -8,12 +8,12 @@ namespace FarmGameBackend.Helper
 {
     public class BarnHelper(FarmApplicationContext context)
     {
-        public List<string> GetUnlockedBarnsNames()
+        public List<string> GetUnlockedBarnsNames(User currentUser)
         {
             List<string> unlockedMeatNames;
             try
             {
-                unlockedMeatNames = context.ProductHelper.GetUnlockedMeatNames();
+                unlockedMeatNames = context.ProductHelper.GetUnlockedMeatNames(currentUser);
             }
             catch(NotFoundException ex) {
                 return new List<string>();
@@ -21,9 +21,9 @@ namespace FarmGameBackend.Helper
             return context.BarnTypes.Where( barnType => unlockedMeatNames.Contains(barnType.ProductName)).Select(barnType => barnType.Name).ToList();
         }
 
-        public bool DoesMeattypeExistsAndUnlocked(string _barnName)
+        public bool DoesMeattypeExistsAndUnlocked(string _barnName, User currentUser)
         {
-            return GetUnlockedBarnsNames().Any(barnName => barnName == _barnName);
+            return GetUnlockedBarnsNames(currentUser).Any(barnName => barnName == _barnName);
         }
         public async Task<Barn?> GetBarnByPosition(int position, User currentUser)
         {

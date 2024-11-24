@@ -58,10 +58,10 @@ namespace FarmGameBackend.Controllers
             try
             {
                 Product? product = await context.ProductHelper.GetProductByName(productName);
-                UserProduct? userProduct = await context.ProductHelper.GetUserProduct(productName);
+                UserProduct? userProduct = await context.ProductHelper.GetUserProduct(productName, CurrentUser);
                 int ownedQuantity = userProduct.Quantity;
 
-                await context.ProductHelper.AddUserProduct(productName, -quantity);
+                await context.ProductHelper.AddUserProduct(productName, -quantity, CurrentUser);
                 DateTime deadline = DateTime.UtcNow.Add(TimeSpan.FromHours(2*24));
                 
                 Classified classified = new Classified
@@ -110,10 +110,10 @@ namespace FarmGameBackend.Controllers
             try
             {
                 Product? product = await context.ProductHelper.GetProductByName(productName);
-                UserProduct? userProduct = await context.ProductHelper.GetUserProduct(productName);
+                UserProduct? userProduct = await context.ProductHelper.GetUserProduct(productName, CurrentUser);
                 int ownedQuantity = userProduct.Quantity;
 
-                await context.ProductHelper.AddUserProduct(productName, -quantity);
+                await context.ProductHelper.AddUserProduct(productName, -quantity, CurrentUser);
                 CurrentUser.UserMoney += product.QuickSellPrice * quantity;
             }
             catch (NotFoundException ex)
@@ -166,7 +166,7 @@ namespace FarmGameBackend.Controllers
             await DeleteClassified(classified.Id);
             User seller = context.GetCurrentUser(classified.UserName);
             User buyer = CurrentUser;
-            await context.ProductHelper.AddUserProduct(classified.ProductName, classified.Quantity);
+            await context.ProductHelper.AddUserProduct(classified.ProductName, classified.Quantity, CurrentUser);
             if (seller.Email != buyer.Email)
             {
                 if (buyer.UserMoney < classified.Price)

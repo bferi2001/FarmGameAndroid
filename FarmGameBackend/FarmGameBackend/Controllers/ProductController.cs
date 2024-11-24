@@ -11,6 +11,17 @@ namespace FarmGameBackend.Controllers
     [Route("api/farm")]
     public class ProductController(FarmApplicationContext context) : Controller
     {
+        private User CurrentUser
+        {
+            get
+            {
+                if(HttpContext.Items["CurrentUser"] == null)
+                {
+                    throw new BadRequestException("User is not logged in.");
+                }
+                return (User)HttpContext.Items["CurrentUser"]!;
+            }
+        }
         [HttpGet("currentuser/inventory/market")]
         public async Task<ActionResult<IEnumerable<MarketUserProduct>>> GetUserProductsForMarketAsync()
         {
@@ -33,7 +44,7 @@ namespace FarmGameBackend.Controllers
         [HttpGet("currentuser/inventory")]
         public async Task<List<UserProduct>> GetUserProductsAsync()
         {
-            return await context.ProductHelper.GetUserProductsAsync();
+            return await context.ProductHelper.GetUserProductsAsync(CurrentUser);
         }
     }
     

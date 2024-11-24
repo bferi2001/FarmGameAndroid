@@ -50,7 +50,7 @@ namespace FarmGameBackend.Helper
             };
         }
 
-        public async Task<List<string>> GetActions(PlantedPlant plantedPlant)
+        public async Task<List<string>> GetActions(PlantedPlant plantedPlant, User currentUser)
         {
             List<string> actions = [];
             if (plantedPlant.HarvestTime != null && plantedPlant.HarvestTime < DateTimeOffset.Now)
@@ -66,7 +66,7 @@ namespace FarmGameBackend.Helper
             {
                 actions.Add("weeding");
             }
-            UserProduct? manure = await context.ProductHelper.GetUserProduct("other_manure");
+            UserProduct? manure = await context.ProductHelper.GetUserProduct("other_manure", currentUser);
             if (plantedPlant.FertilisingTime != null && plantedPlant.FertilisingTime < DateTimeOffset.Now && manure != null && manure.Quantity > 0)
             {
                 actions.Add("fertilising");

@@ -37,7 +37,7 @@ namespace FarmGameBackend.Controllers
         public async Task<ActionResult<IEnumerable<string>>> GetUnlockedBarnsNamesAsync()
         {
             
-            return context.BarnHelper.GetUnlockedBarnsNames();
+            return context.BarnHelper.GetUnlockedBarnsNames(CurrentUser);
         }
 
         [HttpPost("{position}/{typeName}")]
@@ -48,7 +48,7 @@ namespace FarmGameBackend.Controllers
                 return Conflict("The field is not empty");
             }
             string productName = await context.BarnTypeHelper.GetProductnameByBarntype(typeName);
-            Product? productType = await context.ProductHelper.GetUnlockedProductByName(productName);
+            Product? productType = await context.ProductHelper.GetUnlockedProductByName(productName, CurrentUser);
             if (productType == null)
             {
                 return NotFound();
@@ -81,7 +81,7 @@ namespace FarmGameBackend.Controllers
             {
                 barnAtPosition.CleaningTime = null;
                 barnAtPosition = context.BarnHelper.UpdateDateTimes(barnAtPosition);
-                await context.ProductHelper.AddUserProduct("other_manure", 3);
+                await context.ProductHelper.AddUserProduct("other_manure", 3, CurrentUser);
             }
             else
             {
@@ -155,7 +155,7 @@ namespace FarmGameBackend.Controllers
                 }
                 var updatedBarn = context.BarnHelper.UpdateBarn(barnAtPosition, barnProduct.ProductionTimeAsSeconds);
                 await context.BarnHelper.UpdateBarnDatabase(updatedBarn);
-                await context.ProductHelper.AddUserProduct(barnProductName, 3);
+                await context.ProductHelper.AddUserProduct(barnProductName, 3, CurrentUser);
                 await context.QuestHelper.ProgressQuest("harvest", barnProductName, 3, CurrentUser);
                 CurrentUser.UserXP += barnProduct.RewardXP;
                 await context.UserHelper.PutUser(CurrentUser.Id, CurrentUser);

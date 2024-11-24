@@ -7,71 +7,62 @@ using FarmGameBackend.CustomExceptions;
 
 namespace FarmGameBackend.Helper
 {
-    public class ProductHelper
+    public class ProductHelper(FarmApplicationContext context)
     {
-        private readonly FarmApplicationContext _context;
-        private readonly User _currentUser;
-        public ProductHelper(FarmApplicationContext context)
-        {
-            _context = context;
-            //string? userEmail = HttpContext.Items["Email"]?.ToString();
-            //_currentUser = _context.GetCurrentUser(userEmail!);
-            _currentUser = _context.GetCurrentUser("testemail@gmail.com");
-        }
         public class MarketUserProduct
         {
             public string ProductName { get; set; }
             public int QuickSellPrice { get; set; }
             public int Quantity { get; set; }
         }
-        public async Task<List<UserProduct>> GetUserProductsAsync()
+        public async Task<List<UserProduct>> GetUserProductsAsync(User currentUser)
         {
-            List<UserProduct> userProducts = await _context.UserProduct
-                .Where(up => up.UserName == _currentUser.Email).ToListAsync();
+            List<UserProduct> userProducts = await context.UserProduct
+                .Where(up => up.UserName == currentUser.Email).ToListAsync();
             return userProducts;
         }
         public bool UserProductExists(int id)
         {
-            return _context.UserProduct.Any(e => e.Id == id);
+            return context.UserProduct.Any(e => e.Id == id);
         }
         public bool ProductExists(int id)
         {
-            return _context.Products.Any(e => e.Id == id);
+            return context.Products.Any(e => e.Id == id);
         }
         public Boolean DoesProductExists(string _productName)
         {
-            return _context.Products.Any(product => product.Name == _productName);
+            return context.Products.Any(product => product.Name == _productName);
         }
         public async Task<Product?> GetUnlockedCropByName(string name, User currentUser)
         {
-            if (!_context.PlantHelper.DoesCroptypeExistsAndUnlocked(name, currentUser))
+            if (!context.PlantHelper.DoesCroptypeExistsAndUnlocked(name, currentUser))
             {
                 return null;
             }
-            Product? productType = await _context.Products.Where(product => product.Name == name).FirstAsync();
+            Product? productType = await context.Products.Where(product => product.Name == name).FirstAsync();
             return productType;
         }
         public async Task<Product?> GetProductByName(string name)
         {
-            Product? productType = await _context.Products.Where(product => product.Name == name).FirstOrDefaultAsync();
+            Product? productType = await context.Products.Where(product => product.Name == name).FirstOrDefaultAsync();
             if (productType == null)
             {
                 throw new NotFoundException("");
             }
             return productType;
         }
-        public async Task<Product?> GetUnlockedProductByName(string name)
+        public async Task<Product?> GetUnlockedProductByName(string name, User currentUser)
         {
-            Product? productType = await _context.Products.Where(product => product.Name == name && product.UnlockXP <= _currentUser.UserXP).FirstOrDefaultAsync();
+            Product? productType = await context.Products.Where(product => product.Name == name && product.UnlockXP <= currentUser.UserXP).FirstOrDefaultAsync();
             if (productType == null)
             {
                 return null;
             }
             return productType;
         }
-        public async Task<List<string>> GetUnlockedProductNames()
+        public async Task<List<string>> GetUnlockedProductNames(User currentUser)
         {
-            List<string> productType = await _context.Products.Where(product => product.UnlockXP <= _currentUser.UserXP).Select(product => product.Name).ToListAsync();
+            List<string> productType = await context.Products.Where(product => product.UnlockXP <= currentUser.UserXP).Select(product => product.Name).ToListAsync();
             if (productType == null)
             {
                 return new List<string>();
@@ -80,8 +71,8 @@ namespace FarmGameBackend.Helper
         }
         public async Task<UserProduct> PostUserProduct(UserProduct userProduct)
         {
-            _context.UserProduct.Add(userProduct);
-            await _context.SaveChangesAsync();
+            context.UserProduct.Add(userProduct);
+            await context.SaveChangesAsync();
 
             return userProduct;
 
@@ -94,11 +85,11 @@ namespace FarmGameBackend.Helper
                 throw new BadRequestException("Id not match for  modifying "+userProduct.Id);
             }
 
-            _context.Entry(userProduct).State = EntityState.Modified;
+            context.Entry(userProduct).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -114,22 +105,22 @@ namespace FarmGameBackend.Helper
 
             return;
         }
-        public async Task<UserProduct?> GetUserProduct(string productName)
+        public async Task<UserProduct?> GetUserProduct(string productName, User currentUser)
         {
-            var userProduct = await _context.UserProduct.Where(userProduct => userProduct.UserName == _currentUser.Email && userProduct.ProductName == productName).FirstOrDefaultAsync();
+            var userProduct = await context.UserProduct.Where(userProduct => userProduct.UserName == currentUser.Email && userProduct.ProductName == productName).FirstOrDefaultAsync();
             if (userProduct == null)
             {
                 return null;
             }
             return userProduct;
         }
-        public async Task AddUserProduct(string productName, int quantity)
+        public async Task AddUserProduct(string productName, int quantity, User currentUser)
         {
             if (!DoesProductExists(productName))
             {
                 throw new NotFoundException("Product doesn't exists: " + productName);
             }
-            UserProduct? userProduct = await GetUserProduct(productName);
+            UserProduct? userProduct = await GetUserProduct(productName, currentUser);
             if (userProduct == null)
             {
                 if (quantity < 0)
@@ -139,7 +130,7 @@ namespace FarmGameBackend.Helper
                 UserProduct product = new UserProduct
                 {
                     ProductName = productName,
-                    UserName = _currentUser.Email,
+                    UserName = currentUser.Email,
                     Quantity = quantity
                 };
                 await PostUserProduct(product);
@@ -157,10 +148,10 @@ namespace FarmGameBackend.Helper
                 return;
             }
         }
-        public List<string?> GetUnlockedMeatNames()
+        public List<string?> GetUnlockedMeatNames(User currentUser)
         {
-            int userXP = _currentUser.UserXP;
-            var productNames =  _context.Products.Where(product => product.Name.StartsWith("meat_") && product.UnlockXP <= userXP)
+            int userXP = currentUser.UserXP;
+            var productNames =  context.Products.Where(product => product.Name.StartsWith("meat_") && product.UnlockXP <= userXP)
                                     .Select(product => product.Name)
                                     .ToList();
 

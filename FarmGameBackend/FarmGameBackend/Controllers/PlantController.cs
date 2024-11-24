@@ -30,7 +30,7 @@ namespace FarmGameBackend.Controllers
             {
                 return NotFound();
             }
-            return await context.PlantHelper.GetActions(plantAtPosition);
+            return await context.PlantHelper.GetActions(plantAtPosition, CurrentUser);
         }
 
         [HttpGet("unlocked")]
@@ -78,7 +78,7 @@ namespace FarmGameBackend.Controllers
                 return BadRequest("This plant got already watered.");
             }
             DateTimeOffset currentTime = DateTimeOffset.Now;
-            if (currentTime >= plantAtPosition.WateringTime && (await context.PlantHelper.GetActions(plantAtPosition)).Contains("watering"))
+            if (currentTime >= plantAtPosition.WateringTime && (await context.PlantHelper.GetActions(plantAtPosition, CurrentUser)).Contains("watering"))
             {
                 plantAtPosition.WateringTime = null;
                 plantAtPosition = context.PlantHelper.UpdateDateTimes(plantAtPosition);
@@ -106,7 +106,7 @@ namespace FarmGameBackend.Controllers
                 return BadRequest("This plant got already watered.");
             }
             DateTimeOffset currentTime = DateTimeOffset.Now;
-            if (currentTime >= plantAtPosition.WeedingTime && (await context.PlantHelper.GetActions(plantAtPosition)).Contains("weeding"))
+            if (currentTime >= plantAtPosition.WeedingTime && (await context.PlantHelper.GetActions(plantAtPosition, CurrentUser)).Contains("weeding"))
             {
                 plantAtPosition.WeedingTime = null;
                 plantAtPosition = context.PlantHelper.UpdateDateTimes(plantAtPosition);
@@ -135,11 +135,11 @@ namespace FarmGameBackend.Controllers
                 return BadRequest("This plant got already fertilised.");
             }
             DateTimeOffset currentTime = DateTimeOffset.Now;
-            if (currentTime >= plantAtPosition.FertilisingTime && (await context.PlantHelper.GetActions(plantAtPosition)).Contains("fertilising"))
+            if (currentTime >= plantAtPosition.FertilisingTime && (await context.PlantHelper.GetActions(plantAtPosition, CurrentUser)).Contains("fertilising"))
             {
                 plantAtPosition.FertilisingTime = null;
                 plantAtPosition = context.PlantHelper.UpdateDateTimes(plantAtPosition);
-                await context.ProductHelper.AddUserProduct("other_manure", -1);
+                await context.ProductHelper.AddUserProduct("other_manure", -1, CurrentUser);
             }
             try
             {
@@ -165,11 +165,11 @@ namespace FarmGameBackend.Controllers
                 return NotFound();
             }
             DateTimeOffset currentTime = DateTimeOffset.Now;
-            if (!(currentTime >= plantAtPosition.HarvestTime && (await context.PlantHelper.GetActions(plantAtPosition)).Contains("harvesting")))
+            if (!(currentTime >= plantAtPosition.HarvestTime && (await context.PlantHelper.GetActions(plantAtPosition, CurrentUser)).Contains("harvesting")))
             {
                 return BadRequest("This plant can't be harvested yet.");
             }
-            if((await context.PlantHelper.GetActions(plantAtPosition)).Count > 1)
+            if((await context.PlantHelper.GetActions(plantAtPosition, CurrentUser)).Count > 1)
             {
                 return BadRequest("This plant needs other actions.");
             }
@@ -177,7 +177,7 @@ namespace FarmGameBackend.Controllers
             await context.SaveChangesAsync();
             try
             {
-                await context.ProductHelper.AddUserProduct(plantAtPosition.CropsTypeName, 3);
+                await context.ProductHelper.AddUserProduct(plantAtPosition.CropsTypeName, 3, CurrentUser);
                 await context.QuestHelper.ProgressQuest("harvest", plantAtPosition.CropsTypeName, 3, CurrentUser);
                 CurrentUser.UserXP += plantProduct.RewardXP;
                 await context.UserHelper.PutUser(CurrentUser.Id, CurrentUser);
@@ -201,7 +201,7 @@ namespace FarmGameBackend.Controllers
             
             foreach (var plant in plantedPlants)
             {
-                var actions = await context.PlantHelper.GetActions(plant);
+                var actions = await context.PlantHelper.GetActions(plant, CurrentUser);
                 plantWithActions.Add(new PlantWithActions {Plant = plant, Actions = actions});
             }
             

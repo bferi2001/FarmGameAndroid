@@ -11,7 +11,7 @@ namespace FarmGameBackend.Helper
     {
         public async Task NewQuest(User currentUser)
         {
-            List<string> unlockedProducts = await context.ProductHelper.GetUnlockedProductNames();
+            List<string> unlockedProducts = await context.ProductHelper.GetUnlockedProductNames(currentUser);
             Random r = new Random();
             string pickedProduct = unlockedProducts[r.Next(unlockedProducts.Count)];
             int productQuantity = r.Next(1, 51);
