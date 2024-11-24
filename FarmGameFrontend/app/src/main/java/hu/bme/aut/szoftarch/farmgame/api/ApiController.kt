@@ -237,7 +237,7 @@ class ApiController(token: String) : HttpRequestMaker(token) {
     }
 
     suspend fun getAds(): List<AdItemData> {
-        val res = get("api/farm/currentuser/market")
+        val res = get("api/farm/market")
         val json = res.bodyAsText()
         val adsDao = gson.fromJson(json, Array<ClassifiedDao>::class.java)
         val ads = adsDao.map {
@@ -246,7 +246,7 @@ class ApiController(token: String) : HttpRequestMaker(token) {
                 price = it.price,
                 count = it.quantity,
                 seller = it.userName ?: "Unknown",
-                deadline = it.deadline
+                deadline = toLocalDateTime(it.deadline)
             )
         }
 

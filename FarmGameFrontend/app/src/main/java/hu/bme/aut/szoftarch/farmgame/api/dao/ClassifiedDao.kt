@@ -9,6 +9,6 @@ data class ClassifiedDao(
     var userName: String? = null,
     var price: Int,
     var productName: String,
-    var deadline: LocalDateTime,
+    var deadline: String,
     var quantity: Int
 )
