@@ -46,7 +46,17 @@ class Planter(
     }
 
     override fun getTag(): String {
-        return content?.tag ?: "crop_null"
+        if (content == null) {
+            return "crop_null"
+        }
+
+        var tag = content!!.tag
+
+        if (!actions.contains("harvesting")) {
+            return "$tag:growing"
+        }
+
+        return tag
     }
 
     override fun getInteractMenu(): MenuLocation {
