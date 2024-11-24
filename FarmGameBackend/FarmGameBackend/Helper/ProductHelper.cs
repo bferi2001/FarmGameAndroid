@@ -62,10 +62,19 @@ namespace FarmGameBackend.Helper
         }
         public async Task<Product?> GetUnlockedProductByName(string name)
         {
-            Product? productType = await _context.Products.Where(product => product.Name == name && product.UnlockXP <= _currentUser.UserXP ).FirstOrDefaultAsync();
+            Product? productType = await _context.Products.Where(product => product.Name == name && product.UnlockXP <= _currentUser.UserXP).FirstOrDefaultAsync();
             if (productType == null)
             {
                 return null;
+            }
+            return productType;
+        }
+        public async Task<List<string>> GetUnlockedProductNames()
+        {
+            List<string> productType = await _context.Products.Where(product => product.UnlockXP <= _currentUser.UserXP).Select(product => product.Name).ToListAsync();
+            if (productType == null)
+            {
+                return new List<string>();
             }
             return productType;
         }

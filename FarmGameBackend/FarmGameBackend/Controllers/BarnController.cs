@@ -146,6 +146,7 @@ namespace FarmGameBackend.Controllers
                 var updatedBarn = _context.BarnHelper.UpdateBarn(barnAtPosition, barnProduct.ProductionTimeAsSeconds);
                 await _context.BarnHelper.UpdateBarnDatabase(updatedBarn);
                 await _context.ProductHelper.AddUserProduct(barnProductName, 3);
+                await _context.QuestHelper.ProgressQuest("harvest", barnProductName, 3);
             }
             catch (NotFoundException ex)
             {

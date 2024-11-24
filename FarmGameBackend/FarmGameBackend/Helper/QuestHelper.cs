@@ -18,14 +18,27 @@ namespace FarmGameBackend.Helper
             //_currentUser = _context.GetCurrentUser(userEmail!);
             _currentUser = _context.GetCurrentUser("testemail@gmail.com");
         }
-        public void NewQuest()
+        public async Task NewQuest()
         {
-
+            List<string> unlockedProducts = await _context.ProductHelper.GetUnlockedProductNames();
+            Random r = new Random();
+            string pickedProduct = unlockedProducts[r.Next(unlockedProducts.Count)];
+            int productQuantity = r.Next(1, 51);
+            Quest quest = new Quest {
+                UserName = _currentUser.Email,
+                TaskKeyword = "harvest",
+                ObjectId = pickedProduct,
+                GoalQuantity = productQuantity,
+                CurrentQuantity = 0,
+                RewardMoney = productQuantity,
+                RewardXP = productQuantity
+            };
         }
-        public async void ProgressQuest(int id, int quantity)
+
+        public async Task ProgressQuest(string taskKeyword, string objectId, int quantity)
         {
-            Quest? quest = await GetQuest(id);
-            if(quest != null)
+            Quest? quest = await GetQuest(taskKeyword, objectId);
+            if (quest == null)
             {
                 return;
             }
@@ -36,13 +49,30 @@ namespace FarmGameBackend.Helper
                 user.UserMoney += quest.RewardMoney;
                 user.UserXP+= quest.RewardXP;
                 await _context.UserHelper.PutUser(user.Id, user);
-                await DeleteQuest(id);
+                await DeleteQuest(quest.Id);
+                await NewQuest();
             }
-            await PutQuest(id, quest!);
+            await PutQuest(quest.Id, quest!);
+        }
+
+        public async Task<List<Quest>> GetQuests()
+        {
+            return await _context.Quests.Where(quest => quest.UserName == _currentUser.Email).ToListAsync();
         }
         public async Task<Quest?> GetQuest(int id)
         {
             var quest = await _context.Quests.FindAsync(id);
+
+            if (quest == null)
+            {
+                return null;
+            }
+
+            return quest;
+        }
+        public async Task<Quest?> GetQuest(string taskKeyword, string objectId)
+        {
+            var quest = await _context.Quests.Where(q => q.TaskKeyword == taskKeyword && q.ObjectId == objectId).FirstOrDefaultAsync();
 
             if (quest == null)
             {

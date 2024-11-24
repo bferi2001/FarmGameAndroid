@@ -20,7 +20,7 @@ namespace FarmGameBackend.DbContexts
             PlantHelper = new PlantHelper(this);
             BarnHelper = new BarnHelper(this);
             BarnTypeHelper = new BarnTypeHelper(this);
-            QuestHelper = new QuestHelper(this)
+            QuestHelper = new QuestHelper(this);
             UserHelper = new UserHelper(this);
         }
 

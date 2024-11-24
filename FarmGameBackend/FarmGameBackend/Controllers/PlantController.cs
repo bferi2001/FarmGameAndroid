@@ -169,6 +169,7 @@ namespace FarmGameBackend.Controllers
             try
             {
                 await _context.ProductHelper.AddUserProduct(plantAtPosition.CropsTypeName, 3);
+                await _context.QuestHelper.ProgressQuest("harvest", plantAtPosition.CropsTypeName, 3);
             }
             catch (NotFoundException ex) {
                 return NotFound(ex.Message);
