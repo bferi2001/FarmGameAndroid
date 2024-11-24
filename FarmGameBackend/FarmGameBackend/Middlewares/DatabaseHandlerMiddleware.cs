@@ -21,9 +21,7 @@ public class DatabaseHandlerMiddleware(RequestDelegate next)
         
         await next(context);
 
-        if (context.Response.StatusCode == StatusCodes.Status200OK || 
-            context.Response.StatusCode == StatusCodes.Status201Created ||
-            context.Response.StatusCode == StatusCodes.Status204NoContent)
+        if (context.Response.StatusCode is StatusCodes.Status200OK or StatusCodes.Status201Created or StatusCodes.Status204NoContent)
         {
             await dbContext.SaveChangesAsync();
         }
