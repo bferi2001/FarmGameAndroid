@@ -246,7 +246,7 @@ class ApiController(token: String) : HttpRequestMaker(token) {
                 price = it.price,
                 count = it.quantity,
                 seller = it.userName ?: "Unknown",
-                deadline = it.deadline
+                deadline = toLocalDateTime(it.deadline)
             )
         }
 
