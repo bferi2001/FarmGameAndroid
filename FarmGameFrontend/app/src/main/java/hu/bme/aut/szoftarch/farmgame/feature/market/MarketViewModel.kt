@@ -51,4 +51,12 @@ class MarketViewModel() : ViewModel() {
             loadItems()
         }
     }
+
+    fun QuickSell(item: SellingItemData) {
+        viewModelScope.launch(Dispatchers.IO) {
+            apiController.quickSell(sellingItemData = item)
+            loadItems()
+        }
+    }
+
 }

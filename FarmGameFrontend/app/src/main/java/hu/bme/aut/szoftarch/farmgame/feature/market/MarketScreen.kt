@@ -160,9 +160,19 @@ fun MarketScreen(
                             onClick =
                             {
                                 sellingItems.forEach { item ->
-                                    item.quantity -= item.sellCount
+                                    try {
+                                        item.quantity -= item.sellCount
+
+                                        val itemSell = SellingItemData(
+                                            item = item.item,
+                                            price = item.price,
+                                            quantity = item.sellCount)
+
+                                        viewModel.QuickSell(itemSell)
+
+                                    } catch (e: Exception) { }
+
                                 }
-                                /* TODO Handle giving money to user */
                                 totalPrice = 0
                                 Toast.makeText(context, "Selling item...", Toast.LENGTH_SHORT).show()
                             }
