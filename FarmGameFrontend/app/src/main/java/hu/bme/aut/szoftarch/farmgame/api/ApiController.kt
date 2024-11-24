@@ -293,4 +293,14 @@ class ApiController(token: String) : HttpRequestMaker(token) {
             userMoney = userDao.userMoney
         )
     }
+
+    suspend fun quickSell(sellingItemData: SellingItemData): Boolean {
+        val res = put("api/farm/market/quicksell/${sellingItemData.item}/${sellingItemData.quantity}")
+        return res.status.value == 204
+    }
+
+    suspend fun createAd(sellingItemData: SellingItemData): Boolean {
+        val res = post("api/farm/market/${sellingItemData.item}/${sellingItemData.quantity}/${sellingItemData.price}")
+        return res.status.value == 204
+    }
 }
