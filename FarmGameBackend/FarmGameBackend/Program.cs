@@ -6,6 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 Env.Load();
+bool useAuth = Environment.GetEnvironmentVariable("USE_AUTH") != "false";
+
+#if !DEBUG
+useAuth = false;
+#endif
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +29,22 @@ builder.Services.AddDbContext<FarmApplicationContext>(options =>
     options.UseSqlServer(connection));
 builder.Services.AddControllers();
 
-
+if (useAuth)
+{
+    // Add authentication to swagger UI
+    builder.Services.AddSwaggerGen(opt =>
+    {
+        opt.SwaggerDoc("v1", new OpenApiInfo { Title = "My Api", Version = "v1" });
+        opt.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
+        {
+            Type = SecuritySchemeType.Http,
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Scheme = "bearer"
+        });
+        opt.OperationFilter<AuthenticationRequirementsOperationFilter>();
+    });
+}
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -39,8 +59,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+if (useAuth)
+{
+    // Middleware for Google authentication
+    app.UseMiddleware<GoogleAuthMiddleware>();
+}
+else
+{
+    app.UseMiddleware<DebugWithConstantUserMiddleware>();
+}
 
-app.UseCors();
 app.UseHttpsRedirection();
 
 app.MapControllers();
