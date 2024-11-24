@@ -233,10 +233,6 @@ class ApiController(token: String) : HttpRequestMaker(token) {
         return questList
     }
 
-    fun claimQuest(quest: Quest) {
-        TODO("Not yet implemented")
-    }
-
     suspend fun getAds(): List<AdItemData> {
         val res = get("api/farm/market")
         val json = res.bodyAsText()
