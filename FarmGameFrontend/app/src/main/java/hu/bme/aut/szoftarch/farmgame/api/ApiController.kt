@@ -234,7 +234,7 @@ class ApiController(token: String) : HttpRequestMaker(token) {
     }
 
     suspend fun getAds(): List<AdItemData> {
-        val res = get("api/farm/market")
+        val res = get("api/farm/currentuser/market")
         val json = res.bodyAsText()
         val adsDao = gson.fromJson(json, Array<ClassifiedDao>::class.java)
         val ads = adsDao.map {
@@ -251,7 +251,7 @@ class ApiController(token: String) : HttpRequestMaker(token) {
     }
 
     suspend fun getInventory(): List<SellingItemData> {
-        val res = get("api/farm/inventory/market")
+        val res = get("api/farm/currentuser/inventory/market")
         val json = res.bodyAsText()
         val inventoryDao = gson.fromJson(json, Array<MarketUserProductDao>::class.java)
         val inventory = inventoryDao.map {
