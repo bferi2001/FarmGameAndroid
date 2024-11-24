@@ -63,7 +63,7 @@ fun MarketScreen(
                     adItems.clear()
                     adItems.addAll(it.items)
                     sellingItems.clear()
-                    sellingItems.addAll(it.inventory)
+                    sellingItems.addAll(it.inventory.filter { it.quantity > 0 })
                 }
                 is MarketViewModel.LoadingState.Loading -> {}
                 is MarketViewModel.LoadingState.Error -> {
