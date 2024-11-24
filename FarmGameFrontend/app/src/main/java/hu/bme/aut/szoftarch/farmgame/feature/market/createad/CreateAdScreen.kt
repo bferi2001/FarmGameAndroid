@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,7 +17,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,8 +44,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.compose.AppTheme
-import hu.bme.aut.szoftarch.farmgame.api.ApiController
-import hu.bme.aut.szoftarch.farmgame.api.LoginHandler
 import hu.bme.aut.szoftarch.farmgame.data.market.SellingItemData
 import hu.bme.aut.szoftarch.farmgame.feature.market.MarketViewModel
 
@@ -237,7 +233,7 @@ fun CreateAdScreen(
                                 price = inputValuePrice,
                                 quantity = inputValueQuantity)
 
-                            marketViewModel.CreateNewAd(newAd)
+                            marketViewModel.createNewAd(newAd)
 
                             // After creating the new ad, navigate back to the market screen
                             onToMarketScreen()

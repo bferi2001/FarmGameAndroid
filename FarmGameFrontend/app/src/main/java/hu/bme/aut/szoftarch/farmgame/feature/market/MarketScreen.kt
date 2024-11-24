@@ -129,6 +129,7 @@ fun MarketScreen(
                                 userName = adItems[i].seller,
                                 deadline = adItems[i].deadline!!,
                             ) {
+                                viewModel.buyAd(adItems[i].id)
                                 Toast.makeText(context, "Buying ad item...", Toast.LENGTH_SHORT).show()
                             }
                         }

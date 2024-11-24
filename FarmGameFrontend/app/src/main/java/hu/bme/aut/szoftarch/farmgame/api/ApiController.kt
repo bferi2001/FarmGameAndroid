@@ -242,6 +242,7 @@ class ApiController(token: String) : HttpRequestMaker(token) {
         val adsDao = gson.fromJson(json, Array<ClassifiedDao>::class.java)
         val ads = adsDao.map {
             AdItemData(
+                id = it.id,
                 item = it.productName,
                 price = it.price,
                 count = it.quantity,
@@ -309,6 +310,11 @@ class ApiController(token: String) : HttpRequestMaker(token) {
 
     suspend fun createAd(sellingItemData: SellingItemData): Boolean {
         val res = post("api/farm/market/${sellingItemData.item}/${sellingItemData.quantity}/${sellingItemData.price}")
+        return res.status.value == 204
+    }
+
+    suspend fun buyAd(adId: Int): Boolean {
+        val res = delete("api/farm/market/$adId")
         return res.status.value == 204
     }
 }

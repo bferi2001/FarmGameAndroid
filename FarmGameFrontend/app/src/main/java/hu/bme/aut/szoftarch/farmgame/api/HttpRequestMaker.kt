@@ -12,7 +12,7 @@ import io.ktor.client.request.put
 import io.ktor.client.statement.HttpResponse
 import io.ktor.serialization.gson.gson
 
-const val BACKEND_URL = "https://app-241124181531.azurewebsites.net/"
+const val BACKEND_URL = "http://192.168.68.68:5153/"
 
 abstract class HttpRequestMaker(val token: String) {
     val gson = Gson()

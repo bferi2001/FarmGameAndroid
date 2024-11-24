@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class MarketViewModel() : ViewModel() {
+    private val apiController = ApiController(LoginHandler.token!!)
 
     sealed class LoadingState {
         data class Loaded(val items: List<AdItemData>, val inventory: List<SellingItemData>) : LoadingState()
@@ -31,22 +32,23 @@ class MarketViewModel() : ViewModel() {
         }
     }
 
-    suspend fun loadItems() {
-        val apiController = ApiController(LoginHandler.token!!)
+    private suspend fun loadItems() {
         val items = apiController.getAds()
         val inventory = apiController.getInventory()
         _loadingState.value = LoadingState.Loaded(items, inventory)
     }
 
-    suspend fun createAd(newAd: SellingItemData) {
-        val apiController = ApiController(LoginHandler.token!!)
-        apiController.createAd(sellingItemData = newAd)
-    }
-
-    fun CreateNewAd(newAd: SellingItemData) {
+    fun createNewAd(newAd: SellingItemData) {
         viewModelScope.launch(Dispatchers.IO) {
-            createAd(newAd)
+            apiController.createAd(sellingItemData = newAd)
+            loadItems()
         }
     }
 
+    fun buyAd(adId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            apiController.buyAd(adId)
+            loadItems()
+        }
+    }
 }
