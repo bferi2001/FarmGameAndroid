@@ -148,8 +148,15 @@ class MapViewModel @Inject constructor() : ViewModel() {
             }
         }
 
-        if(newInteractions != null && newInteractions != interactions.value){
-            interactions.value = newInteractions
+        try{
+            if(newInteractions != null && newInteractions != interactions.value){
+                interactions.value = newInteractions
+            }
+        }
+        catch (e: Exception){ // Sometimes the interactions is not initialized yet
+            if (newInteractions != null) {
+                interactions.value = newInteractions
+            }
         }
     }
 
