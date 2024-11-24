@@ -4,7 +4,6 @@ import hu.bme.aut.szoftarch.farmgame.api.dao.BarnWithActionsDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.ClassifiedDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.MarketUserProductDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.PlantWithActions
-import hu.bme.aut.szoftarch.farmgame.api.dao.PlantedPlantDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.QuestDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.UserDao
 import hu.bme.aut.szoftarch.farmgame.data.market.AdItemData
@@ -29,22 +28,27 @@ class ApiController(token: String) : HttpRequestMaker(token) {
     }
 
     fun getDisplayNames(): Map<String, String> {
-        return mapOf(
-            Pair("crop_wheat", "Wheat"),
-            Pair("crop_flowers", "Flowers"),
-            Pair("building_cow", "Cow Shed"),
-            Pair("crop_corn", "Corn"),
-            Pair("crop_null", "No crops"),
-            Pair("empty", "Empty"),
-            Pair("action_build", "Build"),
+        val buildingNames = mapOf(
             Pair("building_cow", "Cow Shed"),
             Pair("building_chicken", "Chicken Shed"),
             Pair("building_pig", "Pig Shed"),
+            Pair("building_cow", "Cow Shed"),
+            Pair("building_sheep", "Sheep Shed"),
+        )
+
+        val cropNames = mapOf(
+            Pair("crop_wheat", "Wheat"),
+            Pair("crop_flowers", "Flowers"),
+            Pair("crop_corn", "Corn"),
             Pair("crop_wheat", "Wheat"),
             Pair("crop_carrot", "Carrot"),
             Pair("crop_potato", "Potato"),
             Pair("crop_flower", "Flower"),
+            Pair("crop_tomato", "Tomato"),
+            Pair("crop_cabbage", "Cabbage"),
         )
+
+        return buildingNames + cropNames
     }
 
     suspend fun getLands(size: Int): List<Land> {
