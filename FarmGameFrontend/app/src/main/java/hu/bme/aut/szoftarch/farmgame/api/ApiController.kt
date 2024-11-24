@@ -7,6 +7,7 @@ import hu.bme.aut.szoftarch.farmgame.api.dao.PlantedPlantDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.QuestTypeDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.UserDao
 import hu.bme.aut.szoftarch.farmgame.data.market.AdItemData
+import hu.bme.aut.szoftarch.farmgame.data.market.SellingItemData
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Building
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Crop
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Farm
@@ -244,13 +245,15 @@ class ApiController(token: String) : HttpRequestMaker(token) {
         return ads.toList()
     }
 
-    suspend fun getInventory(): List<Map<String, Int>> {
+    suspend fun getInventory(): List<SellingItemData> {
         val res = get("api/farm/inventory/market")
         val json = res.bodyAsText()
         val inventoryDao = gson.fromJson(json, Array<MarketUserProductDao>::class.java)
         val inventory = inventoryDao.map {
-            mapOf(
-                Pair(it.productName, it.quantity)
+            SellingItemData(
+                item = it.productName,
+                price = it.quickSellPrice,
+                quantity = it.quantity
             )
         }
         return inventory
