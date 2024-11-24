@@ -5,8 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace FarmGameBackend.Controllers
-{//ToDo Inventory and UserXP management
- //ToDo Fertilising costs animal poop resource
+{
     [Route("api/farm/plant")]
     public class PlantController : Controller
     {
