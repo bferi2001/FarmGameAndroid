@@ -125,7 +125,7 @@ namespace FarmGameBackend.Controllers
             return NoContent();
         }
 
-        [HttpPut("{position:int}/harvest")]
+        [HttpPut("{position:int}/harvesting")]
         public async Task<IActionResult> HarvestBarn(int position)
         {
             Barn? barnAtPosition = await _context.BarnHelper.GetBarnByPosition(position);
