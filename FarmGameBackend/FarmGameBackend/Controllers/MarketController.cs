@@ -128,7 +128,7 @@ namespace FarmGameBackend.Controllers
         }
 
 
-        public async Task<Classified> GetClassified(int id)
+        private async Task<Classified> GetClassified(int id)
         {
             var classified = await _context.Classifieds.FindAsync(id);
 
@@ -140,7 +140,7 @@ namespace FarmGameBackend.Controllers
             return classified;
         }
 
-        public async Task<IActionResult> DeleteClassified(int id)
+        private async Task<IActionResult> DeleteClassified(int id)
         {
             var classified = await _context.Classifieds.FindAsync(id);
             if (classified == null)
@@ -153,7 +153,7 @@ namespace FarmGameBackend.Controllers
 
             return NoContent();
         }
-        public async Task<IActionResult> ClassifiedDeleted(Classified classified)
+        private async Task<IActionResult> ClassifiedDeleted(Classified classified)
         {
             await DeleteClassified(classified.Id);
             User seller = _context.GetCurrentUser(classified.UserName);
