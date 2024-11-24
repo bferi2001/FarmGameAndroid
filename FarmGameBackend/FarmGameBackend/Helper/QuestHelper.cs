@@ -33,6 +33,7 @@ namespace FarmGameBackend.Helper
                 RewardMoney = productQuantity,
                 RewardXP = productQuantity
             };
+            await PostQuest(quest);
         }
 
         public async Task ProgressQuest(string taskKeyword, string objectId, int quantity)
@@ -51,6 +52,7 @@ namespace FarmGameBackend.Helper
                 await _context.UserHelper.PutUser(user.Id, user);
                 await DeleteQuest(quest.Id);
                 await NewQuest();
+                return;
             }
             await PutQuest(quest.Id, quest!);
         }

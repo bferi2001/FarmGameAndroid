@@ -14,8 +14,8 @@ public class QuestController(FarmApplicationContext context) : Controller
     //_currentUser = _context.GetCurrentUser(userEmail!);
     
     [HttpGet("availableQuests")]
-    public async Task<ActionResult<IEnumerable<QuestType>>> GetAvailableQuests()
+    public async Task<ActionResult<IEnumerable<Quest>>> GetAvailableQuests()
     {
-        return await context.QuestTypes.ToListAsync();
+        return await context.Quests.Where(q => q.UserName == _currentUser.Email).ToListAsync();
     }
 }
