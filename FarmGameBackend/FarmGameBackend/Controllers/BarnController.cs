@@ -152,7 +152,7 @@ namespace FarmGameBackend.Controllers
                 await _context.BarnHelper.UpdateBarnDatabase(updatedBarn);
                 await _context.ProductHelper.AddUserProduct(barnProductName, 3);
                 await _context.QuestHelper.ProgressQuest("harvest", barnProductName, 3);
-                _currentUser.UserXP = barnProduct.RewardXP;
+                _currentUser.UserXP += barnProduct.RewardXP;
                 await _context.UserHelper.PutUser(_currentUser.Id, _currentUser);
             }
             catch (NotFoundException ex)
