@@ -1,6 +1,7 @@
 package hu.bme.aut.szoftarch.farmgame.feature.market.createad
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,10 +14,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -85,37 +85,8 @@ fun CreateAdScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Row {
-                    ExposedDropdownMenuBox(
-                        expanded = expanded,
-                        onExpandedChange = { expanded = !expanded }
-                    ) {
-                        TextField(
-                            readOnly = true,
-                            value = selectedOptionText,
-                            onValueChange = { },
-                            label = { Text("Dropdown Menu") },
-                            trailingIcon = {
-                                ExposedDropdownMenuDefaults.TrailingIcon(
-                                    expanded = expanded
-                                )
-                            },
-                            colors = ExposedDropdownMenuDefaults.textFieldColors()
-                        )
-                        ExposedDropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false }
-                        ) {
-                            options.forEach { selectionOption ->
-                                DropdownMenuItem(
-                                    onClick = {
-                                        selectedOptionText = selectionOption
-                                        expanded = false
-                                    },
-                                    text = { Text(text = selectionOption) }
-                                )
-                            }
-                        }
-                    }
+                    // DropDown menu for sellable item selection
+                    DropDownDemo()
                     // Input field with + and - buttons
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         IconButton(
@@ -163,6 +134,55 @@ fun CreateAdScreen(
 
             }
         }
+    }
+}
+
+@Composable
+fun DropDownDemo() {
+
+    val isDropDownExpanded = remember {
+        mutableStateOf(false)
+    }
+
+    val itemPosition = remember {
+        mutableIntStateOf(0)
+    }
+
+    val usernames = listOf("Alexander", "Isabella", "Benjamin", "Sophia", "Christopher")
+
+    Column(
+        //modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+
+        Box {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.clickable {
+                    isDropDownExpanded.value = true
+                }
+            ) {
+                Text(text = usernames[itemPosition.value])
+            }
+            DropdownMenu(
+                expanded = isDropDownExpanded.value,
+                onDismissRequest = {
+                    isDropDownExpanded.value = false
+                }) {
+                usernames.forEachIndexed { index, username ->
+                    DropdownMenuItem(text = {
+                        Text(text = username)
+                    },
+                        onClick = {
+                            isDropDownExpanded.value = false
+                            itemPosition.value = index
+                        })
+                }
+            }
+        }
+
     }
 }
 
