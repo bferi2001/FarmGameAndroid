@@ -40,14 +40,6 @@ data class Land(
             return false
         }
         when (interaction) {
-            "action_build" -> {
-                if (params.size < 2) {
-                    throw Exception("Wrong number of parameters")
-                }
-                val building_id = position
-                content = Building(building_id, params[1])
-            }
-
             else -> {
                 throw Exception("Unknown interaction")
             }

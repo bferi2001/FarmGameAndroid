@@ -57,7 +57,10 @@ class ApiController(token: String) : HttpRequestMaker(token) {
         for(barn in barns){
             val content = Building(
                 id = barn.id,
-                tag = barn.typeName
+                tag = barn.typeName,
+                actions = getActions(barn.position, false),
+                productionStartTime = toLocalDateTime(barn.productionStartTime),
+                productionEndTime = toLocalDateTime(barn.productionEndTime)
             )
             content.level = barn.level
             val land = Land(
@@ -139,12 +142,6 @@ class ApiController(token: String) : HttpRequestMaker(token) {
         val crops = res.body<Array<String>>()
         return crops.toList()
     }
-
-    private suspend fun upgradeBuilding(land: Land): Boolean {
-        val position = land.position
-        val res = put("api/farm/barn/$position/upgrade")
-        return res.status.value == 200
-    }
     private suspend fun buildBuilding(land: Land, building: String): Boolean {
         val position = land.position
         val res = post("api/farm/barn/$position/$building")
@@ -159,13 +156,17 @@ class ApiController(token: String) : HttpRequestMaker(token) {
     suspend fun interact(land: Land, interaction: String, params: List<String>): Boolean {
         if(land.content is Building)
         {
-            val res = when(interaction){
-                "upgrade" -> upgradeBuilding(land)
-                "action_build" -> buildBuilding(land, params[0])
-                else -> false
+            if(interaction == "action_build")
+            {
+                val res = buildBuilding(land, params[0])
+                return res
             }
-            if(!res){
-                return false
+            else if(interaction == "cleaning"
+                || interaction == "feeding"
+                || interaction == "harvesting"
+                || interaction == "upgrade")
+            {
+                return barnAction(land.position, interaction)
             }
         }
         else if(land.content is Planter)
@@ -255,6 +256,10 @@ class ApiController(token: String) : HttpRequestMaker(token) {
 
     suspend fun plantAction(position: Int, action: String): Boolean {
         val res = put("api/farm/plant/$position/$action")
+        return res.status.value == 200
+    }
+    suspend fun barnAction(position: Int, action: String): Boolean {
+        val res = put("api/farm/barn/$position/$action")
         return res.status.value == 200
     }
 }
