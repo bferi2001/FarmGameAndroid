@@ -235,7 +235,8 @@ class ApiController(token: String) : HttpRequestMaker(token) {
                 item = it.productName,
                 price = it.price,
                 count = it.quantity,
-                seller = it.userName ?: "Unknown"
+                seller = it.userName ?: "Unknown",
+                deadline = it.deadline
             )
         }
 

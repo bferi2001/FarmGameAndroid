@@ -20,9 +20,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.compose.AppTheme
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
-fun AdItem(item: String, count: Int, price: Int, userName: String,
+fun AdItem(item: String, count: Int, price: Int, userName: String, deadline: LocalDateTime,
            secondary: Boolean = false,
            onBuyClick: () -> Unit) {
     Row(
@@ -36,18 +38,28 @@ fun AdItem(item: String, count: Int, price: Int, userName: String,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
-            Text(text = item, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "Count: $count")
-            Text(text = "Seller: $userName")
-        }
-        Text(text = "Price: $price")
-        Button(
-            onClick = {
-                onBuyClick()
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(text = item, fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(text = "Count: $count")
+                    Text(text = "Seller: $userName")
+                }
+                Text(text = "Price: $price")
+                Button(
+                    onClick = {
+                        onBuyClick()
+                    }
+                ) {
+                    Text(text = "Buy")
+                }
             }
-        ) {
-            Text(text = "Buy")
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+            Text(text = "Deadline: ${deadline.format(formatter)}")
         }
     }
 }
@@ -57,6 +69,6 @@ fun AdItem(item: String, count: Int, price: Int, userName: String,
 @Composable
 fun AdItemPreview() {
     AppTheme{
-        AdItem("Item", 10, 1000, "User") {}
+        AdItem("Item", 10, 1000, "User", LocalDateTime.now()) {}
     }
 }

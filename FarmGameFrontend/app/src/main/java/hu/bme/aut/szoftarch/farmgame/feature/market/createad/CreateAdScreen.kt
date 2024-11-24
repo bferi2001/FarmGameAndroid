@@ -164,7 +164,7 @@ fun DropDownDemo() {
                     isDropDownExpanded.value = true
                 }
             ) {
-                Text(text = usernames[itemPosition.value])
+                Text(text = usernames[itemPosition.intValue])
             }
             DropdownMenu(
                 expanded = isDropDownExpanded.value,
@@ -177,7 +177,7 @@ fun DropDownDemo() {
                     },
                         onClick = {
                             isDropDownExpanded.value = false
-                            itemPosition.value = index
+                            itemPosition.intValue = index
                         })
                 }
             }
