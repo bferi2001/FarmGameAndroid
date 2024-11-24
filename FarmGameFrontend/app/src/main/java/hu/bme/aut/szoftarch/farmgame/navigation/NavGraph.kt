@@ -6,15 +6,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import hu.bme.aut.szoftarch.farmgame.api.LoginHandler
-
 import hu.bme.aut.szoftarch.farmgame.feature.login.LoginScreen
 import hu.bme.aut.szoftarch.farmgame.feature.login.LoginViewModel
 import hu.bme.aut.szoftarch.farmgame.feature.map.MapScreen
 import hu.bme.aut.szoftarch.farmgame.feature.market.MarketScreen
 import hu.bme.aut.szoftarch.farmgame.feature.market.createad.CreateAdScreen
 import hu.bme.aut.szoftarch.farmgame.feature.quests.QuestsScreen
-import kotlin.math.log
 
 
 @Composable
