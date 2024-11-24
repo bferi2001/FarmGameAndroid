@@ -4,7 +4,7 @@ import hu.bme.aut.szoftarch.farmgame.api.dao.BarnDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.ClassifiedDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.MarketUserProductDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.PlantedPlantDao
-import hu.bme.aut.szoftarch.farmgame.api.dao.QuestTypeDao
+import hu.bme.aut.szoftarch.farmgame.api.dao.QuestDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.UserDao
 import hu.bme.aut.szoftarch.farmgame.data.market.AdItemData
 import hu.bme.aut.szoftarch.farmgame.data.market.SellingItemData
@@ -215,11 +215,20 @@ class ApiController(token: String) : HttpRequestMaker(token) {
     suspend fun getQuests(): List<Quest>{
         var res = get("api/farm/quest/availableQuests")
         var json = res.bodyAsText()
-        val quests = gson.fromJson(json, Array<QuestTypeDao>::class.java)
+        val quests = gson.fromJson(json, Array<QuestDao>::class.java)
 
         var questList = mutableListOf<Quest>()
         for(quest in quests){
-            questList.add(Quest(goal = 0, description = quest.description, title = "Quest-${quest.id}"))
+            val description = quest.taskKeyword + " " + quest.objectId
+            questList.add(
+                Quest(
+                    goal = quest.goalQuantity,
+                    description = description,
+                    title = "Quest-${quest.id}",
+                    progress = quest.currentQuantity,
+                    rewardMoney = quest.rewardMoney,
+                    rewardXP = quest.rewardXP
+                ))
         }
         return questList
     }

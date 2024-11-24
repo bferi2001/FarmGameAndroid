@@ -1,19 +1,10 @@
 package hu.bme.aut.szoftarch.farmgame.feature.quests
 
-class Quest(
+data class Quest(
     val goal: Int,
     val title: String,
-    val description: String
-) {
-    var progress: Int = 0
-
-    fun progress() {
-        if (isClaimable()) return
-        progress++
-    }
-
-    fun isClaimable(): Boolean {
-        return progress >= goal
-    }
-
-}
+    val description: String,
+    var progress: Int,
+    val rewardMoney: Int,
+    val rewardXP: Int
+)
