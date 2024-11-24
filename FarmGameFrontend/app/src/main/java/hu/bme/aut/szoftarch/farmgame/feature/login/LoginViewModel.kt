@@ -34,4 +34,9 @@ open class LoginViewModel @Inject constructor() : ViewModel() {
             }
         }
     }
+
+    fun signOut() {
+        LoginHandler.token = null
+        _tokenState.value = TokenState.Idle
+    }
 }
