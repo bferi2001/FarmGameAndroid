@@ -33,11 +33,25 @@ fun NavGraph(
                 loginViewModel = loginViewModel
             )
         }
+        composable(Screen.Login.route + "/{message}") { backStackEntry ->
+            val message = backStackEntry.arguments?.getString("message")
+            LoginScreen(
+                onToMap = {
+                    navController.navigate(Screen.Map.route)
+                },
+                loginViewModel = loginViewModel,
+                message = message
+            )
+        }
         composable(Screen.Map.route) {
             MapScreen(
-                onToLoginScreen = {
+                onToLoginScreen = { message ->
                     loginViewModel.signOut()
-                    navController.navigate(Screen.Login.route)
+                    if(message != null) {
+                        navController.navigate(Screen.Login.route + "/$message")
+                    } else {
+                        navController.navigate(Screen.Login.route)
+                    }
                 },
                 onToMarketScreen = {
                     navController.navigate(Screen.Market.route)

@@ -42,7 +42,7 @@ import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
 @Composable
 fun MapScreen(
     viewModel: MapViewModel = viewModel(),
-    onToLoginScreen: () -> Unit,
+    onToLoginScreen: (message: String?) -> Unit,
     onToMarketScreen: () -> Unit,
     onToQuestsScreen: () -> Unit,
 ) {
@@ -60,7 +60,7 @@ fun MapScreen(
                     userMoney = it.user.userMoney
                 }
                 is MapViewModel.InitState.Error -> {
-                    onToLoginScreen()
+                    onToLoginScreen(it.message)
                     loading = false
                 }
                 else -> loading = true
@@ -80,7 +80,7 @@ fun MapScreen(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Button(
-                            onClick = onToLoginScreen
+                            onClick = {onToLoginScreen(null)}
                         ) {
                             Text(text = "Log out")
                         }
