@@ -125,10 +125,6 @@ namespace FarmGameBackend.Controllers
 
             return NoContent();
         }
-        //ToDo szűréses lekérdezés
-        //ToDo törlés, ha lejár
-        
-        // MarketCOotorllerHelper
         private async Task<Classified> PostClassified(Classified classified)
         {
             _context.Classifieds.Add(classified);

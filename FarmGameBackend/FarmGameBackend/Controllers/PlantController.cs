@@ -78,7 +78,7 @@ namespace FarmGameBackend.Controllers
             if (currentTime >= plantAtPosition.WateringTime && _context.PlantHelper.GetActions(plantAtPosition).Contains("watering"))
             {
                 plantAtPosition.WateringTime = null;
-                //ToDo
+                plantAtPosition = _context.PlantHelper.UpdateDateTimes(plantAtPosition);
             }
             try
             {
@@ -106,7 +106,7 @@ namespace FarmGameBackend.Controllers
             if (currentTime >= plantAtPosition.WeedingTime && _context.PlantHelper.GetActions(plantAtPosition).Contains("weeding"))
             {
                 plantAtPosition.WeedingTime = null;
-                //ToDo
+                plantAtPosition = _context.PlantHelper.UpdateDateTimes(plantAtPosition);
             }
             try
             {
@@ -135,7 +135,7 @@ namespace FarmGameBackend.Controllers
             if (currentTime >= plantAtPosition.FertilisingTime && _context.PlantHelper.GetActions(plantAtPosition).Contains("fertilising"))
             {
                 plantAtPosition.FertilisingTime = null;
-                //ToDo Other actions?
+                plantAtPosition = _context.PlantHelper.UpdateDateTimes(plantAtPosition);
             }
             try
             {

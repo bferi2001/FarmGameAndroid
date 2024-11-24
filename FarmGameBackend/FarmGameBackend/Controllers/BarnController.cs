@@ -76,7 +76,7 @@ namespace FarmGameBackend.Controllers
             if (currentTime >= barnAtPosition.CleaningTime && _context.BarnHelper.GetActions(barnAtPosition).Contains("cleaning"))
             {
                 barnAtPosition.CleaningTime = null;
-                //ToDo
+                barnAtPosition = _context.BarnHelper.UpdateDateTimes(barnAtPosition);
             }
             else
             {
@@ -108,7 +108,7 @@ namespace FarmGameBackend.Controllers
             if (currentTime >= barnAtPosition.FeedingTime && _context.BarnHelper.GetActions(barnAtPosition).Contains("feeding"))
             {
                 barnAtPosition.FeedingTime = null;
-                //ToDo
+                barnAtPosition = _context.BarnHelper.UpdateDateTimes(barnAtPosition);
             }
             else
             {

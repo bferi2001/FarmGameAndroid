@@ -140,7 +140,22 @@ namespace FarmGameBackend.Helper
             }
             return;
         }
+        public Barn UpdateDateTimes(Barn updatedBarn)
+        {
+            if (updatedBarn.ProductionEndTime == null)
+            {
+                updatedBarn.ProductionEndTime = DateTimeOffset.Now + (DateTimeOffset.Now - updatedBarn.ProductionEndTime) * 0.9;
+            }
+            if (updatedBarn.CleaningTime == null)
+            {
+                updatedBarn.CleaningTime = DateTimeOffset.Now + (DateTimeOffset.Now - updatedBarn.CleaningTime) * 0.9;
+            }
+            if (updatedBarn.FeedingTime == null)
+            {
+                updatedBarn.FeedingTime = DateTimeOffset.Now + (DateTimeOffset.Now - updatedBarn.FeedingTime) * 0.9;
+            }
+            return updatedBarn;
+        }
 
-        
     }
 }

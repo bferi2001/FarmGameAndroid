@@ -103,5 +103,26 @@ namespace FarmGameBackend.Helper
             }
             return;
         }
+
+        public PlantedPlant UpdateDateTimes(PlantedPlant updatedPlant)
+        {
+            if(updatedPlant.WateringTime == null)
+            {
+                updatedPlant.WateringTime = DateTimeOffset.Now + (DateTimeOffset.Now-updatedPlant.WateringTime)*0.9;
+            }
+            if (updatedPlant.FertilisingTime == null)
+            {
+                updatedPlant.FertilisingTime = DateTimeOffset.Now + (DateTimeOffset.Now - updatedPlant.FertilisingTime) * 0.9;
+            }
+            if (updatedPlant.WeedingTime == null)
+            {
+                updatedPlant.WeedingTime = DateTimeOffset.Now + (DateTimeOffset.Now - updatedPlant.WeedingTime) * 0.9;
+            }
+            if (updatedPlant.HarvestTime == null)
+            {
+                updatedPlant.HarvestTime = DateTimeOffset.Now + (DateTimeOffset.Now - updatedPlant.HarvestTime) * 0.9;
+            }
+            return updatedPlant;
+        }
     }
 }
