@@ -55,12 +55,15 @@ fun MarketScreen(
     val context = LocalContext.current
     var totalPrice by remember { mutableIntStateOf(0) } // State
     var adItems = remember { mutableStateListOf<AdItemData>() } // State
+    var sellingItems = remember { mutableStateListOf<SellingItemData>() } // State
     LaunchedEffect(key1 = viewModel.loadingState) {
         viewModel.loadingState.collect{
             when(it){
                 is MarketViewModel.LoadingState.Loaded -> {
                     adItems.clear()
                     adItems.addAll(it.items)
+                    sellingItems.clear()
+                    sellingItems.addAll(it.inventory)
                 }
                 is MarketViewModel.LoadingState.Loading -> {}
                 is MarketViewModel.LoadingState.Error -> {
@@ -155,7 +158,7 @@ fun MarketScreen(
                         Button(
                             onClick =
                             {
-                                viewModel.sellingItems.forEach { item ->
+                                sellingItems.forEach { item ->
                                     item.quantity -= item.sellCount
                                 }
                                 /* TODO Handle giving money to user */
@@ -168,15 +171,15 @@ fun MarketScreen(
                     }
 
                     LazyColumn {
-                        items(viewModel.sellingItems.size) { i ->
+                        items(sellingItems.size) { i ->
                             SellingItem(
-                                item = viewModel.sellingItems[i].item,
-                                price = viewModel.sellingItems[i].price,
-                                quantity = viewModel.sellingItems[i].quantity,
+                                item = sellingItems[i].item,
+                                price = sellingItems[i].price,
+                                quantity = sellingItems[i].quantity,
                                 secondary = i % 2 == 0
                             ) { it ->
-                                viewModel.sellingItems[i].sellCount = it
-                                totalPrice = calcTotalPrice(viewModel.sellingItems)
+                                sellingItems[i].sellCount = it
+                                totalPrice = calcTotalPrice(sellingItems)
                             }
                         }
                     }
