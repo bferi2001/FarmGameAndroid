@@ -2,6 +2,7 @@ package hu.bme.aut.szoftarch.farmgame.api
 
 import hu.bme.aut.szoftarch.farmgame.api.dao.BarnDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.ClassifiedDao
+import hu.bme.aut.szoftarch.farmgame.api.dao.MarketUserProductDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.PlantedPlantDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.QuestTypeDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.UserDao
@@ -243,10 +244,16 @@ class ApiController(token: String) : HttpRequestMaker(token) {
     }
 
     suspend fun getInventory(): List<Map<String, Int>> {
-        TODO()
+        val res = get("api/farm/inventory/market")
+        val json = res.bodyAsText()
+        val inventoryDao = gson.fromJson(json, Array<MarketUserProductDao>::class.java)
+        val inventory = inventoryDao.map {
+            mapOf(
+                Pair(it.productName, it.quantity)
+            )
+        }
+        return inventory
     }
-
-
 
     suspend fun getActions(position: Int, plantActions: Boolean): Array<String> {
         val type = if(plantActions) "plant" else "barn"
