@@ -39,7 +39,17 @@ class MapViewModel @Inject constructor() : ViewModel() {
 
     init {
         load()
-        fetchInteractions()
+        fetchRepeat()
+    }
+
+    suspend fun fetchFarm() {
+        try{
+            session?.fetchFarm()
+            _loadingState.value = InitState.Success(session?.farm!!, session?.user!!)
+        }
+        catch (e: Exception){
+            _loadingState.value = InitState.Error(e.message ?: "Something happened")
+        }
     }
 
     fun load(){
@@ -102,32 +112,44 @@ class MapViewModel @Inject constructor() : ViewModel() {
     }
 
     val interactions: MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
-    private fun fetchInteractions(){
+    private fun fetchRepeat(){
         viewModelScope.launch(Dispatchers.IO) {
             while (true)
             {
-                var newInteractions: List<String>? = emptyList<String>()
-                if (selectedLandId.value >= 0) {
-                    try{
-                        val selectedId = selectedLandId.value
-                        val isPlant = session?.farm!!.getLand(selectedId).content is Planter
-                        val actions = session?.apiController?.getActions(selectedId, isPlant)
-                        session?.farm!!.getLand(selectedId).content?.setNewActions(actions)
-                        newInteractions = session?.getInteractions(session?.farm!!.getLand(selectedId))
-                    }
-                    catch (e: Exception){
-                        newInteractions = emptyList()
-                    }
-                }
-
-                if(newInteractions != interactions.value){
-                    if (newInteractions != null) {
-                        interactions.value = newInteractions
-                    }
-                }
-
+                fetchInteractions()
                 delay(1000)
             }
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            while (true)
+            {
+                // Wait for the first initialization to finish
+                if(loadingState.value is InitState.Success)
+                {
+                    fetchFarm()
+                }
+                delay(5000)
+            }
+        }
+    }
+
+    suspend fun fetchInteractions(){
+        var newInteractions: List<String>? = emptyList<String>()
+        if (selectedLandId.value >= 0) {
+            try{
+                val selectedId = selectedLandId.value
+                val isPlant = session?.farm!!.getLand(selectedId).content is Planter
+                val actions = session?.apiController?.getActions(selectedId, isPlant)
+                session?.farm!!.getLand(selectedId).content?.setNewActions(actions)
+                newInteractions = session?.getInteractions(session?.farm!!.getLand(selectedId))
+            }
+            catch (e: Exception){
+                newInteractions = emptyList()
+            }
+        }
+
+        if(newInteractions != null && newInteractions != interactions.value){
+            interactions.value = newInteractions
         }
     }
 

@@ -15,10 +15,21 @@ class Session(
     var farm: Farm? = null
     var user: User? = null
     suspend fun initialize() {
-        farm = apiController.getFarm()
+        fetchFarm()
         crops = apiController.getPossibleCrops().toMutableSet()
         buildings = apiController.getPossibleBuildings().toMutableSet()
         user = apiController.getCurrentUser()
+    }
+
+    // Don't allow multiple fetches at the same time
+    private var isFarmFetching = false
+    suspend fun fetchFarm() {
+        if (isFarmFetching) {
+            return
+        }
+        isFarmFetching = true
+        farm = apiController.getFarm()
+        isFarmFetching = false
     }
 
     fun registerBuilding(building: String) {
