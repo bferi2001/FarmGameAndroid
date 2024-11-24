@@ -1,5 +1,6 @@
 package hu.bme.aut.szoftarch.farmgame.navigation
 
+import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -34,7 +35,10 @@ fun NavGraph(
             )
         }
         composable(Screen.Login.route + "/{message}") { backStackEntry ->
-            val message = backStackEntry.arguments?.getString("message")
+            var message = backStackEntry.arguments?.getString("message")
+            if (message != null) {
+                message = Uri.decode(message)
+            }
             LoginScreen(
                 onToMap = {
                     navController.navigate(Screen.Map.route)
@@ -48,7 +52,7 @@ fun NavGraph(
                 onToLoginScreen = { message ->
                     loginViewModel.signOut()
                     if(message != null) {
-                        navController.navigate(Screen.Login.route + "/$message")
+                        navController.navigate(Screen.Login.route + "/${Uri.encode(message)}")
                     } else {
                         navController.navigate(Screen.Login.route)
                     }
