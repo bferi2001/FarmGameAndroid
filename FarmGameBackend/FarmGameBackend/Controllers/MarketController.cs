@@ -33,7 +33,17 @@ namespace FarmGameBackend.Controllers
                 await ClassifiedDeleted(item);
             }
             return await _context.Classifieds.Where(classified => classified.Deadline > DateTimeOffset.Now).ToListAsync();
+        }
 
+        [HttpGet("market/{productName}")]
+        public async Task<ActionResult<IEnumerable<Classified>>> GetClassifiedForMarketAsync(string productName)
+        {
+            List<Classified> classifiedList = await _context.Classifieds.Where(classified => classified.Deadline <= DateTimeOffset.Now && classified.ProductName == productName).ToListAsync();
+            foreach (var item in classifiedList)
+            {
+                await ClassifiedDeleted(item);
+            }
+            return await _context.Classifieds.Where(classified => classified.Deadline > DateTimeOffset.Now).ToListAsync();
         }
 
         [HttpPost("market/{productName}/{quantity}/{price}")]
