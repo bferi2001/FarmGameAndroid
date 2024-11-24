@@ -69,6 +69,8 @@ else
     app.UseMiddleware<DebugWithConstantUserMiddleware>();
 }
 
+app.UseMiddleware<DatabaseHandlerMiddleware>();
+
 app.UseHttpsRedirection();
 
 app.MapControllers();
