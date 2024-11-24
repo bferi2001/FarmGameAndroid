@@ -38,4 +38,15 @@ class MarketViewModel() : ViewModel() {
         _loadingState.value = LoadingState.Loaded(items, inventory)
     }
 
+    suspend fun createAd(newAd: SellingItemData) {
+        val apiController = ApiController(LoginHandler.token!!)
+        apiController.createAd(sellingItemData = newAd)
+    }
+
+    fun CreateNewAd(newAd: SellingItemData) {
+        viewModelScope.launch(Dispatchers.IO) {
+            createAd(newAd)
+        }
+    }
+
 }
