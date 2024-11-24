@@ -12,6 +12,7 @@ import hu.bme.aut.szoftarch.farmgame.feature.game.Session
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Farm
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Planter
+import hu.bme.aut.szoftarch.farmgame.feature.game.farm.User
 import hu.bme.aut.szoftarch.farmgame.view.interaction.MenuLocation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -30,7 +31,7 @@ class MapViewModel @Inject constructor() : ViewModel() {
 
     sealed class InitState{
         object Loading: InitState()
-        data class Success(val farm: Farm): InitState()
+        data class Success(val farm: Farm, val user: User): InitState()
         data class Error(val message: String): InitState()
     }
     private var _loadingState = MutableStateFlow<InitState>(InitState.Loading)
@@ -52,7 +53,11 @@ class MapViewModel @Inject constructor() : ViewModel() {
                 {
                     throw Exception("Couldn't initialize the farm")
                 }
-                _loadingState.value = InitState.Success(farm)
+                if(session.user == null)
+                {
+                    throw Exception("Couldn't initialize the user")
+                }
+                _loadingState.value = InitState.Success(farm, session.user!!)
             }
             catch (e: Exception){
                 _loadingState.value = InitState.Error(e.message ?: "Something happened")

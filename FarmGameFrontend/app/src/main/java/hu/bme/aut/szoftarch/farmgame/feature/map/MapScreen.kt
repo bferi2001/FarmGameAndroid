@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
@@ -22,6 +23,7 @@ import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,12 +48,16 @@ fun MapScreen(
 ) {
     var loading by remember{ mutableStateOf(true) }
     val snackbarHostState = remember { SnackbarHostState() }
+    var userXp by remember { mutableIntStateOf(0) }
+    var userMoney by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(key1 = viewModel.loadingState) {
         viewModel.loadingState.collect{
             when(it){
                 is MapViewModel.InitState.Success -> {
                     loading = false
+                    userXp = it.user.userXP
+                    userMoney = it.user.userMoney
                 }
                 is MapViewModel.InitState.Error -> {
                     onToLoginScreen()
@@ -88,6 +94,9 @@ fun MapScreen(
                         ) {
                             Text(text = "Quests")
                         }
+                        Spacer(modifier = Modifier.weight(1f))
+                        Text(text = "XP: $userXp", modifier = Modifier.padding(end = 8.dp))
+                        Text(text = "Money: $userMoney", modifier = Modifier.padding(end = 8.dp))
                     }
                 }
             )
