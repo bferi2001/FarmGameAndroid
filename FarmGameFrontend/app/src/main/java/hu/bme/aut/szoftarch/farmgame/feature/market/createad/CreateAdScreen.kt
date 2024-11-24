@@ -2,12 +2,15 @@ package hu.bme.aut.szoftarch.farmgame.feature.market.createad
 
 import android.annotation.SuppressLint
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
@@ -43,6 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.compose.AppTheme
+import com.example.compose.woodColor
 import hu.bme.aut.szoftarch.farmgame.data.market.SellingItemData
 import hu.bme.aut.szoftarch.farmgame.feature.market.MarketViewModel
 
@@ -98,58 +102,66 @@ fun CreateAdScreen(
         ) {
             Column(
                 modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize(),
+                    .padding(innerPadding),
                     //.background(woodColor),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Row {
-                    // DropDown menu for sellable item selection
-                    if (inventory.isNotEmpty())
-                        DropDown(inventory)
-                    else
-                        Text(text = "There are no items")
-                    // Input field with + and - buttons
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        IconButton(
-                            onClick = {
-                                inputValue = (inputValue - 1).coerceAtLeast(0)
-                                //onInputValueChanged(inputValue)
-                            },
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Icon(Icons.Filled.KeyboardArrowDown, contentDescription = "Decrease")
-                        }
-                        TextField(
-                            value = inputValue.toString(),
-                            onValueChange = { newValue ->
-                                inputValue = newValue.toIntOrNull()?.coerceIn(0, 10) ?: 0
-                                //onInputValueChanged(inputValue)
-                            },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            modifier = Modifier.width(70.dp), // Set a specific width for the TextField
-                        )
-                        IconButton(
-                            onClick = {
-                                inputValue = (inputValue + 1).coerceAtMost(10)
-                                //onInputValueChanged(inputValue)
-                            },
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Icon(Icons.Filled.KeyboardArrowUp, contentDescription = "Increase")
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        // DropDown menu for sellable item selection
+                        if (inventory.isNotEmpty())
+                            DropDown(inventory)
+                        else
+                            Text(text = "There are no items")
+                    }
+                    Column {
+                        // Input field with + and - buttons
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            IconButton(
+                                onClick = {
+                                    inputValue = (inputValue - 1).coerceAtLeast(0)
+                                    //onInputValueChanged(inputValue)
+                                },
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Icon(Icons.Filled.KeyboardArrowDown, contentDescription = "Decrease")
+                            }
+                            TextField(
+                                value = inputValue.toString(),
+                                onValueChange = { newValue ->
+                                    inputValue = newValue.toIntOrNull()?.coerceIn(0, 10) ?: 0
+                                    //onInputValueChanged(inputValue)
+                                },
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                modifier = Modifier.width(70.dp), // Set a specific width for the TextField
+                            )
+                            IconButton(
+                                onClick = {
+                                    inputValue = (inputValue + 1).coerceAtMost(10)
+                                    //onInputValueChanged(inputValue)
+                                },
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Icon(Icons.Filled.KeyboardArrowUp, contentDescription = "Increase")
+                            }
                         }
                     }
                 }
-
-                Button(
-                    enabled = inventory.isNotEmpty(),
-                    onClick = {
-                        /* TODO Create ad*/
-                        onToMarketScreen()
+                Spacer(modifier = Modifier.height(10.dp))
+                Row {
+                    Button(
+                        enabled = inventory.isNotEmpty(),
+                        onClick = {
+                            /* TODO Create ad*/
+                            onToMarketScreen()
+                        }
+                    ) {
+                        Text("Create ad")
                     }
-                ) {
-                    Text("Create ad")
                 }
 
             }
