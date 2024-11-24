@@ -76,7 +76,7 @@ namespace FarmGameBackend.Helper
         }
 
 
-        public List<string> GetActions(Barn barn)
+        public async Task<List<string>> GetActions(Barn barn)
         {
             List<string> actions = [];
             if (barn.ProductionEndTime != null && barn.ProductionEndTime < DateTimeOffset.Now)
@@ -92,6 +92,15 @@ namespace FarmGameBackend.Helper
             {
                 actions.Add("feeding");
             }
+            try
+            {
+                if (await _context.BarnTypeHelper.GetBarnTypeCostByLevel(barn.TypeName, barn.Level + 1) <= _currentUser.UserMoney)
+                {
+                    actions.Add("upgrade");
+                }
+            }
+            catch{}
+            
             return actions;
         }
 

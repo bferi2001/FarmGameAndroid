@@ -28,7 +28,7 @@ namespace FarmGameBackend.Controllers
 
             foreach (UserProduct uP in userProducts)
             {
-                Product product = _context.Products.FirstOrDefault(productType => productType.Name == uP.ProductName);
+                Product? product = _context.Products.FirstOrDefault(productType => productType.Name == uP.ProductName);
                 marketUserProducts.Add(new MarketUserProduct
                 {
                     ProductName = uP.ProductName,

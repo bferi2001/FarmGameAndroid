@@ -26,7 +26,7 @@ namespace FarmGameBackend.Controllers
             {
                 return NotFound();
             }
-            return _context.BarnHelper.GetActions(barnAtPosition);
+            return await _context.BarnHelper.GetActions(barnAtPosition);
         }
 
         [HttpGet("unlocked")]
@@ -73,7 +73,7 @@ namespace FarmGameBackend.Controllers
                 return BadRequest("This barn got already cleaned.");
             }
             DateTimeOffset currentTime = DateTimeOffset.Now;
-            if (currentTime >= barnAtPosition.CleaningTime && _context.BarnHelper.GetActions(barnAtPosition).Contains("cleaning"))
+            if (currentTime >= barnAtPosition.CleaningTime && (await _context.BarnHelper.GetActions(barnAtPosition)).Contains("cleaning"))
             {
                 barnAtPosition.CleaningTime = null;
                 barnAtPosition = _context.BarnHelper.UpdateDateTimes(barnAtPosition);
@@ -105,7 +105,7 @@ namespace FarmGameBackend.Controllers
                 return BadRequest("This barn got already feeded.");
             }
             DateTimeOffset currentTime = DateTimeOffset.Now;
-            if (currentTime >= barnAtPosition.FeedingTime && _context.BarnHelper.GetActions(barnAtPosition).Contains("feeding"))
+            if (currentTime >= barnAtPosition.FeedingTime && (await _context.BarnHelper.GetActions(barnAtPosition)).Contains("feeding"))
             {
                 barnAtPosition.FeedingTime = null;
                 barnAtPosition = _context.BarnHelper.UpdateDateTimes(barnAtPosition);
@@ -135,7 +135,7 @@ namespace FarmGameBackend.Controllers
             }
             
             DateTimeOffset currentTime = DateTimeOffset.Now;
-            if (!(currentTime >= barnAtPosition.ProductionEndTime && _context.BarnHelper.GetActions(barnAtPosition).Contains("harvesting")))
+            if (!(currentTime >= barnAtPosition.ProductionEndTime && (await _context.BarnHelper.GetActions(barnAtPosition)).Contains("harvesting")))
             {
                 return BadRequest("This barn can't be harvested yet.");
             }
