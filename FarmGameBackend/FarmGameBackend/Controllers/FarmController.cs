@@ -1,4 +1,5 @@
-﻿using FarmGameBackend.DbContexts;
+﻿using FarmGameBackend.CustomExceptions;
+using FarmGameBackend.DbContexts;
 using FarmGameBackend.Entity;
 using Microsoft.AspNetCore.Mvc;
 using FarmGameBackend.Helper;
@@ -9,7 +10,17 @@ namespace FarmGameBackend.Controllers;
 [ApiController]
 public class FarmController(FarmApplicationContext context) : ControllerBase
 {
-    User _currentUser = context.GetCurrentUser("testemail@gmail.com");
+    private User CurrentUser
+    {
+        get
+        {
+            if(HttpContext.Items["CurrentUser"] == null)
+            {
+                throw new BadRequestException("User is not logged in.");
+            }
+            return (User)HttpContext.Items["CurrentUser"]!;
+        }
+    }
     
     [HttpGet("size")]
     public ActionResult GetFarmSize()
@@ -20,9 +31,7 @@ public class FarmController(FarmApplicationContext context) : ControllerBase
 
     private int FarmSize()
     {
-        var email = _currentUser.Email;
-        User user = context.GetCurrentUser(email!);
-        int xp = user.UserXP;
+        int xp = CurrentUser.UserXP;
         
         int unlockedLandCount = xp/100 + 1;
         return unlockedLandCount;

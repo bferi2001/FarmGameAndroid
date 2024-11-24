@@ -42,9 +42,9 @@ namespace FarmGameBackend.Helper
         {
             return _context.Products.Any(product => product.Name == _productName);
         }
-        public async Task<Product?> GetUnlockedCropByName(string name)
+        public async Task<Product?> GetUnlockedCropByName(string name, User currentUser)
         {
-            if (!_context.PlantHelper.DoesCroptypeExistsAndUnlocked(name))
+            if (!_context.PlantHelper.DoesCroptypeExistsAndUnlocked(name, currentUser))
             {
                 return null;
             }

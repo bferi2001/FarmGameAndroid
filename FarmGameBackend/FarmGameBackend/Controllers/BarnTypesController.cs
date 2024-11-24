@@ -12,15 +12,8 @@ namespace FarmGameBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BarnTypesController : ControllerBase
+    public class BarnTypesController(FarmApplicationContext context) : ControllerBase
     {
-        private readonly FarmApplicationContext _context;
-
-        public BarnTypesController(FarmApplicationContext context)
-        {
-            _context = context;
-        }
-        
         [HttpGet("test")]
         public ActionResult Test()
         {
@@ -31,14 +24,14 @@ namespace FarmGameBackend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BarnType>>> GetBarnTypes()
         {
-            return await _context.BarnTypes.ToListAsync();
+            return await context.BarnTypes.ToListAsync();
         }
 
         // GET: api/BarnTypes/names
         [HttpGet("names")]
         public async Task<ActionResult<List<string>>> GetBarnTypeNames()
         {
-            var barnTypeNames = await _context.BarnTypes.Select(barnType => barnType.Name).ToListAsync();
+            var barnTypeNames = await context.BarnTypes.Select(barnType => barnType.Name).ToListAsync();
 
             if (barnTypeNames == null)
             {
@@ -52,7 +45,7 @@ namespace FarmGameBackend.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<BarnType>> GetBarnType(int id)
         {
-            var barnType = await _context.BarnTypes.FindAsync(id);
+            var barnType = await context.BarnTypes.FindAsync(id);
 
             if (barnType == null)
             {
@@ -66,7 +59,7 @@ namespace FarmGameBackend.Controllers
         [HttpGet("{id}/name")]
         public async Task<ActionResult<string>> GetBarnTypeName(int id)
         {
-            var barnType = await _context.BarnTypes.FindAsync(id);
+            var barnType = await context.BarnTypes.FindAsync(id);
 
             if (barnType == null)
             {
@@ -80,7 +73,7 @@ namespace FarmGameBackend.Controllers
         [HttpGet("{id}/{level}")]
         public async Task<ActionResult<int>> GetBarnTypeByLevel(int id, int level)
         {
-            var barnType = await _context.BarnTypes.FindAsync(id);
+            var barnType = await context.BarnTypes.FindAsync(id);
 
             if (barnType == null)
             {
@@ -101,7 +94,7 @@ namespace FarmGameBackend.Controllers
 
         private bool BarnTypeExists(int id)
         {
-            return _context.BarnTypes.Any(e => e.Id == id);
+            return context.BarnTypes.Any(e => e.Id == id);
         }
     }
 }

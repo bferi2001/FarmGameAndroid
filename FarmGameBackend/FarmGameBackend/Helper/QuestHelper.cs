@@ -7,25 +7,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FarmGameBackend.Helper
 {
-    public class QuestHelper
+    public class QuestHelper(FarmApplicationContext context)
     {
-        private readonly FarmApplicationContext _context;
-        private readonly User _currentUser;
-        public QuestHelper(FarmApplicationContext context)
+        public async Task NewQuest(User currentUser)
         {
-            _context = context;
-            //string? userEmail = HttpContext.Items["Email"]?.ToString();
-            //_currentUser = _context.GetCurrentUser(userEmail!);
-            _currentUser = _context.GetCurrentUser("testemail@gmail.com");
-        }
-        public async Task NewQuest()
-        {
-            List<string> unlockedProducts = await _context.ProductHelper.GetUnlockedProductNames();
+            List<string> unlockedProducts = await context.ProductHelper.GetUnlockedProductNames();
             Random r = new Random();
             string pickedProduct = unlockedProducts[r.Next(unlockedProducts.Count)];
             int productQuantity = r.Next(1, 51);
             Quest quest = new Quest {
-                UserName = _currentUser.Email,
+                UserName = currentUser.Email,
                 TaskKeyword = "harvest",
                 ObjectId = pickedProduct,
                 GoalQuantity = productQuantity,
@@ -36,7 +27,7 @@ namespace FarmGameBackend.Helper
             await PostQuest(quest);
         }
 
-        public async Task ProgressQuest(string taskKeyword, string objectId, int quantity)
+        public async Task ProgressQuest(string taskKeyword, string objectId, int quantity, User currentUser)
         {
             Quest? quest = await GetQuest(taskKeyword, objectId);
             if (quest == null)
@@ -46,24 +37,24 @@ namespace FarmGameBackend.Helper
             quest.CurrentQuantity += quantity;
             if (quest.CurrentQuantity >= quest.GoalQuantity)
             {
-                User user = _context.GetCurrentUser(quest.UserName);
+                User user = context.GetCurrentUser(quest.UserName);
                 user.UserMoney += quest.RewardMoney;
                 user.UserXP+= quest.RewardXP;
-                await _context.UserHelper.PutUser(user.Id, user);
+                await context.UserHelper.PutUser(user.Id, user);
                 await DeleteQuest(quest.Id);
-                await NewQuest();
+                await NewQuest(currentUser);
                 return;
             }
             await PutQuest(quest.Id, quest!);
         }
 
-        public async Task<List<Quest>> GetQuests()
+        public async Task<List<Quest>> GetQuests(User currentUser)
         {
-            return await _context.Quests.Where(quest => quest.UserName == _currentUser.Email).ToListAsync();
+            return await context.Quests.Where(quest => quest.UserName == currentUser.Email).ToListAsync();
         }
         public async Task<Quest?> GetQuest(int id)
         {
-            var quest = await _context.Quests.FindAsync(id);
+            var quest = await context.Quests.FindAsync(id);
 
             if (quest == null)
             {
@@ -74,7 +65,7 @@ namespace FarmGameBackend.Helper
         }
         public async Task<Quest?> GetQuest(string taskKeyword, string objectId)
         {
-            var quest = await _context.Quests.Where(q => q.TaskKeyword == taskKeyword && q.ObjectId == objectId).FirstOrDefaultAsync();
+            var quest = await context.Quests.Where(q => q.TaskKeyword == taskKeyword && q.ObjectId == objectId).FirstOrDefaultAsync();
 
             if (quest == null)
             {
@@ -85,14 +76,14 @@ namespace FarmGameBackend.Helper
         }
         public async Task<Quest?> DeleteQuest(int id)
         {
-            var quest = await _context.Quests.FindAsync(id);
+            var quest = await context.Quests.FindAsync(id);
             if (quest == null)
             {
                 throw new NotFoundException("No quest available with current ID");
             }
 
-            _context.Quests.Remove(quest);
-            await _context.SaveChangesAsync();
+            context.Quests.Remove(quest);
+            await context.SaveChangesAsync();
 
             return null;
         }
@@ -103,11 +94,11 @@ namespace FarmGameBackend.Helper
                 throw new BadRequestException("");
             }
 
-            _context.Entry(quest).State = EntityState.Modified;
+            context.Entry(quest).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -126,14 +117,14 @@ namespace FarmGameBackend.Helper
 
         public async Task<Quest> PostQuest(Quest quest)
         {
-            _context.Quests.Add(quest);
-            await _context.SaveChangesAsync();
+            context.Quests.Add(quest);
+            await context.SaveChangesAsync();
 
             return quest;
         }
         private bool QuestExists(int id)
         {
-            return _context.Quests.Any(e => e.Id == id);
+            return context.Quests.Any(e => e.Id == id);
         }
     }
 }

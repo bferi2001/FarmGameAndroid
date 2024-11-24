@@ -1,4 +1,5 @@
-﻿using FarmGameBackend.DbContexts;
+﻿using FarmGameBackend.CustomExceptions;
+using FarmGameBackend.DbContexts;
 using FarmGameBackend.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,13 +10,21 @@ namespace FarmGameBackend.Controllers;
 [ApiController]
 public class QuestController(FarmApplicationContext context) : Controller
 {
-    private readonly User _currentUser = context.GetCurrentUser("testemail@gmail.com");
-    //string? userEmail = HttpContext.Items["Email"]?.ToString();
-    //_currentUser = _context.GetCurrentUser(userEmail!);
+    private User CurrentUser
+    {
+        get
+        {
+            if(HttpContext.Items["CurrentUser"] == null)
+            {
+                throw new BadRequestException("User is not logged in.");
+            }
+            return (User)HttpContext.Items["CurrentUser"]!;
+        }
+    }
     
     [HttpGet("availableQuests")]
     public async Task<ActionResult<IEnumerable<Quest>>> GetAvailableQuests()
     {
-        return await context.Quests.Where(q => q.UserName == _currentUser.Email).ToListAsync();
+        return await context.Quests.Where(q => q.UserName == CurrentUser.Email).ToListAsync();
     }
 }

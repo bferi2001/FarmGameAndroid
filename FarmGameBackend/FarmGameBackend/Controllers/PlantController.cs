@@ -8,33 +8,36 @@ using Microsoft.EntityFrameworkCore;
 namespace FarmGameBackend.Controllers
 {
     [Route("api/farm/plant")]
-    public class PlantController : Controller
+    public class PlantController(FarmApplicationContext context) : Controller
     {
-        private readonly FarmApplicationContext _context;
-        private readonly User _currentUser;
-        public PlantController(FarmApplicationContext context)
+        private User CurrentUser
         {
-            _context = context;
-            //string? userEmail = HttpContext.Items["Email"]?.ToString();
-            //_currentUser = _context.GetCurrentUser(userEmail!);
-            _currentUser = _context.GetCurrentUser("testemail@gmail.com");
+            get
+            {
+                if(HttpContext.Items["CurrentUser"] == null)
+                {
+                    throw new BadRequestException("User is not logged in.");
+                }
+                return (User)HttpContext.Items["CurrentUser"]!;
+            }
         }
+
         [HttpGet("{position}/actions")]
         public async Task<ActionResult<IEnumerable<string>>> GetActionsAsync(int position)
         {
-            PlantedPlant? plantAtPosition = await _context.PlantHelper.GetPlantByPosition(position);
+            PlantedPlant? plantAtPosition = await context.PlantHelper.GetPlantByPosition(position, CurrentUser);
             if (plantAtPosition == null)
             {
                 return NotFound();
             }
-            return await _context.PlantHelper.GetActions(plantAtPosition);
+            return await context.PlantHelper.GetActions(plantAtPosition);
         }
 
         [HttpGet("unlocked")]
         public async Task<ActionResult<IEnumerable<string>>> GetUnlockedCropsAsync()
         {
-            int userXP = _currentUser.UserXP;
-            return await _context.Products.Where(product => product.UnlockXP <= userXP && product.IsCrop)
+            int userXP = CurrentUser.UserXP;
+            return await context.Products.Where(product => product.UnlockXP <= userXP && product.IsCrop)
                                     .Select(product => product.Name)
                                     .ToListAsync(); 
         }
@@ -42,11 +45,11 @@ namespace FarmGameBackend.Controllers
         [HttpPost("{position}/{typeName}")]
         public async Task<ActionResult<PlantedPlant>> PostPlantedPlant(int position, string typeName)
         {
-            if (await _context.PlantHelper.GetPlantByPosition(position) != null)
+            if (await context.PlantHelper.GetPlantByPosition(position, CurrentUser) != null)
             {
                 return Conflict("The field is not empty");
             }
-            Product? productType = await _context.ProductHelper.GetUnlockedCropByName(typeName);
+            Product? productType = await context.ProductHelper.GetUnlockedCropByName(typeName, CurrentUser);
             if (productType == null)
             {
                 return NotFound();
@@ -54,10 +57,10 @@ namespace FarmGameBackend.Controllers
 
             DateTimeOffset currentTime = DateTimeOffset.Now;
             int growTime = productType.ProductionTimeAsSeconds;
-            PlantedPlant newPlant = _context.PlantHelper.CreatePlantedPlant(typeName, position, growTime);
+            PlantedPlant newPlant = context.PlantHelper.CreatePlantedPlant(typeName, position, growTime, CurrentUser);
 
-            _context.PlantedPlants.Add(newPlant);
-            await _context.SaveChangesAsync();
+            context.PlantedPlants.Add(newPlant);
+            await context.SaveChangesAsync();
 
             return Ok();
         }
@@ -65,7 +68,7 @@ namespace FarmGameBackend.Controllers
         [HttpPut("{position:int}/watering")]
         public async Task<IActionResult> PutWatering(int position)
         {
-            PlantedPlant? plantAtPosition = await _context.PlantHelper.GetPlantByPosition(position);
+            PlantedPlant? plantAtPosition = await context.PlantHelper.GetPlantByPosition(position, CurrentUser);
             if (plantAtPosition == null)
             {
                 return NotFound();
@@ -75,14 +78,14 @@ namespace FarmGameBackend.Controllers
                 return BadRequest("This plant got already watered.");
             }
             DateTimeOffset currentTime = DateTimeOffset.Now;
-            if (currentTime >= plantAtPosition.WateringTime && (await _context.PlantHelper.GetActions(plantAtPosition)).Contains("watering"))
+            if (currentTime >= plantAtPosition.WateringTime && (await context.PlantHelper.GetActions(plantAtPosition)).Contains("watering"))
             {
                 plantAtPosition.WateringTime = null;
-                plantAtPosition = _context.PlantHelper.UpdateDateTimes(plantAtPosition);
+                plantAtPosition = context.PlantHelper.UpdateDateTimes(plantAtPosition);
             }
             try
             {
-                await _context.PlantHelper.UpdatePlantedPlantDatabase(plantAtPosition);
+                await context.PlantHelper.UpdatePlantedPlantDatabase(plantAtPosition);
             }
             catch (NotFoundException ex)
             {
@@ -93,7 +96,7 @@ namespace FarmGameBackend.Controllers
         [HttpPut("{position:int}/weeding")]
         public async Task<IActionResult> PutWeeding(int position)
         {
-            PlantedPlant? plantAtPosition = await _context.PlantHelper.GetPlantByPosition(position);
+            PlantedPlant? plantAtPosition = await context.PlantHelper.GetPlantByPosition(position, CurrentUser);
             if (plantAtPosition == null)
             {
                 return NotFound();
@@ -103,14 +106,14 @@ namespace FarmGameBackend.Controllers
                 return BadRequest("This plant got already watered.");
             }
             DateTimeOffset currentTime = DateTimeOffset.Now;
-            if (currentTime >= plantAtPosition.WeedingTime && (await _context.PlantHelper.GetActions(plantAtPosition)).Contains("weeding"))
+            if (currentTime >= plantAtPosition.WeedingTime && (await context.PlantHelper.GetActions(plantAtPosition)).Contains("weeding"))
             {
                 plantAtPosition.WeedingTime = null;
-                plantAtPosition = _context.PlantHelper.UpdateDateTimes(plantAtPosition);
+                plantAtPosition = context.PlantHelper.UpdateDateTimes(plantAtPosition);
             }
             try
             {
-                await _context.PlantHelper.UpdatePlantedPlantDatabase(plantAtPosition);
+                await context.PlantHelper.UpdatePlantedPlantDatabase(plantAtPosition);
             }
             catch (NotFoundException ex)
             {
@@ -122,7 +125,7 @@ namespace FarmGameBackend.Controllers
         [HttpPut("{position:int}/fertilising")]
         public async Task<IActionResult> PutFertilising(int position)
         {
-            PlantedPlant? plantAtPosition = await _context.PlantHelper.GetPlantByPosition(position);
+            PlantedPlant? plantAtPosition = await context.PlantHelper.GetPlantByPosition(position, CurrentUser);
             if (plantAtPosition == null)
             {
                 return NotFound();
@@ -132,15 +135,15 @@ namespace FarmGameBackend.Controllers
                 return BadRequest("This plant got already fertilised.");
             }
             DateTimeOffset currentTime = DateTimeOffset.Now;
-            if (currentTime >= plantAtPosition.FertilisingTime && (await _context.PlantHelper.GetActions(plantAtPosition)).Contains("fertilising"))
+            if (currentTime >= plantAtPosition.FertilisingTime && (await context.PlantHelper.GetActions(plantAtPosition)).Contains("fertilising"))
             {
                 plantAtPosition.FertilisingTime = null;
-                plantAtPosition = _context.PlantHelper.UpdateDateTimes(plantAtPosition);
-                await _context.ProductHelper.AddUserProduct("other_manure", -1);
+                plantAtPosition = context.PlantHelper.UpdateDateTimes(plantAtPosition);
+                await context.ProductHelper.AddUserProduct("other_manure", -1);
             }
             try
             {
-                await _context.PlantHelper.UpdatePlantedPlantDatabase(plantAtPosition);
+                await context.PlantHelper.UpdatePlantedPlantDatabase(plantAtPosition);
             }
             catch (NotFoundException ex) {
                 return NotFound();
@@ -151,33 +154,33 @@ namespace FarmGameBackend.Controllers
         [HttpDelete("{position:int}/harvest")]
         public async Task<IActionResult> HarvestPlantedPlant(int position)
         {
-            PlantedPlant? plantAtPosition = await _context.PlantHelper.GetPlantByPosition(position);
+            PlantedPlant? plantAtPosition = await context.PlantHelper.GetPlantByPosition(position, CurrentUser);
             if (plantAtPosition == null)
             {
                 return NotFound();
             }
-            Product? plantProduct = await _context.ProductHelper.GetProductByName(plantAtPosition.CropsTypeName);
+            Product? plantProduct = await context.ProductHelper.GetProductByName(plantAtPosition.CropsTypeName);
             if (plantProduct == null)
             {
                 return NotFound();
             }
             DateTimeOffset currentTime = DateTimeOffset.Now;
-            if (!(currentTime >= plantAtPosition.HarvestTime && (await _context.PlantHelper.GetActions(plantAtPosition)).Contains("harvesting")))
+            if (!(currentTime >= plantAtPosition.HarvestTime && (await context.PlantHelper.GetActions(plantAtPosition)).Contains("harvesting")))
             {
                 return BadRequest("This plant can't be harvested yet.");
             }
-            if((await _context.PlantHelper.GetActions(plantAtPosition)).Count > 1)
+            if((await context.PlantHelper.GetActions(plantAtPosition)).Count > 1)
             {
                 return BadRequest("This plant needs other actions.");
             }
-            _context.PlantedPlants.Remove(plantAtPosition);
-            await _context.SaveChangesAsync();
+            context.PlantedPlants.Remove(plantAtPosition);
+            await context.SaveChangesAsync();
             try
             {
-                await _context.ProductHelper.AddUserProduct(plantAtPosition.CropsTypeName, 3);
-                await _context.QuestHelper.ProgressQuest("harvest", plantAtPosition.CropsTypeName, 3);
-                _currentUser.UserXP += plantProduct.RewardXP;
-                await _context.UserHelper.PutUser(_currentUser.Id, _currentUser);
+                await context.ProductHelper.AddUserProduct(plantAtPosition.CropsTypeName, 3);
+                await context.QuestHelper.ProgressQuest("harvest", plantAtPosition.CropsTypeName, 3, CurrentUser);
+                CurrentUser.UserXP += plantProduct.RewardXP;
+                await context.UserHelper.PutUser(CurrentUser.Id, CurrentUser);
             }
             catch (NotFoundException ex) {
                 return NotFound(ex.Message);
@@ -192,13 +195,13 @@ namespace FarmGameBackend.Controllers
         [HttpGet ("plantedPlants")]
         public async Task<ActionResult<IEnumerable<PlantWithActions>?>> GetPlantedPlants()
         {
-            var plantedPlants = await Helper.Helper.GetPlants(_currentUser.Email, _context);
+            var plantedPlants = await Helper.Helper.GetPlants(CurrentUser.Email, context);
             var plantWithActions = new List<PlantWithActions>();
             if (plantedPlants == null) return Ok(plantWithActions);
             
             foreach (var plant in plantedPlants)
             {
-                var actions = await _context.PlantHelper.GetActions(plant);
+                var actions = await context.PlantHelper.GetActions(plant);
                 plantWithActions.Add(new PlantWithActions {Plant = plant, Actions = actions});
             }
             

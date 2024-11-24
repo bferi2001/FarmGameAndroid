@@ -6,17 +6,8 @@ using FarmGameBackend.CustomExceptions;
 
 namespace FarmGameBackend.Helper
 {
-    public class UserHelper
+    public class UserHelper(FarmApplicationContext context)
     {
-        private readonly FarmApplicationContext _context;
-        private readonly User _currentUser;
-        public UserHelper(FarmApplicationContext context)
-        {
-            _context = context;
-            //string? userEmail = HttpContext.Items["Email"]?.ToString();
-            //_currentUser = _context.GetCurrentUser(userEmail!);
-            _currentUser = _context.GetCurrentUser("testemail@gmail.com");
-        }
         public async Task PutUser(int id, User user)
         {
             if (id != user.Id)
@@ -24,11 +15,11 @@ namespace FarmGameBackend.Helper
                 throw new BadRequestException("");
             }
 
-            _context.Entry(user).State = EntityState.Modified;
+            context.Entry(user).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -46,7 +37,7 @@ namespace FarmGameBackend.Helper
         }
         private bool UserExists(int id)
         {
-            return _context.Users.Any(e => e.Id == id);
+            return context.Users.Any(e => e.Id == id);
         }
     }
 }

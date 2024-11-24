@@ -1,4 +1,5 @@
-﻿using FarmGameBackend.DbContexts;
+﻿using FarmGameBackend.CustomExceptions;
+using FarmGameBackend.DbContexts;
 using FarmGameBackend.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -6,21 +7,25 @@ using Microsoft.EntityFrameworkCore;
 namespace FarmGameBackend.Controllers
 {
     [Route("api")]
-    public class UserController : Controller
+    public class UserController(FarmApplicationContext context) : Controller
     {
-        private readonly FarmApplicationContext _context;
-        private readonly User _currentUser;
-        public UserController(FarmApplicationContext context)
+        private readonly FarmApplicationContext _context = context;
+        private User CurrentUser
         {
-            _context = context;
-            //string? userEmail = HttpContext.Items["Email"]?.ToString();
-            //_currentUser = _context.GetCurrentUser(userEmail!);
-            _currentUser = _context.GetCurrentUser("testemail@gmail.com");
+            get
+            {
+                if(HttpContext.Items["CurrentUser"] == null)
+                {
+                    throw new BadRequestException("User is not logged in.");
+                }
+                return (User)HttpContext.Items["CurrentUser"]!;
+            }
         }
+
         [HttpGet("currentUser")]
         public async Task<ActionResult<User>> GetCurrentUserAsync()
         {
-            return _currentUser;
+            return CurrentUser;
         }
     }
 }

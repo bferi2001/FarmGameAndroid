@@ -9,17 +9,8 @@ using static FarmGameBackend.Helper.ProductHelper;
 namespace FarmGameBackend.Controllers
 {
     [Route("api/farm")]
-    public class ProductController : Controller
+    public class ProductController(FarmApplicationContext context) : Controller
     {
-        private readonly FarmApplicationContext _context;
-        private readonly User _currentUser;
-        public ProductController(FarmApplicationContext context)
-        {
-            _context = context;
-            //string? userEmail = HttpContext.Items["Email"]?.ToString();
-            //_currentUser = _context.GetCurrentUser(userEmail!);
-            _currentUser = _context.GetCurrentUser("testemail@gmail.com");
-        }
         [HttpGet("currentuser/inventory/market")]
         public async Task<ActionResult<IEnumerable<MarketUserProduct>>> GetUserProductsForMarketAsync()
         {
@@ -28,7 +19,7 @@ namespace FarmGameBackend.Controllers
 
             foreach (UserProduct uP in userProducts)
             {
-                Product? product = _context.Products.FirstOrDefault(productType => productType.Name == uP.ProductName);
+                Product? product = context.Products.FirstOrDefault(productType => productType.Name == uP.ProductName);
                 marketUserProducts.Add(new MarketUserProduct
                 {
                     ProductName = uP.ProductName,
@@ -42,7 +33,7 @@ namespace FarmGameBackend.Controllers
         [HttpGet("currentuser/inventory")]
         public async Task<List<UserProduct>> GetUserProductsAsync()
         {
-            return await _context.ProductHelper.GetUserProductsAsync();
+            return await context.ProductHelper.GetUserProductsAsync();
         }
     }
     

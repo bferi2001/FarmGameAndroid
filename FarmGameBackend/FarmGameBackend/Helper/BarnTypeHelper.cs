@@ -6,25 +6,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FarmGameBackend.Helper
 {
-    public class BarnTypeHelper
+    public class BarnTypeHelper(FarmApplicationContext context)
     {
-        private readonly FarmApplicationContext _context;
-        private readonly User _currentUser;
-        public BarnTypeHelper(FarmApplicationContext context)
-        {
-            _context = context;
-            //string? userEmail = HttpContext.Items["Email"]?.ToString();
-            //_currentUser = _context.GetCurrentUser(userEmail!);
-            _currentUser = _context.GetCurrentUser("testemail@gmail.com");
-        }
         public async Task<List<BarnType>> GetBarnTypes()
         {
-            return await _context.BarnTypes.ToListAsync();
+            return await context.BarnTypes.ToListAsync();
         }
 
         public async Task<List<string>> GetBarnTypeNames()
         {
-            var barnTypeNames = await _context.BarnTypes.Select(barnType => barnType.Name).ToListAsync();
+            var barnTypeNames = await context.BarnTypes.Select(barnType => barnType.Name).ToListAsync();
 
             if (barnTypeNames == null)
             {
@@ -81,7 +72,7 @@ namespace FarmGameBackend.Helper
 
         public async Task<BarnType> GetBarnTypeByName(string barntype)
         {
-            var product = await _context.BarnTypes.Where(bt => bt.Name == barntype).FirstOrDefaultAsync();
+            var product = await context.BarnTypes.Where(bt => bt.Name == barntype).FirstOrDefaultAsync();
             if (product == null)
             {
                 throw new NotFoundException("This barntype does not exists.");
@@ -91,11 +82,11 @@ namespace FarmGameBackend.Helper
 
         private bool BarnTypeExists(int id)
         {
-            return _context.BarnTypes.Any(e => e.Id == id);
+            return context.BarnTypes.Any(e => e.Id == id);
         }
         public async Task<string> GetProductnameByBarntype(string barntype)
         {
-            var product = await _context.BarnTypes.Where(bt => bt.Name == barntype).Select(bt => bt.ProductName).FirstOrDefaultAsync();
+            var product = await context.BarnTypes.Where(bt => bt.Name == barntype).Select(bt => bt.ProductName).FirstOrDefaultAsync();
             if (product == null)
             {
                 throw new NotFoundException("This barntype does not exists.");

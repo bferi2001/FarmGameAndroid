@@ -6,40 +6,30 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FarmGameBackend.Helper
 {
-    public class BarnHelper
+    public class BarnHelper(FarmApplicationContext context)
     {
-        private readonly FarmApplicationContext _context;
-        private readonly User _currentUser;
-        public BarnHelper(FarmApplicationContext context)
-        {
-            _context = context;
-            //string? userEmail = HttpContext.Items["Email"]?.ToString();
-            //_currentUser = _context.GetCurrentUser(userEmail!);
-            _currentUser = _context.GetCurrentUser("testemail@gmail.com");
-        }
-
         public List<string> GetUnlockedBarnsNames()
         {
             List<string> unlockedMeatNames;
             try
             {
-                unlockedMeatNames = _context.ProductHelper.GetUnlockedMeatNames();
+                unlockedMeatNames = context.ProductHelper.GetUnlockedMeatNames();
             }
             catch(NotFoundException ex) {
                 return new List<string>();
             }
-            return _context.BarnTypes.Where( barnType => unlockedMeatNames.Contains(barnType.ProductName)).Select(barnType => barnType.Name).ToList();
+            return context.BarnTypes.Where( barnType => unlockedMeatNames.Contains(barnType.ProductName)).Select(barnType => barnType.Name).ToList();
         }
 
         public bool DoesMeattypeExistsAndUnlocked(string _barnName)
         {
             return GetUnlockedBarnsNames().Any(barnName => barnName == _barnName);
         }
-        public async Task<Barn?> GetBarnByPosition(int position)
+        public async Task<Barn?> GetBarnByPosition(int position, User currentUser)
         {
             try
             {
-                return await _context.Barns.Where(barn => barn.Position == position && barn.UserName == _currentUser.Email).FirstAsync();
+                return await context.Barns.Where(barn => barn.Position == position && barn.UserName == currentUser.Email).FirstAsync();
             }
             catch (Exception ex)
             {
@@ -48,13 +38,13 @@ namespace FarmGameBackend.Helper
 
         }
 
-        public Barn CreateBarn(string _barnTypeName, int _position, int _growTime)
+        public Barn CreateBarn(string _barnTypeName, int _position, int _growTime, User currentUser)
         {
             var r = new Random();
             DateTimeOffset currentTime = DateTimeOffset.Now;
             return new Barn
             {
-                UserName = _currentUser.Email,
+                UserName = currentUser.Email,
                 TypeName = _barnTypeName,
                 Position = _position,
                 ProductionStartTime = currentTime,
@@ -76,7 +66,7 @@ namespace FarmGameBackend.Helper
         }
 
 
-        public async Task<List<string>> GetActions(Barn barn)
+        public async Task<List<string>> GetActions(Barn barn, User currentUser)
         {
             List<string> actions = [];
             if (barn.ProductionEndTime != null && barn.ProductionEndTime < DateTimeOffset.Now)
@@ -94,7 +84,7 @@ namespace FarmGameBackend.Helper
             }
             try
             {
-                if (await _context.BarnTypeHelper.GetBarnTypeCostByLevel(barn.TypeName, barn.Level + 1) <= _currentUser.UserMoney)
+                if (await context.BarnTypeHelper.GetBarnTypeCostByLevel(barn.TypeName, barn.Level + 1) <= currentUser.UserMoney)
                 {
                     actions.Add("upgrade");
                 }
@@ -106,14 +96,14 @@ namespace FarmGameBackend.Helper
 
         public async Task UpdateBarnDatabase(Barn barn)
         {
-            _context.Entry(barn).State = EntityState.Modified;
+            context.Entry(barn).State = EntityState.Modified;
             try
             {
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.ProductHelper.ProductExists(barn.Id))
+                if (!context.ProductHelper.ProductExists(barn.Id))
                 {
                     throw new NotFoundException("");
                 }
@@ -126,19 +116,19 @@ namespace FarmGameBackend.Helper
         }
         public async Task UpdateBarnDatabase(Barn barn, User user)
         {
-            _context.Entry(barn).State = EntityState.Modified;
-            _context.Entry(user).State = EntityState.Modified;
+            context.Entry(barn).State = EntityState.Modified;
+            context.Entry(user).State = EntityState.Modified;
             try
             {
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.Users.Any(e => e.Id == user.Id))
+                if (!context.Users.Any(e => e.Id == user.Id))
                 {
                     throw new NotFoundException("");
                 }
-                else if (!_context.Barns.Any(e => e.Id == barn.Id))
+                else if (!context.Barns.Any(e => e.Id == barn.Id))
                 {
                     throw new NotFoundException("");
                 }

@@ -6,35 +6,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FarmGameBackend.Helper
 {
-    public class PlantHelper
+    public class PlantHelper(FarmApplicationContext context)
     {
-        private readonly FarmApplicationContext _context;
-        private readonly User _currentUser;
-        public PlantHelper(FarmApplicationContext context)
+        public List<string> GetUnlockedCropsNames(User currentUser)
         {
-            _context = context;
-            //string? userEmail = HttpContext.Items["Email"]?.ToString();
-            //_currentUser = _context.GetCurrentUser(userEmail!);
-            _currentUser = _context.GetCurrentUser("testemail@gmail.com");
-        }
-
-        public List<string> GetUnlockedCropsNames()
-        {
-            int userXP = _currentUser.UserXP;
-            return _context.Products.Where(product => product.UnlockXP <= userXP && product.IsCrop)
+            int userXP = currentUser.UserXP;
+            return context.Products.Where(product => product.UnlockXP <= userXP && product.IsCrop)
                                     .Select(product => product.Name)
                                     .ToList();
         }
 
-        public bool DoesCroptypeExistsAndUnlocked(string _cropName)
+        public bool DoesCroptypeExistsAndUnlocked(string _cropName, User currentUser)
         {
-            return GetUnlockedCropsNames().Any(cropName => cropName == _cropName);
+            return GetUnlockedCropsNames(currentUser).Any(cropName => cropName == _cropName);
         }
-        public async Task<PlantedPlant?> GetPlantByPosition(int position)
+        public async Task<PlantedPlant?> GetPlantByPosition(int position, User currentUser)
         {
             try
             {
-                return await _context.PlantedPlants.Where(plant => plant.Position == position && plant.UserName == _currentUser.Email).FirstAsync();
+                return await context.PlantedPlants.Where(plant => plant.Position == position && plant.UserName == currentUser.Email).FirstAsync();
             }
             catch (Exception ex)
             {
@@ -43,13 +33,13 @@ namespace FarmGameBackend.Helper
 
         }
 
-        public PlantedPlant CreatePlantedPlant(string _cropsTypeName, int _position, int _growTime)
+        public PlantedPlant CreatePlantedPlant(string _cropsTypeName, int _position, int _growTime, User currentUser)
         {
             var r = new Random();
             DateTimeOffset currentTime = DateTimeOffset.Now;
             return new PlantedPlant
             {
-                UserName = _currentUser.Email,
+                UserName = currentUser.Email,
                 CropsTypeName = _cropsTypeName,
                 Position = _position,
                 PlantTime = currentTime,
@@ -76,7 +66,7 @@ namespace FarmGameBackend.Helper
             {
                 actions.Add("weeding");
             }
-            UserProduct? manure = await _context.ProductHelper.GetUserProduct("other_manure");
+            UserProduct? manure = await context.ProductHelper.GetUserProduct("other_manure");
             if (plantedPlant.FertilisingTime != null && plantedPlant.FertilisingTime < DateTimeOffset.Now && manure != null && manure.Quantity > 0)
             {
                 actions.Add("fertilising");
@@ -86,14 +76,14 @@ namespace FarmGameBackend.Helper
 
         public async Task UpdatePlantedPlantDatabase(PlantedPlant updatedPlant)
         {
-            _context.Entry(updatedPlant).State = EntityState.Modified;
+            context.Entry(updatedPlant).State = EntityState.Modified;
             try
             {
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_context.ProductHelper.ProductExists(updatedPlant.Id))
+                if (!context.ProductHelper.ProductExists(updatedPlant.Id))
                 {
                     throw new NotFoundException("");
                 }

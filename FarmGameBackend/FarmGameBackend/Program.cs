@@ -6,11 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 Env.Load();
-bool useAuth = Environment.GetEnvironmentVariable("USE_AUTH") != "false";
-
-#if !DEBUG
-useAuth = false;
-#endif
+bool useAuth = false;
 
 var builder = WebApplication.CreateBuilder(args);
 
