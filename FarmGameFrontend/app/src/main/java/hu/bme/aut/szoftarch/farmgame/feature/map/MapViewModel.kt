@@ -153,10 +153,7 @@ class MapViewModel @Inject constructor() : ViewModel() {
                 interactions.value = newInteractions
             }
         }
-        catch (e: Exception){ // Sometimes the interactions is not initialized yet
-            if (newInteractions != null) {
-                interactions.value = newInteractions
-            }
+        catch (e: Exception){ // Sometimes the interactions is not initialized yet, so we just ignore it
         }
     }
 
