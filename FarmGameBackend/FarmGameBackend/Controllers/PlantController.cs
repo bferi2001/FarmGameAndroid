@@ -155,6 +155,11 @@ namespace FarmGameBackend.Controllers
             {
                 return NotFound();
             }
+            Product? plantProduct = await _context.ProductHelper.GetProductByName(plantAtPosition.CropsTypeName);
+            if (plantProduct == null)
+            {
+                return NotFound();
+            }
             DateTimeOffset currentTime = DateTimeOffset.Now;
             if (!(currentTime >= plantAtPosition.HarvestTime && _context.PlantHelper.GetActions(plantAtPosition).Contains("harvesting")))
             {
@@ -170,6 +175,8 @@ namespace FarmGameBackend.Controllers
             {
                 await _context.ProductHelper.AddUserProduct(plantAtPosition.CropsTypeName, 3);
                 await _context.QuestHelper.ProgressQuest("harvest", plantAtPosition.CropsTypeName, 3);
+                _currentUser.UserXP = plantProduct.RewardXP;
+                await _context.UserHelper.PutUser(_currentUser.Id, _currentUser);
             }
             catch (NotFoundException ex) {
                 return NotFound(ex.Message);
