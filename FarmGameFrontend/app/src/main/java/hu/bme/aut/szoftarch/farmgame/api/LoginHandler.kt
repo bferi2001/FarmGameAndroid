@@ -10,8 +10,9 @@ import java.security.MessageDigest
 import java.util.UUID
 
 object LoginHandler {
-    var token: String? = null
-    suspend fun fetchToken(context: Context): GoogleIdTokenCredential {
+    var googleIdTokenCredential: GoogleIdTokenCredential? = null
+    var token: String? = googleIdTokenCredential?.idToken
+    suspend fun fetchToken(context: Context): GoogleIdTokenCredential? {
         try{
             val credentialManager = CredentialManager.create(context)
 
@@ -38,10 +39,10 @@ object LoginHandler {
             )
             val credential = result.credential
 
-            val googleIdTokenCredential = GoogleIdTokenCredential
+            googleIdTokenCredential = GoogleIdTokenCredential
                 .createFrom(credential.data)
 
-            token = googleIdTokenCredential.idToken
+            token = googleIdTokenCredential?.idToken
             return googleIdTokenCredential
         }
         catch (e: Exception){

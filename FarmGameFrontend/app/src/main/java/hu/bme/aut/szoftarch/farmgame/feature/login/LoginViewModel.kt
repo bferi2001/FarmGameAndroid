@@ -27,6 +27,10 @@ open class LoginViewModel @Inject constructor() : ViewModel() {
         viewModelScope.launch {
             try{
                 val googleIdToken = LoginHandler.fetchToken(context)
+                if (googleIdToken == null) {
+                    _tokenState.value = TokenState.Error("Token is null")
+                    return@launch
+                }
                 _tokenState.value = TokenState.Success(googleIdToken.idToken)
             }
             catch (e: Exception) {
