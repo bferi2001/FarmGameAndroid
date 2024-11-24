@@ -1,6 +1,7 @@
 package hu.bme.aut.szoftarch.farmgame.feature.market.createad
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,18 +27,23 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.compose.AppTheme
+import hu.bme.aut.szoftarch.farmgame.data.market.SellingItemData
 import hu.bme.aut.szoftarch.farmgame.feature.market.MarketViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -47,11 +53,25 @@ fun CreateAdScreen(
     marketViewModel: MarketViewModel = viewModel(),
     onToMarketScreen: () -> Unit
 ) {
+    val context = LocalContext.current
     var inputValue by remember { mutableIntStateOf(0) }
+    var inventory = remember { mutableStateListOf<SellingItemData>() } // State
 
-    var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember { mutableStateOf("Select an option") }
-    val options = listOf("Wheat", "Corn", "Carrot")
+    LaunchedEffect(key1 = marketViewModel.loadingState) {
+        marketViewModel.loadingState.collect{
+            when(it){
+                is MarketViewModel.LoadingState.Loaded -> {
+                    inventory.clear()
+                    inventory.addAll(it.inventory)
+                }
+                is MarketViewModel.LoadingState.Loading -> {}
+                is MarketViewModel.LoadingState.Error -> {
+                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -86,7 +106,10 @@ fun CreateAdScreen(
             ) {
                 Row {
                     // DropDown menu for sellable item selection
-                    DropDownDemo()
+                    if (inventory.isNotEmpty())
+                        DropDown(inventory)
+                    else
+                        Text(text = "There are no items")
                     // Input field with + and - buttons
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         IconButton(
@@ -120,12 +143,9 @@ fun CreateAdScreen(
                 }
 
                 Button(
+                    enabled = inventory.isNotEmpty(),
                     onClick = {
-                        if(inputValue <= 0 && !options.contains(selectedOptionText))
-                        {
-                            return@Button
-                        }
-
+                        /* TODO Create ad*/
                         onToMarketScreen()
                     }
                 ) {
@@ -138,20 +158,16 @@ fun CreateAdScreen(
 }
 
 @Composable
-fun DropDownDemo() {
+fun DropDown(inventory: SnapshotStateList<SellingItemData>) {
 
     val isDropDownExpanded = remember {
         mutableStateOf(false)
     }
-
     val itemPosition = remember {
         mutableIntStateOf(0)
     }
 
-    val usernames = listOf("Alexander", "Isabella", "Benjamin", "Sophia", "Christopher")
-
     Column(
-        //modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -164,16 +180,16 @@ fun DropDownDemo() {
                     isDropDownExpanded.value = true
                 }
             ) {
-                Text(text = usernames[itemPosition.intValue])
+                Text(text = inventory[itemPosition.intValue].item)
             }
             DropdownMenu(
                 expanded = isDropDownExpanded.value,
                 onDismissRequest = {
                     isDropDownExpanded.value = false
                 }) {
-                usernames.forEachIndexed { index, username ->
+                inventory.forEachIndexed { index, data ->
                     DropdownMenuItem(text = {
-                        Text(text = username)
+                        Text(text = data.item)
                     },
                         onClick = {
                             isDropDownExpanded.value = false
