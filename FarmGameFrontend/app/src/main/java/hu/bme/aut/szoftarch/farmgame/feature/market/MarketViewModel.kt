@@ -13,15 +13,8 @@ import kotlinx.coroutines.launch
 
 class MarketViewModel() : ViewModel() {
 
-    val sellingItems = listOf(
-        SellingItemData("Wheat", 1, 2),
-        SellingItemData("Corn", 3, 4),
-        SellingItemData("Carrot", 3000, 30),
-        SellingItemData("EmptyTest", 0, 0),
-    )
-
     sealed class LoadingState {
-        data class Loaded(val items: List<AdItemData>) : LoadingState()
+        data class Loaded(val items: List<AdItemData>, val inventory: List<SellingItemData>) : LoadingState()
         object Loading : LoadingState()
         data class Error(val message: String) : LoadingState()
     }
@@ -41,7 +34,8 @@ class MarketViewModel() : ViewModel() {
     suspend fun loadItems() {
         val apiController = ApiController(LoginHandler.token!!)
         val items = apiController.getAds()
-        _loadingState.value = LoadingState.Loaded(items)
+        val inventory = apiController.getInventory()
+        _loadingState.value = LoadingState.Loaded(items, inventory)
     }
 
 }
