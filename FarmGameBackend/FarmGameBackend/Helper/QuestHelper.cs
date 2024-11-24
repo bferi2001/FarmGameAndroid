@@ -88,7 +88,7 @@ namespace FarmGameBackend.Helper
             var quest = await _context.Quests.FindAsync(id);
             if (quest == null)
             {
-                throw new NotFoundException("");
+                throw new NotFoundException("No quest available with current ID");
             }
 
             _context.Quests.Remove(quest);
