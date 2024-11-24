@@ -12,11 +12,6 @@ import kotlinx.coroutines.launch
 class QuestViewModel : ViewModel() {
     private val apiController = ApiController(LoginHandler.token!!)
 
-    fun claimQuest(quest: Quest) {
-        apiController.claimQuest(quest)
-        //_quests.value = loadQuests()
-    }
-
     sealed class QuestLoadState{
         object Loading: QuestLoadState()
         data class Success(val quests: List<Quest>): QuestLoadState()

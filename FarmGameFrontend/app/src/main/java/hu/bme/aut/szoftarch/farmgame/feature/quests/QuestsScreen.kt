@@ -144,23 +144,10 @@ fun QuestItem(quest: Quest) {
                 horizontalArrangement = Arrangement.SpaceBetween,
             )
             {
-                if (!quest.isClaimable()) {
-                    Button(
-                        onClick = {
-                            quest.progress()
-                        },
-                    ) {
-                        Text("Progress")
-                    }
-                }
-                Text(text = "${quest.progress}/${quest.goal}")
-                Button(
-                    onClick = {
-                        //viewModel.claimQuest(quest)
-                    },
-                    enabled = quest.isClaimable(),
-                ) {
-                    Text("Claim")
+                Text(text = "Progress: ${quest.progress}/${quest.goal}")
+                Column{
+                    Text(text = "Reward money: ${quest.rewardMoney}")
+                    Text(text = "Reward xp: ${quest.rewardXP}")
                 }
             }
         }
