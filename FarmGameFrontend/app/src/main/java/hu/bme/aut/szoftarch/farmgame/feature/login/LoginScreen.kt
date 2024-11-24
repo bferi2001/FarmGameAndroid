@@ -90,11 +90,6 @@ fun LoginScreen(
             ) {
                 Text(text = "Login with Google account")
             }
-            Button(
-                onClick = onToMap
-            ) {
-                Text(text = "open map without login (debug)")
-            }
         }
     }
 
