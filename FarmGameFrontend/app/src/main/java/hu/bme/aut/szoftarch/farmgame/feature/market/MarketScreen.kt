@@ -161,14 +161,16 @@ fun MarketScreen(
                             {
                                 sellingItems.forEach { item ->
                                     try {
-                                        item.quantity -= item.sellCount
+                                        if(item.sellCount > 0) {
+                                            item.quantity -= item.sellCount
 
-                                        val itemSell = SellingItemData(
-                                            item = item.item,
-                                            price = item.price,
-                                            quantity = item.sellCount)
+                                            val itemSell = SellingItemData(
+                                                item = item.item,
+                                                price = item.price,
+                                                quantity = item.sellCount)
 
-                                        viewModel.QuickSell(itemSell)
+                                            viewModel.QuickSell(itemSell)
+                                        }
 
                                     } catch (e: Exception) { }
 
