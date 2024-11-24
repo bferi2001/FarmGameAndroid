@@ -274,7 +274,7 @@ class ApiController(token: String) : HttpRequestMaker(token) {
     }
 
     suspend fun getCurrentUser(): User {
-        val res = get("api/farm/user")
+        val res = get("api/currentUser")
         val json = res.bodyAsText()
         val userDao = gson.fromJson(json, UserDao::class.java)
         return User(

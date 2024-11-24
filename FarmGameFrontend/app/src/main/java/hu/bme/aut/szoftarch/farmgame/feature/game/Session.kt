@@ -3,6 +3,7 @@ package hu.bme.aut.szoftarch.farmgame.feature.game
 import hu.bme.aut.szoftarch.farmgame.api.ApiController
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Farm
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
+import hu.bme.aut.szoftarch.farmgame.feature.game.farm.User
 
 class Session(
     val apiController: ApiController,
@@ -12,10 +13,12 @@ class Session(
     var crops: MutableSet<String> = mutableSetOf()
 
     var farm: Farm? = null
+    var user: User? = null
     suspend fun initialize() {
         farm = apiController.getFarm()
         crops = apiController.getPossibleCrops().toMutableSet()
         buildings = apiController.getPossibleBuildings().toMutableSet()
+        user = apiController.getCurrentUser()
     }
 
     fun registerBuilding(building: String) {
