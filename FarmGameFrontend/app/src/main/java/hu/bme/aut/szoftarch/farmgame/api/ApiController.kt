@@ -246,6 +246,9 @@ class ApiController(token: String) : HttpRequestMaker(token) {
         val res = get("api/farm/$type/$position/actions")
         val json = res.bodyAsText()
         val actions = gson.fromJson(json, Array<String>::class.java)
+        if(actions == null){
+            return arrayOf()
+        }
         return actions
     }
 
