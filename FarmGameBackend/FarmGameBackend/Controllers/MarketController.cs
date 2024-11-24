@@ -86,7 +86,7 @@ namespace FarmGameBackend.Controllers
         }
 
 
-        [HttpDelete("market/{id}")]
+        [HttpDelete("market/{classifiedId}")]
         public async Task<IActionResult> BuyClassified(int classifiedId)
         {
             Classified classified = await GetClassified(classifiedId);
