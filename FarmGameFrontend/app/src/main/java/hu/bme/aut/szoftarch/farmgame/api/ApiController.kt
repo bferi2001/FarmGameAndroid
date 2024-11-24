@@ -4,12 +4,14 @@ import hu.bme.aut.szoftarch.farmgame.api.dao.BarnDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.ClassifiedDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.PlantedPlantDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.QuestTypeDao
+import hu.bme.aut.szoftarch.farmgame.api.dao.UserDao
 import hu.bme.aut.szoftarch.farmgame.data.market.AdItemData
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Building
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Crop
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Farm
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Land
 import hu.bme.aut.szoftarch.farmgame.feature.game.farm.Planter
+import hu.bme.aut.szoftarch.farmgame.feature.game.farm.User
 import hu.bme.aut.szoftarch.farmgame.feature.quests.Quest
 import io.ktor.client.call.body
 import io.ktor.client.statement.bodyAsText
@@ -238,8 +240,13 @@ class ApiController(token: String) : HttpRequestMaker(token) {
         }
 
         return ads.toList()
-
     }
+
+    suspend fun getInventory(): List<Map<String, Int>> {
+        TODO()
+    }
+
+
 
     suspend fun getActions(position: Int, plantActions: Boolean): Array<String> {
         val type = if(plantActions) "plant" else "barn"
@@ -264,5 +271,15 @@ class ApiController(token: String) : HttpRequestMaker(token) {
     suspend fun barnAction(position: Int, action: String): Boolean {
         val res = put("api/farm/barn/$position/$action")
         return res.status.value == 204
+    }
+
+    suspend fun getCurrentUser(): User {
+        val res = get("api/farm/user")
+        val json = res.bodyAsText()
+        val userDao = gson.fromJson(json, UserDao::class.java)
+        return User(
+            userXP = userDao.userXP,
+            userMoney = userDao.userMoney
+        )
     }
 }
