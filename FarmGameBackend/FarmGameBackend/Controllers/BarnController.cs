@@ -77,6 +77,7 @@ namespace FarmGameBackend.Controllers
             {
                 barnAtPosition.CleaningTime = null;
                 barnAtPosition = _context.BarnHelper.UpdateDateTimes(barnAtPosition);
+                await _context.ProductHelper.AddUserProduct("other_manure", 3);
             }
             else
             {

@@ -26,7 +26,7 @@ namespace FarmGameBackend.Controllers
             {
                 return NotFound();
             }
-            return _context.PlantHelper.GetActions(plantAtPosition);
+            return await _context.PlantHelper.GetActions(plantAtPosition);
         }
 
         [HttpGet("unlocked")]
@@ -74,7 +74,7 @@ namespace FarmGameBackend.Controllers
                 return BadRequest("This plant got already watered.");
             }
             DateTimeOffset currentTime = DateTimeOffset.Now;
-            if (currentTime >= plantAtPosition.WateringTime && _context.PlantHelper.GetActions(plantAtPosition).Contains("watering"))
+            if (currentTime >= plantAtPosition.WateringTime && (await _context.PlantHelper.GetActions(plantAtPosition)).Contains("watering"))
             {
                 plantAtPosition.WateringTime = null;
                 plantAtPosition = _context.PlantHelper.UpdateDateTimes(plantAtPosition);
@@ -102,7 +102,7 @@ namespace FarmGameBackend.Controllers
                 return BadRequest("This plant got already watered.");
             }
             DateTimeOffset currentTime = DateTimeOffset.Now;
-            if (currentTime >= plantAtPosition.WeedingTime && _context.PlantHelper.GetActions(plantAtPosition).Contains("weeding"))
+            if (currentTime >= plantAtPosition.WeedingTime && (await _context.PlantHelper.GetActions(plantAtPosition)).Contains("weeding"))
             {
                 plantAtPosition.WeedingTime = null;
                 plantAtPosition = _context.PlantHelper.UpdateDateTimes(plantAtPosition);
@@ -131,10 +131,11 @@ namespace FarmGameBackend.Controllers
                 return BadRequest("This plant got already fertilised.");
             }
             DateTimeOffset currentTime = DateTimeOffset.Now;
-            if (currentTime >= plantAtPosition.FertilisingTime && _context.PlantHelper.GetActions(plantAtPosition).Contains("fertilising"))
+            if (currentTime >= plantAtPosition.FertilisingTime && (await _context.PlantHelper.GetActions(plantAtPosition)).Contains("fertilising"))
             {
                 plantAtPosition.FertilisingTime = null;
                 plantAtPosition = _context.PlantHelper.UpdateDateTimes(plantAtPosition);
+                await _context.ProductHelper.AddUserProduct("other_manure", -1);
             }
             try
             {
@@ -160,11 +161,11 @@ namespace FarmGameBackend.Controllers
                 return NotFound();
             }
             DateTimeOffset currentTime = DateTimeOffset.Now;
-            if (!(currentTime >= plantAtPosition.HarvestTime && _context.PlantHelper.GetActions(plantAtPosition).Contains("harvesting")))
+            if (!(currentTime >= plantAtPosition.HarvestTime && (await _context.PlantHelper.GetActions(plantAtPosition)).Contains("harvesting")))
             {
                 return BadRequest("This plant can't be harvested yet.");
             }
-            if(_context.PlantHelper.GetActions(plantAtPosition).Count > 1)
+            if((await _context.PlantHelper.GetActions(plantAtPosition)).Count > 1)
             {
                 return BadRequest("This plant needs other actions.");
             }
