@@ -41,10 +41,16 @@ class Building(
         return "${NameService.getDisplayName(tag)} lvl${level}"
     }
     override fun getTag(): String {
-        return if (clean) {
-            tag
-        } else {
-            "${tag}_dirty"
+        return when (level) {
+            0 -> {
+                tag
+            }
+            1 -> {
+                "$tag:medium"
+            }
+            else -> {
+                "$tag:big"
+            }
         }
     }
 

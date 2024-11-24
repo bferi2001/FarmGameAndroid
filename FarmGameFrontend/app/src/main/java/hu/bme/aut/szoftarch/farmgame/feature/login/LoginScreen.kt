@@ -28,12 +28,19 @@ import com.example.compose.woodLight
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
+    message: String? = null,
     loginViewModel: LoginViewModel = viewModel(),
     onToMap: () -> Unit,
 ) {
     //https://www.youtube.com/watch?v=P_jZMDmodG4
 
     val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(key1 = message) {
+        if (message != null) {
+            snackbarHostState.showSnackbar(message, duration = SnackbarDuration.Short)
+        }
+    }
 
     LaunchedEffect(key1 = loginViewModel.tokenState) {
         loginViewModel.tokenState.collect {
