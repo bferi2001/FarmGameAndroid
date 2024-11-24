@@ -26,7 +26,6 @@ class MapViewModel @Inject constructor() : ViewModel() {
     var menuOpen by mutableStateOf(MenuLocation.NONE)
         private set
 
-    //TODO replace DummyController
     lateinit var session: Session
 
     sealed class InitState{
@@ -108,10 +107,16 @@ class MapViewModel @Inject constructor() : ViewModel() {
             {
                 var newInteractions = emptyList<String>()
                 if (selectedLandId.value >= 0) {
-                    val isPlant = session.farm!!.getLand(selectedLandId.value).content is Planter
-                    val actions = session.apiController.getActions(selectedLandId.value, isPlant)
-                    session.farm!!.getLand(selectedLandId.value).content?.setNewActions(actions)
-                    newInteractions = session.getInteractions(session.farm!!.getLand(selectedLandId.value))
+                    try{
+                        val selectedId = selectedLandId.value
+                        val isPlant = session.farm!!.getLand(selectedId).content is Planter
+                        val actions = session.apiController.getActions(selectedId, isPlant)
+                        session.farm!!.getLand(selectedId).content?.setNewActions(actions)
+                        newInteractions = session.getInteractions(session.farm!!.getLand(selectedId))
+                    }
+                    catch (e: Exception){
+                        newInteractions = emptyList()
+                    }
                 }
 
                 if(newInteractions != interactions.value){

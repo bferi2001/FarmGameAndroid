@@ -39,11 +39,6 @@ data class Land(
             content!!.interact(interaction, params)
             return false
         }
-        when (interaction) {
-            else -> {
-                throw Exception("Unknown interaction")
-            }
-        }
         return true
     }
 

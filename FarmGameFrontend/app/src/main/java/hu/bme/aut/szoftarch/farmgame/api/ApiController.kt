@@ -259,10 +259,10 @@ class ApiController(token: String) : HttpRequestMaker(token) {
 
     suspend fun plantAction(position: Int, action: String): Boolean {
         val res = put("api/farm/plant/$position/$action")
-        return res.status.value == 200
+        return res.status.value == 204
     }
     suspend fun barnAction(position: Int, action: String): Boolean {
         val res = put("api/farm/barn/$position/$action")
-        return res.status.value == 200
+        return res.status.value == 204
     }
 }
