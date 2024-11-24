@@ -94,6 +94,12 @@ fun MapScreen(
                         ) {
                             Text(text = "Quests")
                         }
+                        if(loading){
+                            Spacer(modifier = Modifier.weight(1f))
+                            CircularProgressIndicator(
+                                color = MaterialTheme.colorScheme.onBackground,
+                            )
+                        }
                         Spacer(modifier = Modifier.weight(1f))
                         Text(text = "XP: $userXp", modifier = Modifier.padding(end = 8.dp))
                         Text(text = "Money: $userMoney", modifier = Modifier.padding(end = 8.dp))
@@ -113,35 +119,19 @@ fun MapScreen(
             }
         },
     ) { innerPadding ->
-        if(loading)
-        {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                CircularProgressIndicator(
-                    color = MaterialTheme.colorScheme.onBackground,
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                LandGrid(
+                    Modifier
+                        .fillMaxSize(),
+                    viewModel
                 )
             }
-        }
-        else{
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-            ) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    LandGrid(
-                        Modifier
-                            .fillMaxSize(),
-                        viewModel
-                    )
-                }
-                SideMenuScreen(viewModel)
-            }
+            SideMenuScreen(viewModel)
         }
     }
 }

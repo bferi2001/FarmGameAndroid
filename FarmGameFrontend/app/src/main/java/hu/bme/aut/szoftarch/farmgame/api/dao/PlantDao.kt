@@ -1,5 +1,8 @@
 package hu.bme.aut.szoftarch.farmgame.api.dao
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class PlantedPlantDao(
     var id: Int,
     var userName: String? = null,

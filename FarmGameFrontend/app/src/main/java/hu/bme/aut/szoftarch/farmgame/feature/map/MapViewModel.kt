@@ -27,7 +27,7 @@ class MapViewModel @Inject constructor() : ViewModel() {
     var menuOpen by mutableStateOf(MenuLocation.NONE)
         private set
 
-    lateinit var session: Session
+    var session: Session? = null
 
     sealed class InitState{
         object Loading: InitState()
@@ -47,17 +47,17 @@ class MapViewModel @Inject constructor() : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 session = Session(ApiController(LoginHandler.token!!))
-                session.initialize()
-                val farm = session.farm
+                session?.initialize()
+                val farm = session?.farm
                 if(farm == null)
                 {
                     throw Exception("Couldn't initialize the farm")
                 }
-                if(session.user == null)
+                if(session?.user == null)
                 {
                     throw Exception("Couldn't initialize the user")
                 }
-                _loadingState.value = InitState.Success(farm, session.user!!)
+                _loadingState.value = InitState.Success(farm, session?.user!!)
             }
             catch (e: Exception){
                 _loadingState.value = InitState.Error(e.message ?: "Something happened")
@@ -73,10 +73,6 @@ class MapViewModel @Inject constructor() : ViewModel() {
         menuOpen = MenuLocation.NONE
     }
 
-    fun getFarm(): Farm? {
-        return session.farm
-    }
-
     fun onLandClicked(land: Land) {
         interactions.value = emptyList()
         selectedLandId.value = land.position
@@ -88,7 +84,7 @@ class MapViewModel @Inject constructor() : ViewModel() {
             if (selectedLandId.value < 0) {
                 return@launch
             }
-            if(session.apiController.interact(session.farm!!.getLand(selectedLandId.value), interaction, params)){
+            if(session?.apiController?.interact(session?.farm!!.getLand(selectedLandId.value), interaction, params) == true){
                 closeMenu()
                 selectedLandId.value = -1
 
@@ -110,14 +106,14 @@ class MapViewModel @Inject constructor() : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             while (true)
             {
-                var newInteractions = emptyList<String>()
+                var newInteractions: List<String>? = emptyList<String>()
                 if (selectedLandId.value >= 0) {
                     try{
                         val selectedId = selectedLandId.value
-                        val isPlant = session.farm!!.getLand(selectedId).content is Planter
-                        val actions = session.apiController.getActions(selectedId, isPlant)
-                        session.farm!!.getLand(selectedId).content?.setNewActions(actions)
-                        newInteractions = session.getInteractions(session.farm!!.getLand(selectedId))
+                        val isPlant = session?.farm!!.getLand(selectedId).content is Planter
+                        val actions = session?.apiController?.getActions(selectedId, isPlant)
+                        session?.farm!!.getLand(selectedId).content?.setNewActions(actions)
+                        newInteractions = session?.getInteractions(session?.farm!!.getLand(selectedId))
                     }
                     catch (e: Exception){
                         newInteractions = emptyList()
@@ -125,7 +121,9 @@ class MapViewModel @Inject constructor() : ViewModel() {
                 }
 
                 if(newInteractions != interactions.value){
-                    interactions.value = newInteractions
+                    if (newInteractions != null) {
+                        interactions.value = newInteractions
+                    }
                 }
 
                 delay(1000)
@@ -137,6 +135,6 @@ class MapViewModel @Inject constructor() : ViewModel() {
         if (selectedLandId.value < 0) {
             return null
         }
-        return session.farm?.getLand(selectedLandId.value)
+        return session?.farm?.getLand(selectedLandId.value)
     }
 }

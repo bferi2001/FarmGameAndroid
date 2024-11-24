@@ -33,8 +33,10 @@ class Planter(
         return date
     }
 
-    override fun setNewActions(actions: Array<String>) {
-        this.actions = actions
+    override fun setNewActions(actions: Array<String>?) {
+        if (actions != null) {
+            this.actions = actions
+        }
     }
 
     var cleaned: Boolean = true

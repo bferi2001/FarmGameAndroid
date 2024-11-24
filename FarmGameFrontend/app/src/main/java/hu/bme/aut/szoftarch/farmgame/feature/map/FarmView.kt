@@ -40,12 +40,24 @@ const val FARM_GRID_COLUMN_COUNT = 10
 
 @Composable
 fun LandGrid(modifier: Modifier, viewModel: MapViewModel) {
+    var lands by remember { mutableStateOf<List<Land>>(emptyList()) }
+    LaunchedEffect(key1 = viewModel.loadingState) {
+        viewModel.loadingState.collect{
+            when(it){
+                is MapViewModel.InitState.Success -> {
+                    lands = it.farm.lands
+                }
+                else -> {}
+            }
+        }
+    }
+
     LazyVerticalGrid(
         columns = GridCells.Fixed(FARM_GRID_COLUMN_COUNT),
         modifier = modifier
             .background(Color(0xFF2F8136)) // Texture background Color
     ) {
-        items(viewModel.getFarm()?.lands ?: emptyList<Land>()) { land ->
+        items(lands) { land ->
             LandItem(land, viewModel)
         }
     }

@@ -1,8 +1,9 @@
 package hu.bme.aut.szoftarch.farmgame.api
 
-import hu.bme.aut.szoftarch.farmgame.api.dao.BarnDao
+import hu.bme.aut.szoftarch.farmgame.api.dao.BarnWithActionsDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.ClassifiedDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.MarketUserProductDao
+import hu.bme.aut.szoftarch.farmgame.api.dao.PlantWithActions
 import hu.bme.aut.szoftarch.farmgame.api.dao.PlantedPlantDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.QuestDao
 import hu.bme.aut.szoftarch.farmgame.api.dao.UserDao
@@ -49,20 +50,21 @@ class ApiController(token: String) : HttpRequestMaker(token) {
     suspend fun getLands(size: Int): List<Land> {
         var res = get("api/farm/Barn/barns")
         var json = res.bodyAsText()
-        val barns = gson.fromJson(json, Array<BarnDao>::class.java)
+        val barns = gson.fromJson(json, Array<BarnWithActionsDao>::class.java)
 
         res = get("api/farm/plant/plantedPlants")
         json = res.bodyAsText()
-        val plants = gson.fromJson(json, Array<PlantedPlantDao>::class.java)
+        val plants = gson.fromJson(json, Array<PlantWithActions>::class.java)
 
         var lands = mutableListOf<Land>()
         val displayNames = getDisplayNames()
 
-        for(barn in barns){
+        for(barnWithActions in barns){
+            val barn = barnWithActions.barn
             val content = Building(
                 id = barn.id,
                 tag = barn.typeName,
-                actions = getActions(barn.position, false),
+                actions = barnWithActions.actions,
                 productionStartTime = toLocalDateTime(barn.productionStartTime),
                 productionEndTime = toLocalDateTime(barn.productionEndTime)
             )
@@ -74,11 +76,12 @@ class ApiController(token: String) : HttpRequestMaker(token) {
             )
             lands.add(land)
         }
-        for(plant in plants){
+        for(plantWithActions in plants){
+            val plant = plantWithActions.plant
             val content = Planter(
                 id = plant.id,
                 plantTime = toLocalDateTime(plant.plantTime),
-                actions = getActions(plant.position, true),
+                actions = plantWithActions.actions,
                 harvestTime = if(plant.harvestTime == null) null else toLocalDateTime(plant.harvestTime!!),
             )
             val crop = Crop(
