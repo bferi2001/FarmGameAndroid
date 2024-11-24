@@ -1,4 +1,5 @@
 ﻿using FarmGameBackend.CustomExceptions;
+using FarmGameBackend.Dao;
 using FarmGameBackend.DbContexts;
 using FarmGameBackend.Entity;
 using Microsoft.AspNetCore.Mvc;
@@ -200,9 +201,24 @@ namespace FarmGameBackend.Controllers
         }
         
         [HttpGet("barns")]
-        public async Task<ActionResult<IEnumerable<Barn>?>> GetBarns()
+        public async Task<ActionResult<IEnumerable<BarnWithActions>?>> GetBarns()
         {
-            return await Helper.Helper.GetBarns(_currentUser.Email, _context);
+            var barns = await Helper.Helper.GetBarns(_currentUser.Email, _context);
+            var barnsWithActions = new List<BarnWithActions>();
+            if (barns == null) return Ok(barnsWithActions);
+            
+            foreach (Barn barn in barns)
+            {
+                var actions = await _context.BarnHelper.GetActions(barn);
+                var barnWithActions = new BarnWithActions
+                {
+                    Barn = barn,
+                    Actions = actions
+                };
+                barnsWithActions.Add(barnWithActions);
+            }
+
+            return Ok(barnsWithActions);
         }
     }
 }
