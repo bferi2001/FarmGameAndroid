@@ -124,6 +124,7 @@ fun MarketScreen(
                                 price = adItems[i].price,
                                 count = adItems[i].count,
                                 userName = adItems[i].seller,
+                                deadline = adItems[i].deadline!!,
                             ) {
                                 Toast.makeText(context, "Buying ad item...", Toast.LENGTH_SHORT).show()
                             }
