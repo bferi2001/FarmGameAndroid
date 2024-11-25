@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 Env.Load();
-bool useAuth = false;
+const bool useAuth = true;
 
 var builder = WebApplication.CreateBuilder(args);
 
