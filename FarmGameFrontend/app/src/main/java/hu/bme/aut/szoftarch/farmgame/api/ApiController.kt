@@ -32,14 +32,11 @@ class ApiController(token: String) : HttpRequestMaker(token) {
             Pair("building_cow", "Cow Shed"),
             Pair("building_chicken", "Chicken Shed"),
             Pair("building_pig", "Pig Shed"),
-            Pair("building_cow", "Cow Shed"),
             Pair("building_sheep", "Sheep Shed"),
         )
 
         val cropNames = mapOf(
             Pair("crop_wheat", "Wheat"),
-            Pair("crop_flowers", "Flowers"),
-            Pair("crop_corn", "Corn"),
             Pair("crop_wheat", "Wheat"),
             Pair("crop_carrot", "Carrot"),
             Pair("crop_potato", "Potato"),
